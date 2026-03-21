@@ -1,0 +1,53 @@
+import { defineConfig } from 'vite';
+import path from 'path';
+import { readdirSync, existsSync } from 'fs';
+
+/**
+ * Auto-discover block entry points from src/blocks/
+ * Each block folder with an index.js becomes an entry.
+ */
+function getBlockEntries() {
+	const blocksDir = path.resolve(__dirname, 'src/blocks');
+	const entries = {};
+
+	if (!existsSync(blocksDir)) {
+		return entries;
+	}
+
+	readdirSync(blocksDir, { withFileTypes: true })
+		.filter((d) => d.isDirectory())
+		.forEach((dir) => {
+			const entry = path.resolve(blocksDir, dir.name, 'index.js');
+			if (existsSync(entry)) {
+				entries[`block-${dir.name}`] = entry;
+			}
+		});
+
+	return entries;
+}
+
+export default defineConfig({
+	root: '.',
+	base: './',
+	build: {
+		outDir: 'dist',
+		manifest: true,
+		rollupOptions: {
+			input: {
+				main: path.resolve(__dirname, 'src/main.js'),
+				editor: path.resolve(__dirname, 'src/editor.js'),
+				...getBlockEntries(),
+			},
+		},
+	},
+	css: {
+		preprocessorOptions: {
+			scss: {},
+		},
+	},
+	server: {
+		port: 5173,
+		strictPort: true,
+		cors: true,
+	},
+});

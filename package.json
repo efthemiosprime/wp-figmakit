@@ -1,0 +1,15 @@
+{
+	"name": "wp-figmakit",
+	"version": "1.0.0",
+	"description": "A Gutenberg-ready companion theme for the Figmakit plugin",
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"sass": "^1.77.0",
+		"vite": "^6.0.0"
+	}
+}

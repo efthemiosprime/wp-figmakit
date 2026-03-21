@@ -1,0 +1,12 @@
+/* Editor styles for Gutenberg */
+:root {
+	--fk-color-primary: #1a1a2e;
+	--fk-color-text: #333;
+	--fk-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.editor-styles-wrapper {
+	font-family: var(--fk-font-sans);
+	color: var(--fk-color-text);
+	line-height: 1.6;
+}
