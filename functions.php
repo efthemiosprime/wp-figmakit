@@ -44,3 +44,4 @@ require_once WP_FIGMAKIT_DIR . '/inc/assets.php';
 require_once WP_FIGMAKIT_DIR . '/inc/blocks.php';
 require_once WP_FIGMAKIT_DIR . '/inc/patterns.php';
 require_once WP_FIGMAKIT_DIR . '/inc/templates.php';
+require_once WP_FIGMAKIT_DIR . '/inc/block-attributes.php';

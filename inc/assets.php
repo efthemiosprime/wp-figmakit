@@ -94,6 +94,38 @@ add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_assets' );
  * Enqueue editor assets.
  */
 function wp_figmakit_enqueue_editor_assets() {
+	$editor_deps = array(
+		'wp-blocks',
+		'wp-dom-ready',
+		'wp-edit-post',
+		'wp-plugins',
+		'wp-editor',
+		'wp-data',
+		'wp-block-editor',
+		'wp-components',
+		'wp-i18n',
+		'wp-element',
+	);
+
+	if ( wp_figmakit_is_vite_dev() ) {
+		wp_enqueue_script(
+			'wp-figmakit-vite-client',
+			'http://localhost:5173/@vite/client',
+			array(),
+			null,
+			false
+		);
+
+		wp_enqueue_script(
+			'wp-figmakit-editor',
+			'http://localhost:5173/src/editor.js',
+			$editor_deps,
+			null,
+			true
+		);
+		return;
+	}
+
 	$editor_entry = 'src/editor.js';
 	$manifest = wp_figmakit_get_manifest();
 
@@ -101,10 +133,21 @@ function wp_figmakit_enqueue_editor_assets() {
 		wp_enqueue_script(
 			'wp-figmakit-editor',
 			WP_FIGMAKIT_URI . '/dist/' . $manifest[ $editor_entry ]['file'],
-			array( 'wp-blocks', 'wp-dom-ready', 'wp-edit-post' ),
+			$editor_deps,
 			WP_FIGMAKIT_VERSION,
 			true
 		);
+
+		if ( isset( $manifest[ $editor_entry ]['css'] ) ) {
+			foreach ( $manifest[ $editor_entry ]['css'] as $i => $css ) {
+				wp_enqueue_style(
+					'wp-figmakit-editor-css-' . $i,
+					WP_FIGMAKIT_URI . '/dist/' . $css,
+					array(),
+					WP_FIGMAKIT_VERSION
+				);
+			}
+		}
 	}
 }
 add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' );
@@ -113,7 +156,7 @@ add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' )
  * Add type="module" to Vite scripts.
  */
 function wp_figmakit_script_module_type( $tag, $handle ) {
-	$module_handles = array( 'wp-figmakit-vite-client', 'wp-figmakit-main' );
+	$module_handles = array( 'wp-figmakit-vite-client', 'wp-figmakit-main', 'wp-figmakit-editor' );
 
 	if ( in_array( $handle, $module_handles, true ) ) {
 		$tag = str_replace( '<script ', '<script type="module" ', $tag );

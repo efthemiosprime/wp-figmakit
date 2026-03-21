@@ -29,6 +29,10 @@ function getBlockEntries() {
 export default defineConfig({
 	root: '.',
 	base: './',
+	esbuild: {
+		jsxFactory: 'wp.element.createElement',
+		jsxFragment: 'wp.element.Fragment',
+	},
 	build: {
 		outDir: 'dist',
 		manifest: true,
