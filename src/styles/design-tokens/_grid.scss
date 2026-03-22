@@ -184,9 +184,17 @@ $grid-gutter: 24px !default;
 // Column Offset
 // ==========================================================================
 
+// Left offset (margin-left)
 @for $i from 0 through ($grid-columns - 1) {
   .fk-offset-#{$i} {
     margin-left: calc(#{$i} / #{$grid-columns} * 100%);
+  }
+}
+
+// Right offset (margin-right)
+@for $i from 1 through ($grid-columns - 1) {
+  .fk-offset-r-#{$i} {
+    margin-right: calc(#{$i} / #{$grid-columns} * 100%);
   }
 }
 

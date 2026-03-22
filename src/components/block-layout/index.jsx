@@ -85,6 +85,16 @@ addFilter('blocks.registerBlockType', 'wp-figmakit/block-layout', (settings, nam
 		},
 	};
 
+	// Responsive layout overrides
+	settings.attributes.fkLayoutTablet = {
+		type: 'object',
+		default: { display: '', direction: '' },
+	};
+	settings.attributes.fkLayoutMobile = {
+		type: 'object',
+		default: { display: '', direction: '' },
+	};
+
 	// Add fkColumns only to core/group
 	if (name === 'core/group') {
 		settings.attributes.fkColumns = {
@@ -107,12 +117,108 @@ function getLayoutClasses(layout) {
 /**
  * Layout panel with columns support for Group blocks.
  */
+const TABLET_DISPLAY_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: 'Block', value: 'fk-t-d-block' },
+	{ label: 'Flex', value: 'fk-t-d-flex' },
+	{ label: 'None', value: 'fk-t-d-none' },
+];
+
+const TABLET_DIRECTION_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: 'Row', value: 'fk-t-dir-row' },
+	{ label: 'Column', value: 'fk-t-dir-col' },
+];
+
+const MOBILE_DISPLAY_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: 'Block', value: 'fk-m-d-block' },
+	{ label: 'Flex', value: 'fk-m-d-flex' },
+	{ label: 'None', value: 'fk-m-d-none' },
+];
+
+const MOBILE_DIRECTION_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: 'Row', value: 'fk-m-dir-row' },
+	{ label: 'Column', value: 'fk-m-dir-col' },
+];
+
+const COL_SIZE_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: '1 col', value: 'fk-col-1' },
+	{ label: '2 col', value: 'fk-col-2' },
+	{ label: '3 col', value: 'fk-col-3' },
+	{ label: '4 col', value: 'fk-col-4' },
+	{ label: '5 col', value: 'fk-col-5' },
+	{ label: '6 col', value: 'fk-col-6' },
+	{ label: '7 col', value: 'fk-col-7' },
+	{ label: '8 col', value: 'fk-col-8' },
+	{ label: '9 col', value: 'fk-col-9' },
+	{ label: '10 col', value: 'fk-col-10' },
+	{ label: '11 col', value: 'fk-col-11' },
+	{ label: '12 col (full)', value: 'fk-col-12' },
+];
+
+const OFFSET_LEFT_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: '1 col', value: 'fk-offset-1' },
+	{ label: '2 col', value: 'fk-offset-2' },
+	{ label: '3 col', value: 'fk-offset-3' },
+	{ label: '4 col', value: 'fk-offset-4' },
+	{ label: '5 col', value: 'fk-offset-5' },
+	{ label: '6 col', value: 'fk-offset-6' },
+];
+
+const OFFSET_RIGHT_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: '1 col', value: 'fk-offset-r-1' },
+	{ label: '2 col', value: 'fk-offset-r-2' },
+	{ label: '3 col', value: 'fk-offset-r-3' },
+	{ label: '4 col', value: 'fk-offset-r-4' },
+	{ label: '5 col', value: 'fk-offset-r-5' },
+	{ label: '6 col', value: 'fk-offset-r-6' },
+];
+
+/**
+ * Helper: extract fk-col-* class from className string.
+ */
+function getColClass(className) {
+	const match = (className || '').match(/\bfk-col-(\d+)\b/);
+	return match ? match[0] : '';
+}
+
+function getOffsetClass(className, direction) {
+	const prefix = direction === 'right' ? 'fk-offset-r-' : 'fk-offset-';
+	const regex = direction === 'right'
+		? /\bfk-offset-r-(\d+)\b/
+		: /\bfk-offset-(\d+)\b/;
+	const match = (className || '').match(regex);
+	return match ? match[0] : '';
+}
+
+function replaceClassByPrefix(className, prefix, newClass) {
+	// Remove old class with this prefix, add new one
+	const regex = new RegExp(`\\b${prefix}\\d+\\b`, 'g');
+	let cleaned = (className || '').replace(regex, '').replace(/\s+/g, ' ').trim();
+	if (newClass) {
+		cleaned = cleaned ? cleaned + ' ' + newClass : newClass;
+	}
+	return cleaned;
+}
+
 const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const { attributes, setAttributes, clientId } = props;
 		const layout = attributes.fkLayout || {};
 		const isGroup = props.name === 'core/group';
 		const fkColumns = attributes.fkColumns || 0;
+		const className = attributes.className || '';
+
+		// Detect if this block is a column (has fk-col-* class)
+		const isColumn = /\bfk-col-\d+\b/.test(className);
+		const currentColSize = getColClass(className);
+		const currentOffsetLeft = getOffsetClass(className, 'left');
+		const currentOffsetRight = getOffsetClass(className, 'right');
 
 		const isFlex = layout.display === 'fk-d-flex' || layout.display === 'fk-d-iflex';
 
@@ -193,6 +299,26 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 			setAttributes({ fkColumns: 0 });
 		}, [setAttributes]);
 
+		// Column size/offset handlers
+		const updateColSize = useCallback((newClass) => {
+			let updated = replaceClassByPrefix(className, 'fk-col-', newClass);
+			setAttributes({ className: updated });
+		}, [className, setAttributes]);
+
+		const updateOffsetLeft = useCallback((newClass) => {
+			// Remove old fk-offset-N (but not fk-offset-r-N)
+			let updated = className.replace(/\bfk-offset-(?!r-)\d+\b/g, '').replace(/\s+/g, ' ').trim();
+			if (newClass) {
+				updated = updated ? updated + ' ' + newClass : newClass;
+			}
+			setAttributes({ className: updated });
+		}, [className, setAttributes]);
+
+		const updateOffsetRight = useCallback((newClass) => {
+			let updated = replaceClassByPrefix(className, 'fk-offset-r-', newClass);
+			setAttributes({ className: updated });
+		}, [className, setAttributes]);
+
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
@@ -238,6 +364,37 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 										__nextHasNoMarginBottom
 									/>
 								)}
+							</div>
+						)}
+
+						{isColumn && (
+							<div className="fk-layout-panel__col-settings">
+								<div className="fk-layout-panel__columns-label">
+									{__('Column Size & Offset', 'wp-figmakit')}
+								</div>
+								<SelectControl
+									label={__('Size', 'wp-figmakit')}
+									value={currentColSize}
+									options={COL_SIZE_OPTIONS}
+									onChange={updateColSize}
+									__nextHasNoMarginBottom
+								/>
+								<div className="fk-layout-panel__offset-row">
+									<SelectControl
+										label={__('Offset Left', 'wp-figmakit')}
+										value={currentOffsetLeft}
+										options={OFFSET_LEFT_OPTIONS}
+										onChange={updateOffsetLeft}
+										__nextHasNoMarginBottom
+									/>
+									<SelectControl
+										label={__('Offset Right', 'wp-figmakit')}
+										value={currentOffsetRight}
+										options={OFFSET_RIGHT_OPTIONS}
+										onChange={updateOffsetRight}
+										__nextHasNoMarginBottom
+									/>
+								</div>
 							</div>
 						)}
 
@@ -288,6 +445,57 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 								/>
 							</Fragment>
 						)}
+						<div className="fk-layout-panel__responsive">
+							<div className="fk-layout-panel__columns-label">
+								{__('Tablet Override', 'wp-figmakit')}
+							</div>
+							<div className="fk-layout-panel__responsive-row">
+								<SelectControl
+									label={__('Display', 'wp-figmakit')}
+									value={(attributes.fkLayoutTablet || {}).display || ''}
+									options={TABLET_DISPLAY_OPTIONS}
+									onChange={(val) => setAttributes({
+										fkLayoutTablet: { ...(attributes.fkLayoutTablet || {}), display: val }
+									})}
+									__nextHasNoMarginBottom
+								/>
+								<SelectControl
+									label={__('Direction', 'wp-figmakit')}
+									value={(attributes.fkLayoutTablet || {}).direction || ''}
+									options={TABLET_DIRECTION_OPTIONS}
+									onChange={(val) => setAttributes({
+										fkLayoutTablet: { ...(attributes.fkLayoutTablet || {}), direction: val }
+									})}
+									__nextHasNoMarginBottom
+								/>
+							</div>
+						</div>
+
+						<div className="fk-layout-panel__responsive">
+							<div className="fk-layout-panel__columns-label">
+								{__('Mobile Override', 'wp-figmakit')}
+							</div>
+							<div className="fk-layout-panel__responsive-row">
+								<SelectControl
+									label={__('Display', 'wp-figmakit')}
+									value={(attributes.fkLayoutMobile || {}).display || ''}
+									options={MOBILE_DISPLAY_OPTIONS}
+									onChange={(val) => setAttributes({
+										fkLayoutMobile: { ...(attributes.fkLayoutMobile || {}), display: val }
+									})}
+									__nextHasNoMarginBottom
+								/>
+								<SelectControl
+									label={__('Direction', 'wp-figmakit')}
+									value={(attributes.fkLayoutMobile || {}).direction || ''}
+									options={MOBILE_DIRECTION_OPTIONS}
+									onChange={(val) => setAttributes({
+										fkLayoutMobile: { ...(attributes.fkLayoutMobile || {}), direction: val }
+									})}
+									__nextHasNoMarginBottom
+								/>
+							</div>
+						</div>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>

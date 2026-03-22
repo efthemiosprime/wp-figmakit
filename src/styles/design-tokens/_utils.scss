@@ -3,6 +3,8 @@
  * All prefixed with fk- to avoid collisions
  */
 
+@use 'variables' as *;
+
 // Display
 .fk-d-block { display: block; }
 .fk-d-iblock { display: inline-block; }
@@ -11,6 +13,24 @@
 .fk-d-iflex { display: inline-flex; }
 .fk-d-grid { display: grid; }
 .fk-d-none { display: none; }
+
+// Responsive Display — Tablet
+@media (max-width: #{$bp-tablet-max}) {
+  .fk-t-d-block { display: block !important; }
+  .fk-t-d-flex { display: flex !important; }
+  .fk-t-d-none { display: none !important; }
+  .fk-t-dir-row { flex-direction: row !important; }
+  .fk-t-dir-col { flex-direction: column !important; }
+}
+
+// Responsive Display — Mobile
+@media (max-width: #{$bp-mobile-max}) {
+  .fk-m-d-block { display: block !important; }
+  .fk-m-d-flex { display: flex !important; }
+  .fk-m-d-none { display: none !important; }
+  .fk-m-dir-row { flex-direction: row !important; }
+  .fk-m-dir-col { flex-direction: column !important; }
+}
 
 // Flex Direction
 .fk-dir-row { flex-direction: row; }

@@ -3,8 +3,18 @@
 	font-family: var(--wp--preset--font-family--system);
 
 	// Reset Gutenberg layout constraints in editor
-	.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+	.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)):not(.fk-row) {
 		max-width: none;
+	}
+
+	// fk-row in editor — respect grid max-width
+	.fk-row,
+	.is-layout-constrained > .fk-row {
+		max-width: var(--fk-container-max, 1440px) !important;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		padding-left: var(--fk-container-padding, 160px) !important;
+		padding-right: var(--fk-container-padding, 160px) !important;
 	}
 
 	// ------------------------------------------------------------------

@@ -40,4 +40,29 @@
 		justify-content: center;
 		font-weight: 600;
 	}
+
+	.fk-layout-panel__col-settings {
+		margin-bottom: 16px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.fk-layout-panel__offset-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		margin-top: 8px;
+	}
+
+	.fk-layout-panel__responsive {
+		margin-top: 16px;
+		padding-top: 16px;
+		border-top: 1px solid #e0e0e0;
+	}
+
+	.fk-layout-panel__responsive-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+	}
 }

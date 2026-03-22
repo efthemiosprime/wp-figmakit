@@ -13,11 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Add layout classes to server-rendered blocks.
  */
 function wp_figmakit_apply_block_layout( $block_content, $block ) {
-	if ( empty( $block['attrs']['fkLayout'] ) || empty( $block_content ) ) {
+	$has_layout  = ! empty( $block['attrs']['fkLayout'] );
+	$has_tablet  = ! empty( $block['attrs']['fkLayoutTablet'] );
+	$has_mobile  = ! empty( $block['attrs']['fkLayoutMobile'] );
+
+	if ( ( ! $has_layout && ! $has_tablet && ! $has_mobile ) || empty( $block_content ) ) {
 		return $block_content;
 	}
-
-	$layout = $block['attrs']['fkLayout'];
 
 	$allowed = array(
 		'fk-d-block', 'fk-d-flex', 'fk-d-iflex', 'fk-d-grid', 'fk-d-none',
@@ -26,12 +28,40 @@ function wp_figmakit_apply_block_layout( $block_content, $block ) {
 		'fk-ai-start', 'fk-ai-center', 'fk-ai-end', 'fk-ai-stretch', 'fk-ai-baseline',
 		'fk-wrap', 'fk-nowrap',
 		'gap-3xl', 'gap-2xl', 'gap-xl', 'gap-lg', 'gap-md', 'gap-sm', 'gap-xs', 'gap-2xs', 'gap-3xs', 'gap-4xs', 'gap-0',
+		// Tablet responsive
+		'fk-t-d-block', 'fk-t-d-flex', 'fk-t-d-none',
+		'fk-t-dir-row', 'fk-t-dir-col',
+		// Mobile responsive
+		'fk-m-d-block', 'fk-m-d-flex', 'fk-m-d-none',
+		'fk-m-dir-row', 'fk-m-dir-col',
 	);
 
 	$classes = array();
-	foreach ( $layout as $value ) {
-		if ( ! empty( $value ) && in_array( $value, $allowed, true ) ) {
-			$classes[] = $value;
+
+	// Desktop layout
+	if ( $has_layout ) {
+		foreach ( $block['attrs']['fkLayout'] as $value ) {
+			if ( ! empty( $value ) && in_array( $value, $allowed, true ) ) {
+				$classes[] = $value;
+			}
+		}
+	}
+
+	// Tablet overrides
+	if ( $has_tablet ) {
+		foreach ( $block['attrs']['fkLayoutTablet'] as $value ) {
+			if ( ! empty( $value ) && in_array( $value, $allowed, true ) ) {
+				$classes[] = $value;
+			}
+		}
+	}
+
+	// Mobile overrides
+	if ( $has_mobile ) {
+		foreach ( $block['attrs']['fkLayoutMobile'] as $value ) {
+			if ( ! empty( $value ) && in_array( $value, $allowed, true ) ) {
+				$classes[] = $value;
+			}
 		}
 	}
 
