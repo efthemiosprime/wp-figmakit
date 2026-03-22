@@ -1,0 +1,36 @@
+// Toolbar dropdown
+.fk-text-style-toolbar {
+	.components-dropdown-menu__toggle {
+		font-size: 13px;
+		min-width: auto;
+		gap: 4px;
+	}
+}
+
+.fk-text-style-toolbar__clear {
+	color: #cc1818 !important;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.components-menu-item__button.is-active {
+	font-weight: 600;
+	background: rgba(0, 124, 186, 0.08);
+}
+
+// Inspector panel
+.fk-text-style-panel {
+	.components-base-control {
+		margin-bottom: 12px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.components-base-control__label {
+		font-size: 11px;
+		font-weight: 500;
+		text-transform: uppercase;
+		color: #757575;
+	}
+}

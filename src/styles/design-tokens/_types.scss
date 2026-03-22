@@ -1,8 +1,133 @@
 /**
  * Typography Tokens
+ * Font families, type scale, and text style utility classes
  */
 
 :root {
+  // Font Families
   --fk-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   --fk-font-mono: 'SF Mono', 'Fira Code', monospace;
+
+  // Type Scale
+  --fk-fs-title: 48px;
+  --fk-fs-subtitle: 32px;
+  --fk-fs-eyebrow: 12px;
+  --fk-fs-body-lg: 18px;
+  --fk-fs-body-md: 16px;
+  --fk-fs-body-sm: 14px;
+  --fk-fs-caption: 12px;
+  --fk-fs-footnote: 11px;
+  --fk-fs-link: 16px;
+
+  // Line Heights
+  --fk-lh-tight: 1.2;
+  --fk-lh-normal: 1.5;
+  --fk-lh-relaxed: 1.75;
 }
+
+// ==========================================================================
+// Tablet Overrides
+// ==========================================================================
+
+@media (max-width: 980px) {
+  :root {
+    --fk-fs-title: 36px;
+    --fk-fs-subtitle: 26px;
+  }
+}
+
+// ==========================================================================
+// Mobile Overrides
+// ==========================================================================
+
+@media (max-width: 767px) {
+  :root {
+    --fk-fs-title: 28px;
+    --fk-fs-subtitle: 22px;
+    --fk-fs-body-lg: 16px;
+  }
+}
+
+// ==========================================================================
+// Text Style Classes
+// ==========================================================================
+
+.fk-text-title {
+  font-size: var(--fk-fs-title);
+  line-height: var(--fk-lh-tight);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.fk-text-subtitle {
+  font-size: var(--fk-fs-subtitle);
+  line-height: var(--fk-lh-tight);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.fk-text-eyebrow {
+  font-size: var(--fk-fs-eyebrow);
+  line-height: var(--fk-lh-normal);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fk-text-body-lg {
+  font-size: var(--fk-fs-body-lg);
+  line-height: var(--fk-lh-relaxed);
+  font-weight: 400;
+}
+
+.fk-text-body-md {
+  font-size: var(--fk-fs-body-md);
+  line-height: var(--fk-lh-normal);
+  font-weight: 400;
+}
+
+.fk-text-body-sm {
+  font-size: var(--fk-fs-body-sm);
+  line-height: var(--fk-lh-normal);
+  font-weight: 400;
+}
+
+.fk-text-caption {
+  font-size: var(--fk-fs-caption);
+  line-height: var(--fk-lh-normal);
+  font-weight: 400;
+  color: var(--fk-color-text-light, #666);
+}
+
+.fk-text-footnote {
+  font-size: var(--fk-fs-footnote);
+  line-height: var(--fk-lh-normal);
+  font-weight: 400;
+  color: var(--fk-color-text-light, #666);
+}
+
+.fk-text-link {
+  font-size: var(--fk-fs-link);
+  line-height: var(--fk-lh-normal);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+// ==========================================================================
+// Font Weight Classes
+// ==========================================================================
+
+.fk-fw-light { font-weight: 300; }
+.fk-fw-normal { font-weight: 400; }
+.fk-fw-medium { font-weight: 500; }
+.fk-fw-semibold { font-weight: 600; }
+.fk-fw-bold { font-weight: 700; }
+.fk-fw-black { font-weight: 900; }
+
+// ==========================================================================
+// Font Family Classes
+// ==========================================================================
+
+.fk-ff-sans { font-family: var(--fk-font-sans); }
+.fk-ff-mono { font-family: var(--fk-font-mono); }
