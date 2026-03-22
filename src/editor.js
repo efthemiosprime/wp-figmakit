@@ -5,3 +5,7 @@ import './components/responsive-visibility/index.jsx';
 import './components/responsive-visibility/responsive-visibility.scss';
 import './components/button-icons/index.jsx';
 import './components/button-icons/button-icons.scss';
+import './components/block-spacing/index.jsx';
+import './components/block-spacing/block-spacing.scss';
+import './components/block-layout/index.jsx';
+import './components/block-layout/block-layout.scss';

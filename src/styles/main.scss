@@ -1,17 +1,11 @@
 // WP Figmakit Theme Styles
 
-:root {
-	--fk-color-primary: #1a1a2e;
-	--fk-color-secondary: #16213e;
-	--fk-color-accent: #0f3460;
-	--fk-color-highlight: #e94560;
-	--fk-color-text: #333;
-	--fk-color-text-light: #666;
-	--fk-color-bg: #fff;
-	--fk-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-	--fk-font-mono: 'SF Mono', 'Fira Code', monospace;
-	--fk-max-width: 1200px;
-}
+// Design Tokens
+@use './design-tokens/variables' as *;
+@use './design-tokens/colors';
+@use './design-tokens/types';
+@use './design-tokens/spacing';
+@use './design-tokens/utils';
 
 *,
 *::before,
@@ -34,12 +28,12 @@ body {
 	align-items: center;
 	justify-content: space-between;
 	padding: 1rem 2rem;
-	max-width: var(--fk-max-width);
+	max-width: $max-width;
 	margin: 0 auto;
 }
 
 .site-main {
-	max-width: var(--fk-max-width);
+	max-width: $max-width;
 	margin: 0 auto;
 	padding: 2rem;
 }
@@ -143,7 +137,7 @@ article {
 
 // Gutenberg alignment support
 .alignwide {
-	max-width: calc(var(--fk-max-width) + 200px);
+	max-width: calc(#{$max-width} + 200px);
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -156,13 +150,13 @@ article {
 }
 
 // Responsive Visibility
-@media (min-width: 1025px) {
+@media (min-width: $bp-desktop-min) {
 	.fk-hide-desktop { display: none !important; }
 }
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: $bp-tablet-max) {
 	.fk-hide-tablet { display: none !important; }
 }
-@media (max-width: 767px) {
+@media (max-width: $bp-mobile-max) {
 	.fk-hide-mobile { display: none !important; }
 }
 

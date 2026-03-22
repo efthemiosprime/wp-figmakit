@@ -34,6 +34,7 @@ addFilter('blocks.registerBlockType', 'wp-figmakit/block-attributes', (settings)
 			default: [],
 		},
 	};
+
 	return settings;
 });
 

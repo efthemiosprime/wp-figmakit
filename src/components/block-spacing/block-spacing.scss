@@ -1,0 +1,87 @@
+.fk-spacing-panel {
+	.fk-spacing-panel__section {
+		margin-bottom: 16px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid #e0e0e0;
+
+		&:last-child {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+	}
+
+	.fk-spacing-panel__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 8px;
+	}
+
+	.fk-spacing-panel__heading {
+		font-size: 11px;
+		font-weight: 500;
+		text-transform: uppercase;
+		color: #757575;
+	}
+
+	.fk-spacing-panel__links {
+		display: flex;
+		gap: 4px;
+	}
+
+	.fk-spacing-panel__link {
+		min-width: 24px !important;
+		height: 24px !important;
+		padding: 0 !important;
+
+		.dashicon, .dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+		}
+
+		&.is-linked {
+			color: var(--wp-admin-theme-color, #007cba);
+		}
+
+		&:not(.is-linked) {
+			color: #757575;
+		}
+	}
+
+	.fk-spacing-panel__single {
+		.components-base-control {
+			margin-bottom: 0;
+		}
+	}
+
+	.fk-spacing-panel__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.fk-spacing-panel__pair {
+		display: grid;
+		grid-template-columns: 24px 1fr 1fr;
+		gap: 8px;
+		align-items: end;
+
+		.fk-spacing-panel__link {
+			align-self: center;
+		}
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__label {
+			font-size: 11px;
+		}
+
+		.components-select-control__input:disabled {
+			opacity: 0.5;
+		}
+	}
+}

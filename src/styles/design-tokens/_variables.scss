@@ -1,0 +1,23 @@
+/**
+ * Global Variables
+ */
+
+// Breakpoints
+$bp-desktop-min: 1025px !default;
+$bp-tablet-max: 980px !default;
+$bp-mobile-max: 767px !default;
+
+// Layout
+$max-width: 1200px !default;
+
+// Spacing (static defaults — CSS custom properties in _spacing.scss)
+$spacing-3xl: 96px !default;
+$spacing-2xl: 80px !default;
+$spacing-xl: 48px !default;
+$spacing-lg: 32px !default;
+$spacing-md: 24px !default;
+$spacing-sm: 20px !default;
+$spacing-xs: 16px !default;
+$spacing-2xs: 12px !default;
+$spacing-3xs: 8px !default;
+$spacing-4xs: 4px !default;

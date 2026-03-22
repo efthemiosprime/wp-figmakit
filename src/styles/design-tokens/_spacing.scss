@@ -1,0 +1,148 @@
+@use 'variables' as *;
+
+/**
+ * Spacing System
+ * Unified responsive spacing tokens from Figma (Desktop, Tablet, Mobile)
+ * One scale for padding, margin, and gap
+ */
+
+// ==========================================================================
+// Spacing CSS Custom Properties
+// ==========================================================================
+
+:root {
+  --spacing-3xl: #{$spacing-3xl};
+  --spacing-2xl: #{$spacing-2xl};
+  --spacing-xl: #{$spacing-xl};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-md: #{$spacing-md};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-xs: #{$spacing-xs};
+  --spacing-2xs: #{$spacing-2xs};
+  --spacing-3xs: #{$spacing-3xs};
+  --spacing-4xs: #{$spacing-4xs};
+
+  // Button-specific
+  --spacing-button-lg: 20px;
+  --spacing-button-sm: 16px;
+}
+
+// ==========================================================================
+// Tablet Overrides (max-width: 980px)
+// ==========================================================================
+
+@media (max-width: #{$bp-tablet-max}) {
+  :root {
+    --spacing-3xl: 64px;
+    --spacing-2xl: 56px;
+    --spacing-xl: 40px;
+    --spacing-lg: 28px;
+  }
+}
+
+// ==========================================================================
+// Mobile Overrides (max-width: 767px)
+// ==========================================================================
+
+@media (max-width: #{$bp-mobile-max}) {
+  :root {
+    --spacing-3xl: 48px;
+    --spacing-2xl: 40px;
+    --spacing-xl: 32px;
+    --spacing-lg: 24px;
+    --spacing-md: 20px;
+    --spacing-sm: 16px;
+  }
+}
+
+// ==========================================================================
+// Spacing map for utility generation
+// ==========================================================================
+
+$spacing-sizes: (
+  '3xl': var(--spacing-3xl),
+  '2xl': var(--spacing-2xl),
+  'xl': var(--spacing-xl),
+  'lg': var(--spacing-lg),
+  'md': var(--spacing-md),
+  'sm': var(--spacing-sm),
+  'xs': var(--spacing-xs),
+  '2xs': var(--spacing-2xs),
+  '3xs': var(--spacing-3xs),
+  '4xs': var(--spacing-4xs),
+  '0': 0,
+);
+
+// ==========================================================================
+// Spacing Mixins
+// ==========================================================================
+
+@mixin section-padding($size: 'xl') {
+  padding-top: var(--spacing-#{$size});
+  padding-bottom: var(--spacing-#{$size});
+}
+
+@mixin gap($size: 'lg') {
+  gap: var(--spacing-#{$size});
+}
+
+@mixin padding($size: 'md') {
+  padding: var(--spacing-#{$size});
+}
+
+// ==========================================================================
+// Utility Classes - Gap
+// ==========================================================================
+
+@each $name, $val in $spacing-sizes {
+  .gap-#{$name} { gap: $val; }
+  .gap-y-#{$name} { row-gap: $val; }
+  .gap-x-#{$name} { column-gap: $val; }
+}
+
+// ==========================================================================
+// Utility Classes - Padding
+// ==========================================================================
+
+@each $name, $val in $spacing-sizes {
+  .p-#{$name} { padding: $val; }
+  .py-#{$name} { padding-top: $val; padding-bottom: $val; }
+  .px-#{$name} { padding-left: $val; padding-right: $val; }
+  .pt-#{$name} { padding-top: $val; }
+  .pb-#{$name} { padding-bottom: $val; }
+  .pl-#{$name} { padding-left: $val; }
+  .pr-#{$name} { padding-right: $val; }
+}
+
+// ==========================================================================
+// Utility Classes - Margin
+// ==========================================================================
+
+@each $name, $val in $spacing-sizes {
+  .m-#{$name} { margin: $val; }
+  .my-#{$name} { margin-top: $val; margin-bottom: $val; }
+  .mx-#{$name} { margin-left: $val; margin-right: $val; }
+  .mt-#{$name} { margin-top: $val; }
+  .mb-#{$name} { margin-bottom: $val; }
+  .ml-#{$name} { margin-left: $val; }
+  .mr-#{$name} { margin-right: $val; }
+}
+
+.m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-auto { margin-top: auto; margin-bottom: auto; }
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+
+// ==========================================================================
+// Section Spacing Classes
+// ==========================================================================
+
+.section { @include section-padding('xl'); }
+.section-3xl { @include section-padding('3xl'); }
+.section-2xl { @include section-padding('2xl'); }
+.section-lg { @include section-padding('lg'); }
+.section-md { @include section-padding('md'); }
+.section-sm { @include section-padding('sm'); }
