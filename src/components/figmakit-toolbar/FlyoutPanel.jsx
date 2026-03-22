@@ -1,8 +1,8 @@
 const { __ } = wp.i18n;
 
-export default function FlyoutPanel({ title, isOpen, onClose, children }) {
+export default function FlyoutPanel({ title, isOpen, onClose, children, className }) {
 	return (
-		<div className={`fk-flyout ${isOpen ? 'is-open' : ''}`}>
+		<div className={`fk-flyout ${isOpen ? 'is-open' : ''}${className ? ' ' + className : ''}`}>
 			<div className="fk-flyout__header">
 				<h2 className="fk-flyout__title">{title}</h2>
 				<button

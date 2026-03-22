@@ -82,6 +82,10 @@
 // Flyout panel
 .fk-flyout {
 	width: 300px;
+
+	&--wide {
+		width: 600px;
+	}
 	height: 100%;
 	background: #fff;
 	box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
@@ -395,6 +399,110 @@
 
 	.components-color-picker {
 		width: 100% !important;
+	}
+}
+
+// Patterns panel
+.fk-panel-patterns {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	&__search {
+		.components-base-control {
+			margin-bottom: 0;
+		}
+	}
+
+	&__save-bar {
+		padding-bottom: 12px;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	&__save-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	&__save-fields {
+		display: flex;
+		gap: 6px;
+		align-items: flex-end;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+	}
+
+	&__empty {
+		text-align: center;
+		color: #757575;
+		font-size: 13px;
+		padding: 24px 0;
+		margin: 0;
+	}
+}
+
+.fk-pattern-card {
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	overflow: hidden;
+	transition: border-color 0.15s ease;
+
+	&:hover {
+		border-color: #007cba;
+	}
+
+	&__preview {
+		height: 120px;
+		overflow: hidden;
+		background: #f8f8f8;
+		border-bottom: 1px solid #e0e0e0;
+		pointer-events: none;
+		cursor: pointer;
+
+		.block-editor-block-preview__container {
+			transform-origin: top left;
+		}
+	}
+
+	&__placeholder {
+		height: 100%;
+		background: #f0f0f0;
+	}
+
+	&__info {
+		padding: 8px 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__title {
+		font-size: 13px;
+		font-weight: 600;
+		color: #1e1e1e;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 4px;
+
+		.components-button {
+			font-size: 11px !important;
+			min-height: 24px;
+			padding: 0 6px;
+		}
 	}
 }
 
