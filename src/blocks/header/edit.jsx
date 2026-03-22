@@ -204,7 +204,7 @@ export default function Edit({ attributes, setAttributes }) {
 				<div className="fk-header__inner">
 					{variant === 'default' ? (
 						<Fragment>
-							<div className="fk-header__row fk-header__row--top">
+							<div className="fk-header__row fk-header__row--main">
 								<div className="fk-header__logo">
 									<InnerBlocks
 										template={INNER_BLOCKS_TEMPLATE}
@@ -212,12 +212,16 @@ export default function Edit({ attributes, setAttributes }) {
 										templateLock={false}
 									/>
 								</div>
-							</div>
-							<div className="fk-header__row fk-header__row--main">
-								{showUtilityMenu && (
-									<MenuPreview menuId={utilityMenuId} type="utility" label={__('Utility Menu', 'wp-figmakit')} />
-								)}
-								<MenuPreview menuId={mainMenuId} type="primary" label={__('Main Menu', 'wp-figmakit')} />
+								<div className="fk-header__menus">
+									{showUtilityMenu && (
+										<div className="fk-header__menus-row">
+											<MenuPreview menuId={utilityMenuId} type="utility" label={__('Utility Menu', 'wp-figmakit')} />
+										</div>
+									)}
+									<div className="fk-header__menus-row">
+										<MenuPreview menuId={mainMenuId} type="primary" label={__('Main Menu', 'wp-figmakit')} />
+									</div>
+								</div>
 							</div>
 						</Fragment>
 					) : (

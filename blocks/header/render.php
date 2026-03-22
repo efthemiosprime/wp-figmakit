@@ -60,19 +60,20 @@ if ( $show_skip ) : ?>
 
 		<?php if ( 'default' === $variant ) : ?>
 
-			<div class="fk-header__row fk-header__row--top">
+			<div class="fk-header__row fk-header__row--main">
 				<div class="fk-header__logo">
 					<?php echo $content; ?>
 				</div>
-			</div>
-
-			<div class="fk-header__row fk-header__row--main">
-				<?php
-				if ( $show_utility ) {
-					$render_nav( $utility_menu_id, 'utility' );
-				}
-				$render_nav( $main_menu_id, 'primary' );
-				?>
+				<div class="fk-header__menus">
+					<?php if ( $show_utility ) : ?>
+					<div class="fk-header__menus-row">
+						<?php $render_nav( $utility_menu_id, 'utility' ); ?>
+					</div>
+					<?php endif; ?>
+					<div class="fk-header__menus-row">
+						<?php $render_nav( $main_menu_id, 'primary' ); ?>
+					</div>
+				</div>
 				<button class="fk-header__toggle" aria-expanded="false" aria-controls="fk-header-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle menu', 'wp-figmakit' ); ?>">
 					<span class="fk-header__toggle-bar"></span>
 					<span class="fk-header__toggle-bar"></span>
