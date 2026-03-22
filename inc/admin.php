@@ -72,7 +72,93 @@ function wp_figmakit_sanitize_options( $input ) {
 		}
 	}
 
+	// CSP toggle
+	$sanitized['enable_csp'] = ! empty( $input['enable_csp'] ) ? 1 : 0;
+
+	// CSP directive fields — sanitize as plain text (no HTML)
+	$csp_directives = wp_figmakit_get_csp_directives();
+	foreach ( array_keys( $csp_directives ) as $directive ) {
+		$key = 'csp_' . $directive;
+		$sanitized[ $key ] = isset( $input[ $key ] ) ? sanitize_text_field( $input[ $key ] ) : '';
+	}
+
 	return $sanitized;
+}
+
+/**
+ * Get CSP directive definitions with defaults and descriptions.
+ */
+function wp_figmakit_get_csp_directives() {
+	return array(
+		'default-src' => array(
+			'default'     => "'self'",
+			'description' => 'Fallback for all resource types not explicitly defined.',
+		),
+		'script-src' => array(
+			'default'     => "'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.cookielaw.org https://geolocation.onetrust.com https://connect.facebook.net https://bat.bing.com https://www.clarity.ms https://scripts.clarity.ms https://q.clarity.ms https://cdnjs.cloudflare.com https://code.jquery.com",
+			'description' => 'Sources allowed to load JavaScript. Includes GA, GTM, OneTrust, Facebook, Bing, Clarity, Cloudflare.',
+		),
+		'style-src' => array(
+			'default'     => "'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.cookielaw.org",
+			'description' => 'Sources allowed to load CSS stylesheets.',
+		),
+		'font-src' => array(
+			'default'     => "'self' data: https://fonts.gstatic.com",
+			'description' => 'Sources allowed to load fonts.',
+		),
+		'img-src' => array(
+			'default'     => "'self' data: https: http:",
+			'description' => 'Sources allowed to load images. Allows all HTTPS/HTTP for tracking pixels.',
+		),
+		'connect-src' => array(
+			'default'     => "'self' https://www.google-analytics.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://cdn.cookielaw.org https://geolocation.onetrust.com https://privacyportal.onetrust.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://www.clarity.ms https://scripts.clarity.ms https://q.clarity.ms https://h.clarity.ms https://cdnjs.cloudflare.com",
+			'description' => 'Sources allowed for fetch, XHR, WebSocket connections.',
+		),
+		'frame-src' => array(
+			'default'     => "'self' https://www.googletagmanager.com https://www.google-analytics.com https://stats.g.doubleclick.net https://cdn.cookielaw.org https://geolocation.onetrust.com https://bat.bing.com https://www.clarity.ms https://scripts.clarity.ms https://q.clarity.ms",
+			'description' => 'Sources allowed to be embedded in iframes.',
+		),
+		'media-src' => array(
+			'default'     => "'self' data: https:",
+			'description' => 'Sources allowed to load audio/video.',
+		),
+		'worker-src' => array(
+			'default'     => "'self' blob:",
+			'description' => 'Sources allowed for Web Workers and Service Workers.',
+		),
+		'child-src' => array(
+			'default'     => "'self' blob:",
+			'description' => 'Sources allowed for web workers and nested browsing contexts.',
+		),
+		'frame-ancestors' => array(
+			'default'     => "'self'",
+			'description' => 'Who can embed this site in an iframe. Prevents clickjacking.',
+		),
+		'base-uri' => array(
+			'default'     => "'self'",
+			'description' => 'Restricts URLs that can be used in the <base> element.',
+		),
+		'form-action' => array(
+			'default'     => "'self'",
+			'description' => 'Restricts URLs that forms can submit to.',
+		),
+	);
+}
+
+/**
+ * Build the full CSP header string from defaults + overrides.
+ */
+function wp_figmakit_build_csp_header() {
+	$directives = wp_figmakit_get_csp_directives();
+	$parts      = array();
+
+	foreach ( $directives as $directive => $info ) {
+		$custom = wp_figmakit_get_option( 'csp_' . $directive, '' );
+		$value  = ! empty( $custom ) ? $custom : $info['default'];
+		$parts[] = $directive . ' ' . $value;
+	}
+
+	return implode( '; ', $parts );
 }
 
 /**
@@ -168,6 +254,36 @@ function wp_figmakit_options_page() {
 					<p class="description"><?php esc_html_e( 'Code will be output at the bottom of single post content.', 'wp-figmakit' ); ?></p>
 					<textarea name="wp_figmakit_options[post_bottom_code]" rows="8" class="fk-admin__textarea"><?php echo esc_textarea( wp_figmakit_get_option( 'post_bottom_code' ) ); ?></textarea>
 				</div>
+			</div>
+
+			<div class="fk-admin__section">
+				<h2 class="fk-admin__section-title"><?php esc_html_e( 'Content Security Policy (CSP)', 'wp-figmakit' ); ?></h2>
+
+				<label class="fk-admin__toggle" style="margin-bottom: 16px;">
+					<input type="checkbox" name="wp_figmakit_options[enable_csp]" value="1"
+						<?php checked( wp_figmakit_get_option( 'enable_csp' ), 1 ); ?> />
+					<span><?php esc_html_e( 'Enable Content Security Policy', 'wp-figmakit' ); ?></span>
+				</label>
+
+				<p class="description" style="margin-bottom: 16px;">
+					<?php esc_html_e( 'Configure which external sources are allowed to load scripts, styles, fonts, and other resources. Each directive accepts a space-separated list of sources. Leave empty to use the default.', 'wp-figmakit' ); ?>
+				</p>
+
+				<?php
+				$csp_directives = wp_figmakit_get_csp_directives();
+				foreach ( $csp_directives as $directive => $info ) :
+				?>
+				<div class="fk-admin__code-block">
+					<h3><?php echo esc_html( $directive ); ?></h3>
+					<p class="description">
+						<?php echo esc_html( $info['description'] ); ?>
+						<br />
+						<strong><?php esc_html_e( 'Default:', 'wp-figmakit' ); ?></strong>
+						<code><?php echo esc_html( $info['default'] ); ?></code>
+					</p>
+					<textarea name="wp_figmakit_options[csp_<?php echo esc_attr( $directive ); ?>]" rows="3" class="fk-admin__textarea fk-admin__textarea--sm"><?php echo esc_textarea( wp_figmakit_get_option( 'csp_' . $directive, '' ) ); ?></textarea>
+				</div>
+				<?php endforeach; ?>
 			</div>
 
 			<?php submit_button( __( 'Save Changes', 'wp-figmakit' ) ); ?>

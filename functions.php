@@ -52,3 +52,4 @@ require_once WP_FIGMAKIT_DIR . '/inc/block-layout.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-sizing.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-text-style.php';
 require_once WP_FIGMAKIT_DIR . '/inc/admin.php';
+require_once WP_FIGMAKIT_DIR . '/inc/security.php';
