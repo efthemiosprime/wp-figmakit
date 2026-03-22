@@ -184,6 +184,139 @@
 	}
 }
 
+// Policies panel
+.fk-panel-policies {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	.fk-panel-policies__save {
+		width: 100%;
+		justify-content: center;
+		margin-top: 8px;
+	}
+}
+
+.fk-policy-block {
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.fk-policy-block__header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	background: #f8f8f8;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.fk-policy-block__title {
+	font-size: 13px;
+	font-weight: 600;
+	flex: 1;
+}
+
+.fk-policy-block__slug {
+	font-size: 10px;
+	font-family: 'SF Mono', 'Fira Code', monospace;
+	color: #999;
+}
+
+.fk-policy-block__remove {
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	background: none;
+	color: #cc1818;
+	cursor: pointer;
+	padding: 0;
+	.dashicons { font-size: 16px; width: 16px; height: 16px; }
+}
+
+.fk-policy-block__classes {
+	padding: 8px 12px;
+}
+
+.fk-policy-class {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 0;
+	border-bottom: 1px solid #f0f0f0;
+
+	&:last-of-type {
+		border-bottom: none;
+	}
+}
+
+.fk-policy-class__label {
+	font-size: 13px;
+	flex: 1;
+}
+
+.fk-policy-class__name {
+	font-size: 11px;
+	background: #f0f0f0;
+	padding: 1px 6px;
+	border-radius: 3px;
+	color: #555;
+}
+
+.fk-policy-class__remove {
+	width: 18px;
+	height: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	background: none;
+	color: #cc1818;
+	cursor: pointer;
+	padding: 0;
+	.dashicons { font-size: 14px; width: 14px; height: 14px; }
+}
+
+.fk-policy-add-form {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 8px 0;
+	border-top: 1px solid #e0e0e0;
+	margin-top: 4px;
+
+	.components-base-control {
+		margin-bottom: 0;
+	}
+}
+
+.fk-policy-add-form__actions {
+	display: flex;
+	gap: 6px;
+}
+
+.fk-policy-block__add-btn {
+	margin-top: 4px;
+	font-size: 12px !important;
+}
+
+.fk-policy-add-block {
+	display: flex;
+	gap: 6px;
+	align-items: flex-end;
+	padding-top: 12px;
+	border-top: 1px solid #e0e0e0;
+
+	.components-base-control {
+		flex: 1;
+		margin-bottom: 0;
+	}
+}
+
 .fk-color-field__remove {
 	width: 24px;
 	height: 24px;

@@ -15,3 +15,5 @@ import './components/block-text-style/index.jsx';
 import './components/block-text-style/block-text-style.scss';
 import './components/figmakit-toolbar/index.jsx';
 import './components/figmakit-toolbar/figmakit-toolbar.scss';
+import './components/block-policies/index.jsx';
+import './components/block-policies/block-policies.scss';

@@ -1,0 +1,20 @@
+.fk-policies-panel {
+	.components-checkbox-control {
+		margin-bottom: 8px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.components-checkbox-control__label {
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+	.components-base-control__help {
+		font-family: 'SF Mono', 'Fira Code', monospace;
+		font-size: 11px;
+		color: #757575;
+	}
+}

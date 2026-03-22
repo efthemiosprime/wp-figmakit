@@ -5,10 +5,12 @@ import ToolbarButton from './ToolbarButton';
 import FlyoutPanel from './FlyoutPanel';
 import GridPanel from './panels/GridPanel';
 import ColorsPanel from './panels/ColorsPanel';
+import PoliciesPanel from './panels/PoliciesPanel';
 
 const PANELS = [
 	{ id: 'grid', icon: 'grid-view', label: 'Grid Settings', component: GridPanel },
 	{ id: 'colors', icon: 'art', label: 'Colors', component: ColorsPanel },
+	{ id: 'policies', icon: 'admin-generic', label: 'Policies', component: PoliciesPanel },
 ];
 
 export default function Toolbar() {
