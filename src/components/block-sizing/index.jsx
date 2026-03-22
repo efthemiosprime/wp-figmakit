@@ -182,17 +182,3 @@ const withSizingPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withSizingPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-sizing-panel', withSizingPanel);
-
-/**
- * Apply sizing classes to saved block markup.
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-sizing', (extraProps, blockType, attributes) => {
-	const classes = getSizingClasses(attributes.fkSizing);
-	if (classes.length === 0) return extraProps;
-
-	extraProps.className = extraProps.className
-		? extraProps.className + ' ' + classes.join(' ')
-		: classes.join(' ');
-
-	return extraProps;
-});

@@ -1,0 +1,27 @@
+.fk-columns-panel {
+	.fk-columns-panel__desc {
+		font-size: 12px;
+		color: #757575;
+		margin-bottom: 12px;
+	}
+
+	.fk-columns-panel__presets {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 6px;
+		margin-bottom: 16px;
+	}
+
+	.fk-columns-panel__preset-btn {
+		min-width: 0 !important;
+		justify-content: center;
+		font-weight: 600;
+		font-size: 13px;
+	}
+
+	.fk-columns-panel__clear {
+		width: 100%;
+		justify-content: center;
+		margin-top: 8px;
+	}
+}

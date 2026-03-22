@@ -164,17 +164,3 @@ const withTextStylePanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withTextStylePanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-text-style-panel', withTextStylePanel);
-
-/**
- * Apply text style classes to saved block markup.
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-text-style', (extraProps, blockType, attributes) => {
-	const classes = getTextStyleClasses(attributes.fkTextStyle);
-	if (classes.length === 0) return extraProps;
-
-	extraProps.className = extraProps.className
-		? extraProps.className + ' ' + classes.join(' ')
-		: classes.join(' ');
-
-	return extraProps;
-});

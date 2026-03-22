@@ -1,0 +1,249 @@
+@use 'variables' as *;
+
+/**
+ * Grid System
+ * 12-column responsive grid with container, rows, and columns
+ * All classes prefixed with fk-
+ */
+
+// ==========================================================================
+// Grid Variables
+// ==========================================================================
+
+$grid-columns: 12;
+$grid-container-max: 1440px !default;
+$grid-container-padding: 160px !default;
+$grid-container-padding-tablet: 32px !default;
+$grid-container-padding-mobile: 24px !default;
+$grid-gutter: 24px !default;
+
+:root {
+  --fk-container-max: #{$grid-container-max};
+  --fk-container-padding: #{$grid-container-padding};
+  --fk-gutter: #{$grid-gutter};
+}
+
+@media (max-width: #{$bp-tablet-max}) {
+  :root {
+    --fk-container-padding: #{$grid-container-padding-tablet};
+  }
+}
+
+@media (max-width: #{$bp-mobile-max}) {
+  :root {
+    --fk-container-padding: #{$grid-container-padding-mobile};
+    --fk-gutter: 16px;
+  }
+}
+
+// ==========================================================================
+// Container
+// ==========================================================================
+
+.fk-container {
+  width: 100%;
+  max-width: var(--fk-container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--fk-container-padding);
+  padding-right: var(--fk-container-padding);
+  box-sizing: border-box;
+}
+
+.fk-container-fluid {
+  width: 100%;
+  padding-left: var(--fk-container-padding);
+  padding-right: var(--fk-container-padding);
+  box-sizing: border-box;
+}
+
+// ==========================================================================
+// Row
+// ==========================================================================
+
+.fk-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  max-width: var(--fk-container-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--fk-container-padding) !important;
+  padding-right: var(--fk-container-padding) !important;
+  box-sizing: border-box !important;
+  gap: var(--fk-gutter) !important;
+
+  @media (max-width: #{$bp-mobile-max}) {
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+  }
+}
+
+.fk-row-no-gutter {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 0;
+  margin-right: 0;
+
+  > [class*="fk-col"] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// ==========================================================================
+// Columns — 12-column grid
+// ==========================================================================
+
+// Base column — no padding since row uses gap
+[class*="fk-col"] {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+// Generate column widths: fk-col-1 through fk-col-12
+// Account for gaps: total gaps = (columns - 1) * gutter
+@for $i from 1 through $grid-columns {
+  .fk-col-#{$i} {
+    flex: 0 0 calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns}));
+    max-width: calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns}));
+  }
+}
+
+// Auto column
+.fk-col-auto {
+  width: auto;
+  flex: 0 0 auto;
+  max-width: none;
+}
+
+// Fill column
+.fk-col {
+  flex: 1 0 0%;
+  max-width: 100%;
+}
+
+// ==========================================================================
+// Responsive Columns — Tablet
+// ==========================================================================
+
+@media (max-width: #{$bp-tablet-max}) {
+  @for $i from 1 through $grid-columns {
+    .fk-col-t-#{$i} {
+      flex: 0 0 calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns}));
+      max-width: calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns}));
+    }
+  }
+
+  .fk-col-t-auto {
+    width: auto;
+    flex: 0 0 auto;
+    max-width: none;
+  }
+
+  .fk-col-t-full {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+// ==========================================================================
+// Responsive Columns — Mobile (stack by default)
+// ==========================================================================
+
+@media (max-width: #{$bp-mobile-max}) {
+  // All columns stack full-width on mobile by default
+  [class*="fk-col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  // Override with explicit mobile column classes
+  @for $i from 1 through $grid-columns {
+    .fk-col-m-#{$i} {
+      flex: 0 0 calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns})) !important;
+      max-width: calc((#{$i} / #{$grid-columns}) * 100% - var(--fk-gutter) * (1 - #{$i} / #{$grid-columns})) !important;
+    }
+  }
+
+  .fk-col-m-auto {
+    width: auto;
+    flex: 0 0 auto;
+    max-width: none;
+  }
+
+  .fk-col-m-full {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+// ==========================================================================
+// Column Offset
+// ==========================================================================
+
+@for $i from 0 through ($grid-columns - 1) {
+  .fk-offset-#{$i} {
+    margin-left: calc(#{$i} / #{$grid-columns} * 100%);
+  }
+}
+
+@media (max-width: #{$bp-tablet-max}) {
+  @for $i from 0 through ($grid-columns - 1) {
+    .fk-offset-t-#{$i} {
+      margin-left: calc(#{$i} / #{$grid-columns} * 100%);
+    }
+  }
+}
+
+@media (max-width: #{$bp-mobile-max}) {
+  @for $i from 0 through ($grid-columns - 1) {
+    .fk-offset-m-#{$i} {
+      margin-left: calc(#{$i} / #{$grid-columns} * 100%);
+    }
+  }
+}
+
+// ==========================================================================
+// Column Order
+// ==========================================================================
+
+@for $i from 1 through $grid-columns {
+  .fk-order-#{$i} {
+    order: #{$i};
+  }
+}
+
+.fk-order-first { order: -1; }
+.fk-order-last { order: 999; }
+
+@media (max-width: #{$bp-tablet-max}) {
+  .fk-order-t-first { order: -1; }
+  .fk-order-t-last { order: 999; }
+}
+
+@media (max-width: #{$bp-mobile-max}) {
+  .fk-order-m-first { order: -1; }
+  .fk-order-m-last { order: 999; }
+}
+
+// ==========================================================================
+// Section (vertical rhythm for page sections)
+// ==========================================================================
+
+.fk-section {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+
+  @media (max-width: #{$bp-tablet-max}) {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+  }
+
+  @media (max-width: #{$bp-mobile-max}) {
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+  }
+}

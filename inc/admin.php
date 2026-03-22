@@ -72,6 +72,22 @@ function wp_figmakit_sanitize_options( $input ) {
 		}
 	}
 
+	// Grid fields — validate CSS values
+	$grid_fields = wp_figmakit_get_grid_fields();
+	foreach ( $grid_fields as $field ) {
+		$key = $field['key'];
+		if ( isset( $input[ $key ] ) && ! empty( $input[ $key ] ) ) {
+			$val = wp_strip_all_tags( $input[ $key ] );
+			if ( preg_match( '/^[\d.]+(px|em|rem|%|vw)$/', $val ) ) {
+				$sanitized[ $key ] = $val;
+			} else {
+				$sanitized[ $key ] = $field['default'];
+			}
+		} else {
+			$sanitized[ $key ] = $field['default'];
+		}
+	}
+
 	// CSP toggle
 	$sanitized['enable_csp'] = ! empty( $input['enable_csp'] ) ? 1 : 0;
 
@@ -160,6 +176,73 @@ function wp_figmakit_build_csp_header() {
 
 	return implode( '; ', $parts );
 }
+
+/**
+ * Get grid field definitions with defaults.
+ */
+function wp_figmakit_get_grid_fields() {
+	return array(
+		array(
+			'key'         => 'grid_container_max',
+			'label'       => __( 'Container Max Width', 'wp-figmakit' ),
+			'default'     => '1440px',
+			'description' => 'Maximum width of the .fk-container element.',
+		),
+		array(
+			'key'         => 'grid_container_padding',
+			'label'       => __( 'Container Padding (Desktop)', 'wp-figmakit' ),
+			'default'     => '160px',
+			'description' => 'Left/right padding inside the container on desktop.',
+		),
+		array(
+			'key'         => 'grid_container_padding_tablet',
+			'label'       => __( 'Container Padding (Tablet)', 'wp-figmakit' ),
+			'default'     => '32px',
+			'description' => 'Left/right padding inside the container on tablet.',
+		),
+		array(
+			'key'         => 'grid_container_padding_mobile',
+			'label'       => __( 'Container Padding (Mobile)', 'wp-figmakit' ),
+			'default'     => '24px',
+			'description' => 'Left/right padding inside the container on mobile.',
+		),
+		array(
+			'key'         => 'grid_gutter',
+			'label'       => __( 'Column Gutter (Desktop)', 'wp-figmakit' ),
+			'default'     => '24px',
+			'description' => 'Space between columns.',
+		),
+		array(
+			'key'         => 'grid_gutter_mobile',
+			'label'       => __( 'Column Gutter (Mobile)', 'wp-figmakit' ),
+			'default'     => '16px',
+			'description' => 'Space between columns on mobile.',
+		),
+	);
+}
+
+/**
+ * Output grid CSS custom properties from admin settings.
+ */
+function wp_figmakit_output_grid_css() {
+	$container_max     = wp_figmakit_get_option( 'grid_container_max', '1440px' );
+	$container_padding = wp_figmakit_get_option( 'grid_container_padding', '160px' );
+	$container_tablet  = wp_figmakit_get_option( 'grid_container_padding_tablet', '32px' );
+	$container_mobile  = wp_figmakit_get_option( 'grid_container_padding_mobile', '24px' );
+	$gutter            = wp_figmakit_get_option( 'grid_gutter', '24px' );
+	$gutter_mobile     = wp_figmakit_get_option( 'grid_gutter_mobile', '16px' );
+
+	$css = ":root{";
+	$css .= "--fk-container-max:{$container_max};";
+	$css .= "--fk-container-padding:{$container_padding};";
+	$css .= "--fk-gutter:{$gutter};";
+	$css .= "}";
+	$css .= "@media(max-width:980px){:root{--fk-container-padding:{$container_tablet};}}";
+	$css .= "@media(max-width:767px){:root{--fk-container-padding:{$container_mobile};--fk-gutter:{$gutter_mobile};}}";
+
+	echo "<style id='fk-grid-vars'>{$css}</style>\n";
+}
+add_action( 'wp_head', 'wp_figmakit_output_grid_css', 5 );
 
 /**
  * Get theme option.
@@ -253,6 +336,35 @@ function wp_figmakit_options_page() {
 					<h3><?php esc_html_e( 'Add Code To The Bottom Of Your Posts, Before The Comments', 'wp-figmakit' ); ?></h3>
 					<p class="description"><?php esc_html_e( 'Code will be output at the bottom of single post content.', 'wp-figmakit' ); ?></p>
 					<textarea name="wp_figmakit_options[post_bottom_code]" rows="8" class="fk-admin__textarea"><?php echo esc_textarea( wp_figmakit_get_option( 'post_bottom_code' ) ); ?></textarea>
+				</div>
+			</div>
+
+			<div class="fk-admin__section">
+				<h2 class="fk-admin__section-title"><?php esc_html_e( 'Grid Settings', 'wp-figmakit' ); ?></h2>
+				<p class="description" style="margin-bottom: 16px;">
+					<?php esc_html_e( 'Configure the grid system. Values are used as CSS custom properties and update the grid utility classes.', 'wp-figmakit' ); ?>
+				</p>
+
+				<?php
+				$grid_fields = wp_figmakit_get_grid_fields();
+				?>
+				<div class="fk-admin__grid-settings">
+					<?php foreach ( $grid_fields as $field ) : ?>
+					<div class="fk-admin__field">
+						<label for="fk-<?php echo esc_attr( $field['key'] ); ?>">
+							<?php echo esc_html( $field['label'] ); ?>
+						</label>
+						<input
+							type="text"
+							id="fk-<?php echo esc_attr( $field['key'] ); ?>"
+							name="wp_figmakit_options[<?php echo esc_attr( $field['key'] ); ?>]"
+							value="<?php echo esc_attr( wp_figmakit_get_option( $field['key'], $field['default'] ) ); ?>"
+							placeholder="<?php echo esc_attr( $field['default'] ); ?>"
+							class="fk-admin__input"
+						/>
+						<p class="description"><?php echo esc_html( $field['description'] ); ?> <strong><?php esc_html_e( 'Default:', 'wp-figmakit' ); ?></strong> <code><?php echo esc_html( $field['default'] ); ?></code></p>
+					</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 

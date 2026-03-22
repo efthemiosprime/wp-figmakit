@@ -5,6 +5,7 @@
 @use './design-tokens/colors';
 @use './design-tokens/types';
 @use './design-tokens/spacing';
+@use './design-tokens/grid';
 @use './design-tokens/utils';
 
 *,
@@ -135,18 +136,70 @@ article {
 	}
 }
 
-// Gutenberg alignment support
-.alignwide {
-	max-width: calc(#{$max-width} + 200px);
-	margin-left: auto;
-	margin-right: auto;
+// ==========================================================================
+// Gutenberg Layout Reset — no default constraints
+// Container/padding/margin controlled per block via Group + spacing panel
+// ==========================================================================
+
+// Remove default max-width — blocks are full-width by default
+.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)):not(.fk-row) {
+	max-width: none;
+	margin-left: 0;
+	margin-right: 0;
 }
 
+// fk-row inside constrained layout — keep its max-width
+.is-layout-constrained > .fk-row {
+	max-width: var(--fk-container-max) !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+// Reset root padding
+.has-global-padding {
+	padding-right: 0 !important;
+	padding-left: 0 !important;
+}
+
+// fk-row controls its own padding — override Gutenberg
+.fk-row.has-global-padding,
+.fk-row .has-global-padding {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+// Columns inside fk-row — strip Gutenberg layout interference
+.fk-row [class*="fk-col"] {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+// Override Gutenberg max-width on columns
+.fk-row .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+	max-width: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+// Reset block gap — use spacing panel instead
+.is-layout-constrained > * + * {
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+
+// Full width
 .alignfull {
 	max-width: 100vw;
 	margin-left: calc(50% - 50vw);
 	margin-right: calc(50% - 50vw);
 	width: 100vw;
+}
+
+// Wide — same as full, no constraints
+.alignwide {
+	max-width: none;
 }
 
 // Responsive Visibility

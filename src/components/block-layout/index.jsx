@@ -2,7 +2,9 @@ const { createHigherOrderComponent } = wp.compose;
 const { addFilter } = wp.hooks;
 const { Fragment, useCallback } = wp.element;
 const { InspectorControls } = wp.blockEditor;
-const { PanelBody, SelectControl } = wp.components;
+const { PanelBody, SelectControl, RangeControl, Button } = wp.components;
+const { useSelect, useDispatch } = wp.data;
+const { createBlock } = wp.blocks;
 const { __ } = wp.i18n;
 
 const DISPLAY_OPTIONS = [
@@ -62,10 +64,12 @@ const GAP_OPTIONS = [
 	{ label: '0', value: 'gap-0' },
 ];
 
+const COLUMN_PRESETS = [1, 2, 3, 4, 5, 6, 12];
+
 /**
- * Add fkLayout attribute to all blocks.
+ * Add fkLayout and fkColumns attributes.
  */
-addFilter('blocks.registerBlockType', 'wp-figmakit/block-layout', (settings) => {
+addFilter('blocks.registerBlockType', 'wp-figmakit/block-layout', (settings, name) => {
 	settings.attributes = {
 		...settings.attributes,
 		fkLayout: {
@@ -80,6 +84,15 @@ addFilter('blocks.registerBlockType', 'wp-figmakit/block-layout', (settings) => 
 			},
 		},
 	};
+
+	// Add fkColumns only to core/group
+	if (name === 'core/group') {
+		settings.attributes.fkColumns = {
+			type: 'number',
+			default: 0,
+		};
+	}
+
 	return settings;
 });
 
@@ -92,19 +105,20 @@ function getLayoutClasses(layout) {
 }
 
 /**
- * Layout panel in the block inspector.
+ * Layout panel with columns support for Group blocks.
  */
 const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
-		const { attributes, setAttributes } = props;
+		const { attributes, setAttributes, clientId } = props;
 		const layout = attributes.fkLayout || {};
+		const isGroup = props.name === 'core/group';
+		const fkColumns = attributes.fkColumns || 0;
 
 		const isFlex = layout.display === 'fk-d-flex' || layout.display === 'fk-d-iflex';
 
 		const updateLayout = useCallback((key, value) => {
 			const updated = { ...layout, [key]: value };
 
-			// Clear flex properties when display is not flex
 			if (key === 'display' && value !== 'fk-d-flex' && value !== 'fk-d-iflex') {
 				updated.direction = '';
 				updated.justify = '';
@@ -116,6 +130,69 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 			setAttributes({ fkLayout: updated });
 		}, [layout, setAttributes]);
 
+		// Column management — only for Group blocks
+		const { replaceInnerBlocks } = useDispatch('core/block-editor');
+		const innerBlocks = useSelect((select) => {
+			if (!isGroup) return [];
+			return select('core/block-editor').getBlocks(clientId);
+		}, [clientId, isGroup]);
+
+		const applyColumns = useCallback((count) => {
+			if (!isGroup) return;
+
+			const colSpan = Math.floor(12 / count);
+			const colBlocks = [];
+
+			// Check if there's already a row block with columns
+			const existingRow = innerBlocks.find(
+				(b) => b.name === 'core/group' && (b.attributes.className || '').includes('fk-row')
+			);
+			const existingCols = existingRow ? existingRow.innerBlocks : [];
+
+			for (let i = 0; i < count; i++) {
+				const existingCol = existingCols[i] || null;
+				let colBlock;
+
+				if (existingCol && existingCol.name === 'core/group') {
+					colBlock = createBlock(
+						'core/group',
+						{ ...existingCol.attributes, className: `fk-col-${colSpan}` },
+						existingCol.innerBlocks
+					);
+				} else {
+					colBlock = createBlock(
+						'core/group',
+						{ className: `fk-col-${colSpan}` },
+						[]
+					);
+				}
+
+				colBlocks.push(colBlock);
+			}
+
+			// Create the row Group containing the columns
+			const rowBlock = createBlock(
+				'core/group',
+				{
+					className: 'fk-row',
+					layout: { type: 'flex', flexWrap: 'nowrap' },
+				},
+				colBlocks
+			);
+
+			setAttributes({
+				fkColumns: count,
+				// Parent section uses default constrained layout
+				tagName: 'section',
+			});
+
+			replaceInnerBlocks(clientId, [rowBlock], false);
+		}, [isGroup, innerBlocks, clientId, attributes.className, setAttributes, replaceInnerBlocks]);
+
+		const clearColumns = useCallback(() => {
+			setAttributes({ fkColumns: 0 });
+		}, [setAttributes]);
+
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
@@ -125,6 +202,45 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 						initialOpen={false}
 						className="fk-layout-panel"
 					>
+						{isGroup && (
+							<div className="fk-layout-panel__columns">
+								<div className="fk-layout-panel__columns-label">
+									{__('Columns', 'wp-figmakit')}
+								</div>
+								<div className="fk-layout-panel__columns-presets">
+									{COLUMN_PRESETS.map((cols) => (
+										<Button
+											key={cols}
+											variant={fkColumns === cols ? 'primary' : 'secondary'}
+											size="small"
+											onClick={() => applyColumns(cols)}
+											className="fk-layout-panel__col-btn"
+										>
+											{cols}
+										</Button>
+									))}
+									{fkColumns > 0 && (
+										<Button
+											icon="no-alt"
+											size="small"
+											isDestructive
+											onClick={clearColumns}
+											label={__('Clear', 'wp-figmakit')}
+										/>
+									)}
+								</div>
+								{fkColumns > 0 && (
+									<RangeControl
+										value={fkColumns}
+										onChange={(val) => applyColumns(val)}
+										min={1}
+										max={12}
+										__nextHasNoMarginBottom
+									/>
+								)}
+							</div>
+						)}
+
 						<SelectControl
 							label={__('Display', 'wp-figmakit')}
 							value={layout.display || ''}
@@ -180,17 +296,3 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withLayoutPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-layout-panel', withLayoutPanel);
-
-/**
- * Apply layout classes to saved block markup.
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-layout', (extraProps, blockType, attributes) => {
-	const classes = getLayoutClasses(attributes.fkLayout);
-	if (classes.length === 0) return extraProps;
-
-	extraProps.className = extraProps.className
-		? extraProps.className + ' ' + classes.join(' ')
-		: classes.join(' ');
-
-	return extraProps;
-});

@@ -152,25 +152,3 @@ const withAttributesPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withAttributesPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-attributes-panel', withAttributesPanel);
-
-/**
- * Apply attributes to saved block markup (client-side rendered blocks).
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-attributes', (extraProps, blockType, attributes) => {
-	const fkAttrs = attributes.fkAttributes;
-	if (!fkAttrs || fkAttrs.length === 0) return extraProps;
-
-	for (const attr of fkAttrs) {
-		if (!attr.name || attr.name === 'data-') continue;
-
-		if (attr.name === 'class') {
-			extraProps.className = extraProps.className
-				? extraProps.className + ' ' + attr.value
-				: attr.value;
-		} else {
-			extraProps[attr.name] = attr.value;
-		}
-	}
-
-	return extraProps;
-});

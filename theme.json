@@ -4,8 +4,8 @@
 	"settings": {
 		"appearanceTools": true,
 		"layout": {
-			"contentSize": "800px",
-			"wideSize": "1200px"
+			"contentSize": "100%",
+			"wideSize": "100%"
 		},
 		"color": {
 			"palette": [
@@ -80,9 +80,9 @@
 		"spacing": {
 			"padding": {
 				"top": "0",
-				"right": "var(--wp--preset--spacing--30, 1.5rem)",
+				"right": "0",
 				"bottom": "0",
-				"left": "var(--wp--preset--spacing--30, 1.5rem)"
+				"left": "0"
 			}
 		},
 		"elements": {

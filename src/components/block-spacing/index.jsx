@@ -241,17 +241,3 @@ const withSpacingPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withSpacingPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-spacing-panel', withSpacingPanel);
-
-/**
- * Apply spacing classes to saved block markup.
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-spacing', (extraProps, blockType, attributes) => {
-	const classes = getSpacingClasses(attributes.fkSpacing);
-	if (classes.length === 0) return extraProps;
-
-	extraProps.className = extraProps.className
-		? extraProps.className + ' ' + classes.join(' ')
-		: classes.join(' ');
-
-	return extraProps;
-});

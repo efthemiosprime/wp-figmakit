@@ -78,24 +78,3 @@ const withVisibilityPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withVisibilityPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/responsive-visibility-panel', withVisibilityPanel);
-
-/**
- * Add visibility classes to saved block markup.
- */
-addFilter('blocks.getSaveContent.extraProps', 'wp-figmakit/apply-visibility', (extraProps, blockType, attributes) => {
-	const vis = attributes.fkVisibility;
-	if (!vis) return extraProps;
-
-	const classes = [];
-	if (!vis.desktop) classes.push('fk-hide-desktop');
-	if (!vis.tablet) classes.push('fk-hide-tablet');
-	if (!vis.mobile) classes.push('fk-hide-mobile');
-
-	if (classes.length === 0) return extraProps;
-
-	extraProps.className = extraProps.className
-		? extraProps.className + ' ' + classes.join(' ')
-		: classes.join(' ');
-
-	return extraProps;
-});
