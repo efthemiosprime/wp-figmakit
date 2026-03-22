@@ -1,7 +1,8 @@
 {
 	"name": "wp-figmakit",
 	"version": "1.0.0",
-	"description": "A Gutenberg-ready companion theme for the Figmakit plugin",
+	"description": "A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities. Also serves as the starting point for the FigmaKit plugin.",
+	"author": "Efthemios Suyat <support@figmakit.dev>",
 	"private": true,
 	"scripts": {
 		"dev": "vite",

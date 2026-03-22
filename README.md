@@ -1,6 +1,6 @@
 # WP Figmakit Theme
 
-A modern, component-based WordPress theme built for Full-Site Editing (FSE) with a design-token-driven approach. Companion theme for the FigmaKit plugin.
+A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities. Also serves as the starting point for the FigmaKit plugin.
 
 - **Version**: 1.0.0
 - **Build System**: Vite 6.0 + SASS
