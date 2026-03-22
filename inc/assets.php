@@ -160,10 +160,21 @@ add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' )
 function wp_figmakit_editor_iframe_styles( $editor_settings ) {
 	$manifest = wp_figmakit_get_manifest();
 	if ( $manifest ) {
+		// Inject editor CSS
 		$editor_entry = 'src/editor.js';
 		if ( isset( $manifest[ $editor_entry ]['css'][0] ) ) {
 			$css_url = WP_FIGMAKIT_URI . '/dist/' . $manifest[ $editor_entry ]['css'][0];
 			$editor_settings['styles'][] = array( 'css' => '@import url("' . $css_url . '");' );
+		}
+
+		// Inject all block CSS files into the iframe
+		foreach ( $manifest as $entry => $data ) {
+			if ( strpos( $entry, 'src/blocks/' ) === 0 && isset( $data['css'] ) ) {
+				foreach ( $data['css'] as $css ) {
+					$css_url = WP_FIGMAKIT_URI . '/dist/' . $css;
+					$editor_settings['styles'][] = array( 'css' => '@import url("' . $css_url . '");' );
+				}
+			}
 		}
 	}
 	return $editor_settings;

@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-card",
+	"version": "1.0.0",
+	"title": "Card",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A flexible card component with image, eyebrow, title, description, and CTA buttons.",
+	"keywords": ["card", "cta", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "vstack"
+		},
+		"showImage": {
+			"type": "boolean",
+			"default": true
+		},
+		"showEyebrow": {
+			"type": "boolean",
+			"default": true
+		},
+		"showButtons": {
+			"type": "boolean",
+			"default": true
+		},
+		"showFootnote": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"render": "file:./render.php"
+}

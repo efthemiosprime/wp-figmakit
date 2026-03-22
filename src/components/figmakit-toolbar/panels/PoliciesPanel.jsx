@@ -38,6 +38,7 @@ export default function PoliciesPanel() {
 		{ label: 'Cover', value: 'core/cover' },
 		{ label: 'Separator', value: 'core/separator' },
 		{ label: 'Spacer', value: 'core/spacer' },
+		{ label: 'Card', value: 'wp-figmakit/fk-card' },
 	];
 
 	const blockTypes = ALLOWED_BLOCK_TYPES;

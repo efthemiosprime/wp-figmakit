@@ -45,3 +45,73 @@ function wp_figmakit_block_categories( $categories ) {
 	);
 }
 add_filter( 'block_categories_all', 'wp_figmakit_block_categories', 10, 1 );
+
+/**
+ * Enqueue custom block editor scripts from Vite build.
+ */
+function wp_figmakit_enqueue_block_scripts() {
+	$manifest_path = WP_FIGMAKIT_DIR . '/dist/.vite/manifest.json';
+
+	if ( ! file_exists( $manifest_path ) ) {
+		return;
+	}
+
+	$manifest = json_decode( file_get_contents( $manifest_path ), true );
+
+	// Auto-enqueue block-* entries
+	foreach ( $manifest as $entry => $data ) {
+		if ( strpos( $entry, 'src/blocks/' ) === 0 && isset( $data['file'] ) ) {
+			$block_name = basename( dirname( $entry ) );
+			$handle     = 'wp-figmakit-block-' . $block_name;
+
+			wp_enqueue_script(
+				$handle,
+				WP_FIGMAKIT_URI . '/dist/' . $data['file'],
+				array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-data' ),
+				WP_FIGMAKIT_VERSION,
+				true
+			);
+
+			// Enqueue block CSS
+			if ( isset( $data['css'] ) ) {
+				foreach ( $data['css'] as $i => $css ) {
+					wp_enqueue_style(
+						$handle . '-css-' . $i,
+						WP_FIGMAKIT_URI . '/dist/' . $css,
+						array(),
+						WP_FIGMAKIT_VERSION
+					);
+				}
+			}
+		}
+	}
+}
+add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_block_scripts' );
+
+/**
+ * Enqueue block frontend CSS.
+ */
+function wp_figmakit_enqueue_block_frontend_styles() {
+	$manifest_path = WP_FIGMAKIT_DIR . '/dist/.vite/manifest.json';
+
+	if ( ! file_exists( $manifest_path ) ) {
+		return;
+	}
+
+	$manifest = json_decode( file_get_contents( $manifest_path ), true );
+
+	foreach ( $manifest as $entry => $data ) {
+		if ( strpos( $entry, 'src/blocks/' ) === 0 && isset( $data['css'] ) ) {
+			$block_name = basename( dirname( $entry ) );
+			foreach ( $data['css'] as $i => $css ) {
+				wp_enqueue_style(
+					'wp-figmakit-block-' . $block_name . '-css-' . $i,
+					WP_FIGMAKIT_URI . '/dist/' . $css,
+					array(),
+					WP_FIGMAKIT_VERSION
+				);
+			}
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_styles' );

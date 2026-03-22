@@ -1,4 +1,4 @@
-export default function ToolbarButton({ icon, label, isActive, onClick }) {
+export default function ToolbarButton({ icon: Icon, label, isActive, onClick }) {
 	return (
 		<button
 			className={`fk-toolbar__btn ${isActive ? 'is-active' : ''}`}
@@ -6,7 +6,7 @@ export default function ToolbarButton({ icon, label, isActive, onClick }) {
 			title={label}
 			type="button"
 		>
-			<span className={`dashicons dashicons-${icon}`} />
+			{typeof Icon === 'function' ? <Icon /> : <span className={`dashicons dashicons-${Icon}`} />}
 		</button>
 	);
 }
