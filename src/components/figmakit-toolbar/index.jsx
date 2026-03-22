@@ -3,6 +3,12 @@ import Toolbar from './Toolbar';
 const { createRoot } = wp.element;
 
 function mountToolbar() {
+	// Don't mount in the Site Editor (only in post/page editor)
+	if (document.body.classList.contains('site-editor-php') ||
+		window.location.href.includes('site-editor.php')) {
+		return;
+	}
+
 	const editorWrapper = document.querySelector('.editor-editor-interface') ||
 		document.querySelector('.edit-post-layout') ||
 		document.querySelector('#editor');

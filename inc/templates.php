@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function wp_figmakit_register_menus() {
 	register_nav_menus( array(
 		'primary'  => __( 'Primary Menu', 'wp-figmakit' ),
+		'utility'  => __( 'Utility Menu', 'wp-figmakit' ),
 		'footer'   => __( 'Footer Menu', 'wp-figmakit' ),
 	) );
 }

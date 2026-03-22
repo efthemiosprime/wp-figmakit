@@ -185,9 +185,7 @@ add_filter( 'block_editor_settings_all', 'wp_figmakit_editor_iframe_styles' );
  * Add type="module" to Vite scripts.
  */
 function wp_figmakit_script_module_type( $tag, $handle ) {
-	$module_handles = array( 'wp-figmakit-vite-client', 'wp-figmakit-main', 'wp-figmakit-editor' );
-
-	if ( in_array( $handle, $module_handles, true ) ) {
+	if ( strpos( $handle, 'wp-figmakit' ) === 0 ) {
 		$tag = str_replace( '<script ', '<script type="module" ', $tag );
 	}
 

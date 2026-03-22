@@ -1,0 +1,47 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-header",
+	"version": "1.0.0",
+	"title": "FK Header",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A site header with logo, utility navigation, and main navigation. Two layout variants.",
+	"keywords": ["header", "navigation", "nav", "menu", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": false
+		},
+		"multiple": true
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "default"
+		},
+		"utilityMenuId": {
+			"type": "number",
+			"default": 0
+		},
+		"mainMenuId": {
+			"type": "number",
+			"default": 0
+		},
+		"showUtilityMenu": {
+			"type": "boolean",
+			"default": true
+		},
+		"showSkipLink": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"render": "file:./render.php"
+}

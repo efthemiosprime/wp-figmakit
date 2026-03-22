@@ -1,0 +1,326 @@
+// ==========================================================================
+// Skip Link
+// ==========================================================================
+.fk-header__skip-link {
+	position: absolute;
+	top: -100%;
+	left: 0;
+	z-index: 10000;
+	padding: 8px 16px;
+	background: var(--wp--preset--color--primary, #1a1a2e);
+	color: #fff;
+	text-decoration: none;
+
+	&:focus {
+		top: 0;
+		clip: auto;
+		clip-path: none;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+}
+
+// ==========================================================================
+// Base Header
+// ==========================================================================
+.fk-header {
+	width: 100%;
+	position: relative;
+	z-index: 100;
+	background: var(--fk-header-bg, var(--wp--preset--color--surface, #fff));
+	color: var(--fk-header-color, var(--wp--preset--color--primary, #1a1a2e));
+}
+
+.fk-header__inner {
+	max-width: var(--fk-container-max, 1440px);
+	margin: 0 auto;
+	padding: 0 var(--fk-container-padding, 24px);
+}
+
+// ==========================================================================
+// Rows
+// ==========================================================================
+.fk-header__row {
+	display: flex;
+	align-items: center;
+}
+
+.fk-header__row--top {
+	padding: 12px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.fk-header__row--main {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 0;
+	gap: 24px;
+}
+
+// ==========================================================================
+// Logo
+// ==========================================================================
+.fk-header__logo {
+	flex-shrink: 0;
+
+	img {
+		display: block;
+		max-height: 48px;
+		width: auto;
+	}
+}
+
+// ==========================================================================
+// Navigation (shared)
+// ==========================================================================
+.fk-header__utility-list,
+.fk-header__primary-list {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 16px;
+	align-items: center;
+}
+
+.fk-header__utility-item,
+.fk-header__primary-item {
+	position: relative;
+}
+
+.utility-nav-link,
+.nav-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	text-decoration: none;
+	color: inherit;
+	padding: 8px 4px;
+	font-size: 0.875rem;
+	transition: color 0.15s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: var(--wp--preset--color--highlight, #e94560);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--wp--preset--color--accent, #0f3460);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+}
+
+.nav-link {
+	font-size: 1rem;
+	font-weight: 500;
+}
+
+// ==========================================================================
+// Chevron (decorative)
+// ==========================================================================
+.fk-header__chevron {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid currentColor;
+	margin-left: 4px;
+	transition: transform 0.2s ease;
+}
+
+// ==========================================================================
+// Dropdown Sub-menus
+// ==========================================================================
+.fk-header__utility-sub,
+.fk-header__primary-sub {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 200;
+	min-width: 200px;
+	list-style: none;
+	margin: 0;
+	padding: 8px 0;
+	background: var(--wp--preset--color--surface, #fff);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+	li {
+		margin: 0;
+	}
+
+	a {
+		display: block;
+		padding: 8px 16px;
+		white-space: nowrap;
+		text-decoration: none;
+		color: inherit;
+		font-size: 0.875rem;
+
+		&:hover,
+		&:focus-visible {
+			color: var(--wp--preset--color--highlight, #e94560);
+			background: rgba(0, 0, 0, 0.02);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--wp--preset--color--accent, #0f3460);
+			outline-offset: -2px;
+		}
+	}
+}
+
+// Show submenu on hover and when aria-expanded="true"
+.fk-header__utility-item--has-children,
+.fk-header__primary-item--has-children {
+	&:hover > .fk-header__utility-sub,
+	&:hover > .fk-header__primary-sub {
+		display: block;
+	}
+}
+
+[aria-expanded="true"] + .fk-header__utility-sub,
+[aria-expanded="true"] + .fk-header__primary-sub {
+	display: block;
+}
+
+[aria-expanded="true"] .fk-header__chevron {
+	transform: rotate(180deg);
+}
+
+// ==========================================================================
+// Variant: default (logo top, navs in row 2)
+// ==========================================================================
+.fk-header--default {
+	.fk-header__row--top {
+		justify-content: center;
+	}
+
+	.fk-header__row--main {
+		justify-content: center;
+		gap: 32px;
+	}
+}
+
+// ==========================================================================
+// Variant: header-utility-top (utility top, logo+main in row 2)
+// ==========================================================================
+.fk-header--header-utility-top {
+	.fk-header__row--top {
+		justify-content: flex-end;
+		padding: 8px 0;
+		font-size: 0.875rem;
+	}
+
+	.fk-header__row--main {
+		justify-content: space-between;
+	}
+}
+
+// ==========================================================================
+// Mobile Toggle
+// ==========================================================================
+.fk-header__toggle {
+	display: none;
+	flex-direction: column;
+	gap: 4px;
+	padding: 8px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: inherit;
+
+	&:focus-visible {
+		outline: 2px solid var(--wp--preset--color--accent, #0f3460);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+}
+
+.fk-header__toggle-bar {
+	display: block;
+	width: 24px;
+	height: 2px;
+	background: currentColor;
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+// ==========================================================================
+// Responsive (mobile)
+// ==========================================================================
+@media (max-width: 767px) {
+	.fk-header__toggle {
+		display: flex;
+	}
+
+	.fk-header__utility,
+	.fk-header__primary {
+		display: none;
+	}
+
+	.fk-header--menu-open {
+		.fk-header__utility,
+		.fk-header__primary {
+			display: block;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: var(--wp--preset--color--surface, #fff);
+			border-top: 1px solid rgba(0, 0, 0, 0.08);
+			padding: 24px;
+			z-index: 200;
+		}
+
+		.fk-header__utility-list,
+		.fk-header__primary-list {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.fk-header__utility-sub,
+		.fk-header__primary-sub {
+			position: static;
+			box-shadow: none;
+			border: none;
+			padding-left: 16px;
+		}
+
+		.fk-header__toggle-bar:nth-child(1) {
+			transform: rotate(45deg) translate(4px, 4px);
+		}
+
+		.fk-header__toggle-bar:nth-child(2) {
+			opacity: 0;
+		}
+
+		.fk-header__toggle-bar:nth-child(3) {
+			transform: rotate(-45deg) translate(4px, -4px);
+		}
+	}
+}
+
+// ==========================================================================
+// Editor placeholders
+// ==========================================================================
+.fk-header__menu-placeholder {
+	display: flex;
+	gap: 24px;
+	align-items: center;
+}
+
+.fk-header__menu-label {
+	display: inline-block;
+	padding: 6px 12px;
+	background: rgba(0, 0, 0, 0.04);
+	border: 1px dashed rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	font-size: 0.875rem;
+	color: #757575;
+}
