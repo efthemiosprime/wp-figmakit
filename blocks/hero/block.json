@@ -1,0 +1,43 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-hero",
+	"version": "1.0.0",
+	"title": "Hero",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A hero/banner section with heading, description, and call-to-action buttons.",
+	"keywords": ["hero", "banner", "header", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "centered"
+		},
+		"showOverlay": {
+			"type": "boolean",
+			"default": false
+		},
+		"minHeight": {
+			"type": "string",
+			"default": "60vh"
+		},
+		"showButtons": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"render": "file:./render.php"
+}

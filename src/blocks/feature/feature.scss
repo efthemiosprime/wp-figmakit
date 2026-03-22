@@ -1,0 +1,41 @@
+.fk-feature {
+	&--vstack {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	&--hstack {
+		display: flex;
+		flex-direction: row;
+		gap: 1.5rem;
+		align-items: flex-start;
+	}
+
+	&--icon-left {
+		flex-direction: row;
+	}
+
+	&--icon-right {
+		flex-direction: row-reverse;
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		max-width: 64px;
+		margin-bottom: 1rem;
+
+		.fk-feature--hstack & {
+			margin-bottom: 0;
+		}
+	}
+
+	&__title {
+		margin-bottom: 0.5rem;
+	}
+
+	&__description {
+		margin-bottom: 0;
+	}
+}

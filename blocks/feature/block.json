@@ -1,0 +1,34 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-feature",
+	"version": "1.0.0",
+	"title": "Feature",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A feature block with icon/image, title, and description.",
+	"keywords": ["feature", "blurb", "icon", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "vstack"
+		},
+		"iconPosition": {
+			"type": "string",
+			"default": "top"
+		}
+	},
+	"render": "file:./render.php"
+}

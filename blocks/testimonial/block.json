@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-testimonial",
+	"version": "1.0.0",
+	"title": "Testimonial",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A testimonial block with quote, avatar, name, and role.",
+	"keywords": ["testimonial", "quote", "review", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "standard"
+		},
+		"showAvatar": {
+			"type": "boolean",
+			"default": true
+		},
+		"showRole": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"render": "file:./render.php"
+}

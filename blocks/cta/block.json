@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-cta",
+	"version": "1.0.0",
+	"title": "Call to Action",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A call-to-action section with heading, description, and buttons.",
+	"keywords": ["cta", "call to action", "banner", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "centered"
+		},
+		"alignment": {
+			"type": "string",
+			"default": "center"
+		}
+	},
+	"render": "file:./render.php"
+}

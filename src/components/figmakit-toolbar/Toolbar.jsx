@@ -3,15 +3,17 @@ const { __ } = wp.i18n;
 
 import ToolbarButton from './ToolbarButton';
 import FlyoutPanel from './FlyoutPanel';
-import { GridIcon, PaletteIcon, FormIcon } from './icons';
+import { GridIcon, PaletteIcon, FormIcon, PortabilityIcon } from './icons';
 import GridPanel from './panels/GridPanel';
 import ColorsPanel from './panels/ColorsPanel';
 import PoliciesPanel from './panels/PoliciesPanel';
+import PortabilityPanel from './panels/PortabilityPanel';
 
 const PANELS = [
 	{ id: 'grid', icon: GridIcon, label: 'Grid Settings', component: GridPanel },
 	{ id: 'colors', icon: PaletteIcon, label: 'Colors', component: ColorsPanel },
 	{ id: 'policies', icon: FormIcon, label: 'Policies', component: PoliciesPanel },
+	{ id: 'portability', icon: PortabilityIcon, label: 'Portability', component: PortabilityPanel },
 ];
 
 export default function Toolbar() {

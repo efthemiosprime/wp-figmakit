@@ -1,0 +1,44 @@
+.fk-cta {
+	padding: 4rem 2rem;
+
+	&__inner {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	&--centered {
+		text-align: center;
+
+		.fk-cta__inner {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+	}
+
+	&--left {
+		text-align: left;
+	}
+
+	&--split {
+		.fk-cta__inner {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 2rem;
+			align-items: center;
+			max-width: 1200px;
+		}
+	}
+
+	&__title {
+		margin-bottom: 1rem;
+	}
+
+	&__description {
+		margin-bottom: 2rem;
+	}
+
+	&__buttons {
+		margin-top: 1rem;
+	}
+}
