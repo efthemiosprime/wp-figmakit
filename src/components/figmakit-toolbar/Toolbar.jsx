@@ -12,7 +12,7 @@ import PortabilityPanel from './panels/PortabilityPanel';
 const PANELS = [
 	{ id: 'grid', icon: GridIcon, label: 'Grid Settings', component: GridPanel },
 	{ id: 'colors', icon: PaletteIcon, label: 'Colors', component: ColorsPanel },
-	{ id: 'policies', icon: FormIcon, label: 'Policies', component: PoliciesPanel },
+	{ id: 'policies', icon: FormIcon, label: 'Block Policies', component: PoliciesPanel },
 	{ id: 'portability', icon: PortabilityIcon, label: 'Portability', component: PortabilityPanel },
 ];
 
