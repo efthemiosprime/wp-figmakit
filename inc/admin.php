@@ -242,7 +242,7 @@ function wp_figmakit_output_grid_css() {
 
 	echo "<style id='fk-grid-vars'>{$css}</style>\n";
 }
-add_action( 'wp_head', 'wp_figmakit_output_grid_css', 5 );
+add_action( 'wp_head', 'wp_figmakit_output_grid_css', 100 );
 
 /**
  * Get theme option.

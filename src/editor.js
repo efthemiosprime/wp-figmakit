@@ -13,4 +13,5 @@ import './components/block-sizing/index.jsx';
 import './components/block-sizing/block-sizing.scss';
 import './components/block-text-style/index.jsx';
 import './components/block-text-style/block-text-style.scss';
-import './components/grid-settings/index.jsx';
+import './components/figmakit-toolbar/index.jsx';
+import './components/figmakit-toolbar/figmakit-toolbar.scss';
