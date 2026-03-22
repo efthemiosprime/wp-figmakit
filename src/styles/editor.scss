@@ -3,18 +3,13 @@
 	font-family: var(--wp--preset--font-family--system);
 
 	// Reset Gutenberg layout constraints in editor
-	.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)):not(.fk-row) {
+	.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
 		max-width: none;
 	}
 
-	// fk-row in editor — respect grid max-width
-	.fk-row,
+	// Reset Gutenberg max-width on fk-row in editor
 	.is-layout-constrained > .fk-row {
-		max-width: var(--fk-container-max, 1440px) !important;
-		margin-left: auto !important;
-		margin-right: auto !important;
-		padding-left: var(--fk-container-padding, 160px) !important;
-		padding-right: var(--fk-container-padding, 160px) !important;
+		max-width: none;
 	}
 
 	// ------------------------------------------------------------------
@@ -69,9 +64,13 @@
 // Column editor styles — OUTSIDE .editor-styles-wrapper for full specificity
 // ==========================================================================
 
-// Row container in editor
+// Row container in editor — full width with 60px padding
 .fk-row.block-editor-block-list__block,
-.block-editor-block-list__block .fk-row {
+.block-editor-block-list__block .fk-row,
+.block-editor-block-list__block.fk-row {
+	max-width: none !important;
+	padding-left: 60px !important;
+	padding-right: 60px !important;
 	outline: 1px dashed rgba(0, 124, 186, 0.2);
 	outline-offset: -1px;
 }

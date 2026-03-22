@@ -140,6 +140,7 @@ function wp_figmakit_enqueue_editor_assets() {
 
 		if ( isset( $manifest[ $editor_entry ]['css'] ) ) {
 			foreach ( $manifest[ $editor_entry ]['css'] as $i => $css ) {
+				// Enqueue in admin page
 				wp_enqueue_style(
 					'wp-figmakit-editor-css-' . $i,
 					WP_FIGMAKIT_URI . '/dist/' . $css,
@@ -148,9 +149,26 @@ function wp_figmakit_enqueue_editor_assets() {
 				);
 			}
 		}
+
 	}
 }
 add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' );
+
+/**
+ * Inject editor CSS into the block editor iframe.
+ */
+function wp_figmakit_editor_iframe_styles( $editor_settings ) {
+	$manifest = wp_figmakit_get_manifest();
+	if ( $manifest ) {
+		$editor_entry = 'src/editor.js';
+		if ( isset( $manifest[ $editor_entry ]['css'][0] ) ) {
+			$css_url = WP_FIGMAKIT_URI . '/dist/' . $manifest[ $editor_entry ]['css'][0];
+			$editor_settings['styles'][] = array( 'css' => '@import url("' . $css_url . '");' );
+		}
+	}
+	return $editor_settings;
+}
+add_filter( 'block_editor_settings_all', 'wp_figmakit_editor_iframe_styles' );
 
 /**
  * Add type="module" to Vite scripts.
