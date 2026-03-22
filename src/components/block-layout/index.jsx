@@ -7,44 +7,44 @@ const { __ } = wp.i18n;
 
 const DISPLAY_OPTIONS = [
 	{ label: '—', value: '' },
-	{ label: 'Block', value: 'd-block' },
-	{ label: 'Flex', value: 'd-flex' },
-	{ label: 'Inline Flex', value: 'd-inline-flex' },
-	{ label: 'Grid', value: 'd-grid' },
-	{ label: 'None', value: 'd-none' },
+	{ label: 'Block', value: 'fk-d-block' },
+	{ label: 'Flex', value: 'fk-d-flex' },
+	{ label: 'Inline Flex', value: 'fk-d-iflex' },
+	{ label: 'Grid', value: 'fk-d-grid' },
+	{ label: 'None', value: 'fk-d-none' },
 ];
 
 const DIRECTION_OPTIONS = [
 	{ label: '—', value: '' },
-	{ label: 'Row', value: 'flex-row' },
-	{ label: 'Row Reverse', value: 'flex-row-reverse' },
-	{ label: 'Column', value: 'flex-col' },
-	{ label: 'Column Reverse', value: 'flex-col-reverse' },
+	{ label: 'Row', value: 'fk-dir-row' },
+	{ label: 'Row Reverse', value: 'fk-dir-row-r' },
+	{ label: 'Column', value: 'fk-dir-col' },
+	{ label: 'Column Reverse', value: 'fk-dir-col-r' },
 ];
 
 const JUSTIFY_OPTIONS = [
 	{ label: '—', value: '' },
-	{ label: 'Start', value: 'justify-start' },
-	{ label: 'Center', value: 'justify-center' },
-	{ label: 'End', value: 'justify-end' },
-	{ label: 'Space Between', value: 'justify-between' },
-	{ label: 'Space Around', value: 'justify-around' },
-	{ label: 'Space Evenly', value: 'justify-evenly' },
+	{ label: 'Start', value: 'fk-jc-start' },
+	{ label: 'Center', value: 'fk-jc-center' },
+	{ label: 'End', value: 'fk-jc-end' },
+	{ label: 'Space Between', value: 'fk-jc-between' },
+	{ label: 'Space Around', value: 'fk-jc-around' },
+	{ label: 'Space Evenly', value: 'fk-jc-evenly' },
 ];
 
 const ALIGN_OPTIONS = [
 	{ label: '—', value: '' },
-	{ label: 'Start', value: 'align-start' },
-	{ label: 'Center', value: 'align-center' },
-	{ label: 'End', value: 'align-end' },
-	{ label: 'Stretch', value: 'align-stretch' },
-	{ label: 'Baseline', value: 'align-baseline' },
+	{ label: 'Start', value: 'fk-ai-start' },
+	{ label: 'Center', value: 'fk-ai-center' },
+	{ label: 'End', value: 'fk-ai-end' },
+	{ label: 'Stretch', value: 'fk-ai-stretch' },
+	{ label: 'Baseline', value: 'fk-ai-baseline' },
 ];
 
 const WRAP_OPTIONS = [
 	{ label: '—', value: '' },
-	{ label: 'Wrap', value: 'flex-wrap' },
-	{ label: 'No Wrap', value: 'flex-nowrap' },
+	{ label: 'Wrap', value: 'fk-wrap' },
+	{ label: 'No Wrap', value: 'fk-nowrap' },
 ];
 
 const GAP_OPTIONS = [
@@ -99,13 +99,13 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 		const { attributes, setAttributes } = props;
 		const layout = attributes.fkLayout || {};
 
-		const isFlex = layout.display === 'd-flex' || layout.display === 'd-inline-flex';
+		const isFlex = layout.display === 'fk-d-flex' || layout.display === 'fk-d-iflex';
 
 		const updateLayout = useCallback((key, value) => {
 			const updated = { ...layout, [key]: value };
 
 			// Clear flex properties when display is not flex
-			if (key === 'display' && value !== 'd-flex' && value !== 'd-inline-flex') {
+			if (key === 'display' && value !== 'fk-d-flex' && value !== 'fk-d-iflex') {
 				updated.direction = '';
 				updated.justify = '';
 				updated.align = '';

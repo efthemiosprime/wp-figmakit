@@ -59,7 +59,7 @@ function getSpacingClasses(spacing) {
 
 	// Auto-add d-block when left+right margins are auto (centering)
 	if (spacing.ml === 'auto' && spacing.mr === 'auto') {
-		classes.push('d-block');
+		classes.push('fk-d-block');
 	}
 
 	return classes;

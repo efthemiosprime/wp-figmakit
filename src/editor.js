@@ -9,3 +9,5 @@ import './components/block-spacing/index.jsx';
 import './components/block-spacing/block-spacing.scss';
 import './components/block-layout/index.jsx';
 import './components/block-layout/block-layout.scss';
+import './components/block-sizing/index.jsx';
+import './components/block-sizing/block-sizing.scss';

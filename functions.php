@@ -49,3 +49,4 @@ require_once WP_FIGMAKIT_DIR . '/inc/responsive-visibility.php';
 require_once WP_FIGMAKIT_DIR . '/inc/button-icons.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-spacing.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-layout.php';
+require_once WP_FIGMAKIT_DIR . '/inc/block-sizing.php';

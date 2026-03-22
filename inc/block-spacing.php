@@ -29,7 +29,7 @@ function wp_figmakit_apply_block_spacing( $block_content, $block ) {
 
 	// Auto-add d-block when left+right margins are auto (centering)
 	if ( isset( $spacing['ml'], $spacing['mr'] ) && 'auto' === $spacing['ml'] && 'auto' === $spacing['mr'] ) {
-		$classes[] = 'd-block';
+		$classes[] = 'fk-d-block';
 	}
 
 	if ( empty( $classes ) ) {

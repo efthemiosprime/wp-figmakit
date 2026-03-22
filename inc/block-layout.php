@@ -20,11 +20,11 @@ function wp_figmakit_apply_block_layout( $block_content, $block ) {
 	$layout = $block['attrs']['fkLayout'];
 
 	$allowed = array(
-		'd-block', 'd-flex', 'd-inline-flex', 'd-grid', 'd-none',
-		'flex-row', 'flex-row-reverse', 'flex-col', 'flex-col-reverse',
-		'justify-start', 'justify-center', 'justify-end', 'justify-between', 'justify-around', 'justify-evenly',
-		'align-start', 'align-center', 'align-end', 'align-stretch', 'align-baseline',
-		'flex-wrap', 'flex-nowrap',
+		'fk-d-block', 'fk-d-flex', 'fk-d-iflex', 'fk-d-grid', 'fk-d-none',
+		'fk-dir-row', 'fk-dir-row-r', 'fk-dir-col', 'fk-dir-col-r',
+		'fk-jc-start', 'fk-jc-center', 'fk-jc-end', 'fk-jc-between', 'fk-jc-around', 'fk-jc-evenly',
+		'fk-ai-start', 'fk-ai-center', 'fk-ai-end', 'fk-ai-stretch', 'fk-ai-baseline',
+		'fk-wrap', 'fk-nowrap',
 		'gap-3xl', 'gap-2xl', 'gap-xl', 'gap-lg', 'gap-md', 'gap-sm', 'gap-xs', 'gap-2xs', 'gap-3xs', 'gap-4xs', 'gap-0',
 	);
 

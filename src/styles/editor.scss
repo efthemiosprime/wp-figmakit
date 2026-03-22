@@ -1,4 +1,51 @@
 // Editor-specific styles that extend theme.json
 .editor-styles-wrapper {
 	font-family: var(--wp--preset--font-family--system);
+
+	// ------------------------------------------------------------------
+	// Enhanced block selection & hover outlines (Divi-like)
+	// ------------------------------------------------------------------
+
+	// Hover outline on any block
+	.block-editor-block-list__block:hover:not(.is-selected):not(.has-child-selected) {
+		outline: 1px dashed rgba(255, 255, 255, 0.4);
+		outline-offset: -1px;
+	}
+
+	// Selected block — prominent outline
+	.block-editor-block-list__block.is-selected {
+		outline: 2px solid var(--wp-admin-theme-color, #007cba) !important;
+		outline-offset: -2px;
+	}
+
+	// Parent of selected block — subtle outline showing hierarchy
+	.block-editor-block-list__block.has-child-selected {
+		outline: 1px solid rgba(0, 124, 186, 0.3);
+		outline-offset: -1px;
+	}
+
+	// Nested parent chain — even subtler
+	.block-editor-block-list__block.has-child-selected .block-editor-block-list__block.has-child-selected {
+		outline-color: rgba(0, 124, 186, 0.15);
+	}
+
+	// Container blocks (Group, Columns, Row) — always show a faint border
+	.wp-block-group,
+	.wp-block-columns,
+	.wp-block-column {
+		outline: 1px dashed rgba(150, 150, 150, 0.25);
+		outline-offset: -1px;
+		transition: outline-color 0.15s ease;
+
+		&:hover {
+			outline-color: rgba(150, 150, 150, 0.5);
+		}
+	}
+
+	// Selected container — override with solid
+	.wp-block-group.is-selected,
+	.wp-block-columns.is-selected,
+	.wp-block-column.is-selected {
+		outline: 2px solid var(--wp-admin-theme-color, #007cba) !important;
+	}
 }
