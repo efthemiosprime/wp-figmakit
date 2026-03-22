@@ -90,7 +90,8 @@ const withAttributesPanel = createHigherOrderComponent((BlockEdit) => {
 											label={__('Name', 'wp-figmakit')}
 											value={attr.name}
 											onChange={(val) => {
-												const sanitized = val.startsWith('data-') ? val : 'data-' + val;
+												const clean = val.toLowerCase().replace(/[^a-z0-9-]/g, '');
+												const sanitized = clean.startsWith('data-') ? clean : 'data-' + clean;
 												updateAttribute(index, 'name', sanitized);
 											}}
 											placeholder="data-my-attr"

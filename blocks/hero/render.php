@@ -7,6 +7,10 @@
 
 $variant    = isset( $attributes['variant'] ) ? $attributes['variant'] : 'centered';
 $min_height = isset( $attributes['minHeight'] ) ? $attributes['minHeight'] : '60vh';
+// Strict CSS value validation — only digits, dots, and units.
+if ( ! preg_match( '/^[\d.]+(px|em|rem|%|vh|vw|svh|dvh)$/', $min_height ) ) {
+	$min_height = '60vh';
+}
 $overlay    = ! empty( $attributes['showOverlay'] );
 $classes    = array( 'fk-hero', 'fk-hero--' . sanitize_html_class( $variant ) );
 
@@ -16,7 +20,7 @@ if ( $overlay ) {
 
 $wrapper = get_block_wrapper_attributes( array(
 	'class' => implode( ' ', $classes ),
-	'style' => 'min-height:' . esc_attr( $min_height ),
+	'style' => 'min-height:' . $min_height,
 ) );
 ?>
 
