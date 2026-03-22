@@ -1,4 +1,4 @@
-const { useState, useCallback, useRef } = wp.element;
+const { useState, useEffect, useCallback, useRef } = wp.element;
 const { Button, Notice, RadioControl } = wp.components;
 const { __ } = wp.i18n;
 
@@ -14,9 +14,13 @@ export default function PortabilityPanel() {
 	const [importMode, setImportMode] = useState('replace');
 	const [status, setStatus] = useState(null);
 	const fileRef = useRef();
+	const timerRef = useRef();
+
+	useEffect(() => () => clearTimeout(timerRef.current), []);
 
 	const clearStatus = useCallback(() => {
-		setTimeout(() => setStatus(null), 4000);
+		clearTimeout(timerRef.current);
+		timerRef.current = setTimeout(() => setStatus(null), 4000);
 	}, []);
 
 	const handleExport = useCallback(() => {

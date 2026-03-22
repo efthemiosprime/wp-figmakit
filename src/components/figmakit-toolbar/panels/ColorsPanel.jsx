@@ -1,4 +1,4 @@
-const { useState, useEffect, useCallback } = wp.element;
+const { useState, useEffect, useCallback, useRef } = wp.element;
 const { ColorPicker, Button, TextControl, Notice } = wp.components;
 const { __ } = wp.i18n;
 
@@ -61,6 +61,9 @@ export default function ColorsPanel() {
 	const [customColors, setCustomColors] = useState([]);
 	const [saved, setSaved] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const timerRef = useRef();
+
+	useEffect(() => () => clearTimeout(timerRef.current), []);
 	const [newName, setNewName] = useState('');
 
 	useEffect(() => {
@@ -139,7 +142,8 @@ export default function ColorsPanel() {
 			},
 		}).then(() => {
 			setSaved(true);
-			setTimeout(() => setSaved(false), 3000);
+			clearTimeout(timerRef.current);
+			timerRef.current = setTimeout(() => setSaved(false), 3000);
 		});
 	}, [values, customColors]);
 

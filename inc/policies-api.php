@@ -46,6 +46,11 @@ function wp_figmakit_get_policies() {
  * Save policies.
  */
 function wp_figmakit_save_policies( $request ) {
+	$lock_key = 'wp_figmakit_options_lock';
+	if ( ! get_transient( $lock_key ) ) {
+		set_transient( $lock_key, 1, 5 );
+	}
+
 	$options = get_option( 'wp_figmakit_options', array() );
 	$params  = $request->get_json_params();
 
@@ -71,6 +76,7 @@ function wp_figmakit_save_policies( $request ) {
 
 	$options['policies'] = $sanitized;
 	update_option( 'wp_figmakit_options', $options );
+	delete_transient( 'wp_figmakit_options_lock' );
 
 	return rest_ensure_response( array( 'success' => true ) );
 }

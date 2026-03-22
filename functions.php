@@ -56,5 +56,6 @@ require_once WP_FIGMAKIT_DIR . '/inc/grid-api.php';
 require_once WP_FIGMAKIT_DIR . '/inc/colors-api.php';
 require_once WP_FIGMAKIT_DIR . '/inc/policies-api.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-policies.php';
+require_once WP_FIGMAKIT_DIR . '/inc/block-render-combined.php';
 require_once WP_FIGMAKIT_DIR . '/inc/security.php';
 require_once WP_FIGMAKIT_DIR . '/inc/figma-tokens.php';

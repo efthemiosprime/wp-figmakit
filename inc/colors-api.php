@@ -76,6 +76,11 @@ function wp_figmakit_get_color_settings() {
  * Save color settings.
  */
 function wp_figmakit_save_color_settings( $request ) {
+	$lock_key = 'wp_figmakit_options_lock';
+	if ( ! get_transient( $lock_key ) ) {
+		set_transient( $lock_key, 1, 5 );
+	}
+
 	$options = get_option( 'wp_figmakit_options', array() );
 	$fields  = wp_figmakit_get_color_fields();
 	$params  = $request->get_json_params();
@@ -91,10 +96,10 @@ function wp_figmakit_save_color_settings( $request ) {
 		}
 	}
 
-	// Save custom colors metadata
+	// Save custom colors metadata (max 50 custom colors).
 	if ( isset( $params['_custom_colors'] ) && is_array( $params['_custom_colors'] ) ) {
 		$custom_colors = array();
-		foreach ( $params['_custom_colors'] as $custom ) {
+		foreach ( array_slice( $params['_custom_colors'], 0, 50 ) as $custom ) {
 			if ( ! empty( $custom['key'] ) && ! empty( $custom['label'] ) ) {
 				$custom_colors[] = array(
 					'key'   => sanitize_key( $custom['key'] ),
@@ -118,6 +123,7 @@ function wp_figmakit_save_color_settings( $request ) {
 	}
 
 	update_option( 'wp_figmakit_options', $options );
+	delete_transient( 'wp_figmakit_options_lock' );
 
 	return rest_ensure_response( array( 'success' => true ) );
 }
@@ -133,7 +139,10 @@ function wp_figmakit_output_color_css() {
 	// Default colors
 	foreach ( $fields as $field ) {
 		if ( ! empty( $options[ $field['key'] ] ) ) {
-			$vars[] = $field['css_var'] . ':' . $options[ $field['key'] ];
+			$color = sanitize_hex_color( $options[ $field['key'] ] );
+			if ( $color ) {
+				$vars[] = esc_attr( $field['css_var'] ) . ':' . $color;
+			}
 		}
 	}
 
@@ -141,7 +150,12 @@ function wp_figmakit_output_color_css() {
 	if ( ! empty( $options['_custom_colors'] ) ) {
 		foreach ( $options['_custom_colors'] as $custom ) {
 			if ( ! empty( $options[ $custom['key'] ] ) && ! empty( $custom['cssVar'] ) ) {
-				$vars[] = $custom['cssVar'] . ':' . $options[ $custom['key'] ];
+				$color = sanitize_hex_color( $options[ $custom['key'] ] );
+				// Validate CSS var name: only allow --fk- prefix with alphanumeric/hyphens.
+				$css_var = $custom['cssVar'];
+				if ( $color && preg_match( '/^--fk-[a-z0-9-]+$/', $css_var ) ) {
+					$vars[] = $css_var . ':' . $color;
+				}
 			}
 		}
 	}

@@ -2,6 +2,9 @@ import Toolbar from './Toolbar';
 
 const { createRoot } = wp.element;
 
+let mountRetries = 0;
+const MAX_MOUNT_RETRIES = 20;
+
 function mountToolbar() {
 	// Don't mount in the Site Editor (only in post/page editor)
 	if (document.body.classList.contains('site-editor-php') ||
@@ -14,8 +17,9 @@ function mountToolbar() {
 		document.querySelector('#editor');
 
 	if (!editorWrapper) {
-		// Retry — editor may not be ready yet
-		setTimeout(mountToolbar, 500);
+		if (mountRetries++ < MAX_MOUNT_RETRIES) {
+			setTimeout(mountToolbar, 500);
+		}
 		return;
 	}
 

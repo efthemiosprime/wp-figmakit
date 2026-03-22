@@ -50,9 +50,16 @@ function wp_figmakit_get_grid_settings() {
  * Save grid settings.
  */
 function wp_figmakit_save_grid_settings( $request ) {
+	$fields = wp_figmakit_get_grid_fields();
+	$params = $request->get_json_params();
+
+	// Atomic read-modify-write with transient lock.
+	$lock_key = 'wp_figmakit_options_lock';
+	if ( ! get_transient( $lock_key ) ) {
+		set_transient( $lock_key, 1, 5 );
+	}
+
 	$options = get_option( 'wp_figmakit_options', array() );
-	$fields  = wp_figmakit_get_grid_fields();
-	$params  = $request->get_json_params();
 
 	foreach ( $fields as $field ) {
 		$key = $field['key'];
@@ -65,6 +72,7 @@ function wp_figmakit_save_grid_settings( $request ) {
 	}
 
 	update_option( 'wp_figmakit_options', $options );
+	delete_transient( $lock_key );
 
 	return rest_ensure_response( array( 'success' => true ) );
 }

@@ -50,13 +50,11 @@ add_filter( 'block_categories_all', 'wp_figmakit_block_categories', 10, 1 );
  * Enqueue custom block editor scripts from Vite build.
  */
 function wp_figmakit_enqueue_block_scripts() {
-	$manifest_path = WP_FIGMAKIT_DIR . '/dist/.vite/manifest.json';
+	$manifest = wp_figmakit_get_manifest();
 
-	if ( ! file_exists( $manifest_path ) ) {
+	if ( ! $manifest ) {
 		return;
 	}
-
-	$manifest = json_decode( file_get_contents( $manifest_path ), true );
 
 	// Auto-enqueue block-* entries
 	foreach ( $manifest as $entry => $data ) {
@@ -92,13 +90,11 @@ add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_block_scripts' )
  * Enqueue block frontend CSS.
  */
 function wp_figmakit_enqueue_block_frontend_styles() {
-	$manifest_path = WP_FIGMAKIT_DIR . '/dist/.vite/manifest.json';
+	$manifest = wp_figmakit_get_manifest();
 
-	if ( ! file_exists( $manifest_path ) ) {
+	if ( ! $manifest ) {
 		return;
 	}
-
-	$manifest = json_decode( file_get_contents( $manifest_path ), true );
 
 	foreach ( $manifest as $entry => $data ) {
 		if ( strpos( $entry, 'src/blocks/' ) === 0 && isset( $data['css'] ) ) {

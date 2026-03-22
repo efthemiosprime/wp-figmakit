@@ -1,4 +1,4 @@
-const { useState, useEffect, useCallback } = wp.element;
+const { useState, useEffect, useCallback, useRef } = wp.element;
 const { TextControl, Button, Notice } = wp.components;
 const { __ } = wp.i18n;
 
@@ -15,6 +15,9 @@ export default function GridPanel() {
 	const [values, setValues] = useState({});
 	const [saved, setSaved] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const timerRef = useRef();
+
+	useEffect(() => () => clearTimeout(timerRef.current), []);
 
 	useEffect(() => {
 		wp.apiFetch({ path: '/wp-figmakit/v1/grid-settings' }).then((data) => {
@@ -46,7 +49,8 @@ export default function GridPanel() {
 			root.style.setProperty('--fk-container-max', values.grid_container_max);
 			root.style.setProperty('--fk-container-padding', values.grid_container_padding);
 			root.style.setProperty('--fk-gutter', values.grid_gutter);
-			setTimeout(() => setSaved(false), 3000);
+			clearTimeout(timerRef.current);
+			timerRef.current = setTimeout(() => setSaved(false), 3000);
 		});
 	}, [values]);
 

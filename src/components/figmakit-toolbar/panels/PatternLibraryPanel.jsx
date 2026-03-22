@@ -1,4 +1,4 @@
-const { useState, useEffect, useCallback, useMemo } = wp.element;
+const { useState, useEffect, useCallback, useMemo, useRef } = wp.element;
 const { Button, TextControl, Notice, Spinner } = wp.components;
 const { __ } = wp.i18n;
 const { BlockPreview } = wp.blockEditor;
@@ -72,10 +72,14 @@ export default function PatternLibraryPanel() {
 	const [savingNew, setSavingNew] = useState(false);
 	const [newName, setNewName] = useState('');
 	const [status, setStatus] = useState(null);
+	const timerRef = useRef();
+
+	useEffect(() => () => clearTimeout(timerRef.current), []);
 
 	const showStatus = useCallback((type, message) => {
 		setStatus({ type, message });
-		setTimeout(() => setStatus(null), 4000);
+		clearTimeout(timerRef.current);
+		timerRef.current = setTimeout(() => setStatus(null), 4000);
 	}, []);
 
 	const fetchPatterns = useCallback(() => {
@@ -87,8 +91,14 @@ export default function PatternLibraryPanel() {
 	}, []);
 
 	useEffect(() => {
-		fetchPatterns();
-	}, [fetchPatterns]);
+		const controller = new AbortController();
+		wp.apiFetch({ path: '/wp/v2/blocks?per_page=100', signal: controller.signal }).then((data) => {
+			setPatterns(data);
+		}).catch((err) => {
+			if (err.name !== 'AbortError') setPatterns([]);
+		});
+		return () => controller.abort();
+	}, []);
 
 	const filtered = useMemo(() => {
 		if (!patterns) return [];

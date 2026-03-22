@@ -44,6 +44,15 @@ function buildMenuTree(items) {
 }
 
 /**
+ * Decode HTML entities from REST API rendered strings.
+ */
+function decodeEntities(str) {
+	const txt = document.createElement('textarea');
+	txt.innerHTML = str;
+	return txt.value;
+}
+
+/**
  * Render a nav menu preview from menu items.
  */
 function MenuPreview({ menuId, type, label }) {
@@ -54,11 +63,13 @@ function MenuPreview({ menuId, type, label }) {
 			setItems([]);
 			return;
 		}
-		wp.apiFetch({ path: `/wp/v2/menu-items?menus=${menuId}&per_page=100` }).then((data) => {
+		const controller = new AbortController();
+		wp.apiFetch({ path: `/wp/v2/menu-items?menus=${menuId}&per_page=100`, signal: controller.signal }).then((data) => {
 			setItems(data);
-		}).catch(() => {
-			setItems([]);
+		}).catch((err) => {
+			if (err.name !== 'AbortError') setItems([]);
 		});
+		return () => controller.abort();
 	}, [menuId]);
 
 	const tree = useMemo(() => buildMenuTree(items), [items]);
@@ -102,7 +113,7 @@ function MenuPreview({ menuId, type, label }) {
 					>
 						<a className={linkClass} href="#" onClick={(e) => e.preventDefault()}>
 							{type === 'primary' ? (
-								<span>{item.title.rendered}</span>
+								<span>{decodeEntities(item.title.rendered)}</span>
 							) : (
 								item.title.rendered
 							)}

@@ -23,9 +23,12 @@ function wp_figmakit_apply_block_policies( $block_content, $block ) {
 		return $block_content;
 	}
 
-	// Validate against saved policies
-	$options  = get_option( 'wp_figmakit_options', array() );
-	$policies = isset( $options['policies'] ) ? $options['policies'] : array();
+	// Validate against saved policies (cached per request).
+	static $policies = null;
+	if ( $policies === null ) {
+		$options  = get_option( 'wp_figmakit_options', array() );
+		$policies = isset( $options['policies'] ) ? $options['policies'] : array();
+	}
 	$block_name = isset( $block['blockName'] ) ? $block['blockName'] : '';
 
 	$allowed = array();
@@ -50,4 +53,5 @@ function wp_figmakit_apply_block_policies( $block_content, $block ) {
 
 	return $dom->get_updated_html();
 }
-add_filter( 'render_block', 'wp_figmakit_apply_block_policies', 10, 2 );
+// Moved to block-render-combined.php for single-pass performance.
+// add_filter( 'render_block', 'wp_figmakit_apply_block_policies', 10, 2 );

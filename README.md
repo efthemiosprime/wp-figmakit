@@ -2,6 +2,7 @@
 
 A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities. Also serves as the starting point for the FigmaKit plugin.
 
+- **Author**: Efthemios Suyat (support@figmakit.dev)
 - **Version**: 1.0.0
 - **Build System**: Vite 6.0 + SASS
 - **Architecture**: Modular PHP includes, React-based editor extensions
@@ -75,6 +76,7 @@ wp-figmakit/
 │   ├── grid-api.php           # Grid settings REST API
 │   ├── colors-api.php         # Color tokens REST API
 │   ├── policies-api.php       # Block policies REST API
+│   ├── class-fk-header-nav-walker.php  # Custom nav walker for header block
 │   ├── block-attributes.php   # Custom HTML attributes on blocks
 │   ├── block-policies.php     # Style class system for blocks
 │   ├── block-spacing.php      # Spacing utility classes
@@ -88,6 +90,7 @@ wp-figmakit/
 │   ├── card/                  # block.json + render.php
 │   ├── cta/
 │   ├── feature/
+│   ├── header/                # Site header with nav menus
 │   ├── hero/
 │   └── testimonial/
 │
@@ -116,6 +119,7 @@ wp-figmakit/
     │   ├── card/
     │   ├── cta/
     │   ├── feature/
+    │   ├── header/            # Header block editor + frontend JS
     │   ├── hero/
     │   └── testimonial/
     ├── components/            # Editor enhancement components
@@ -158,7 +162,7 @@ wp-figmakit/
 
 | Entry | File | Purpose |
 |-------|------|---------|
-| `main` | `src/main.js` | Frontend styles and scripts |
+| `main` | `src/main.js` | Frontend styles, scripts, and header mobile toggle |
 | `editor` | `src/editor.js` | Block editor extensions and toolbar |
 | `block-*` | `src/blocks/*/index.js` | Auto-discovered per-block scripts |
 
@@ -181,7 +185,7 @@ The theme uses a Vite manifest for production and a direct dev server connection
 - `wp_figmakit_is_vite_dev()` — detects if the dev server is running
 - `wp_figmakit_get_manifest()` — reads `dist/.vite/manifest.json`
 - `wp_figmakit_enqueue_entry()` — loads entries with HMR or hashed production URLs
-- Scripts are output with `type="module"` via `script_loader_tag` filter
+- All `wp-figmakit` prefixed scripts are output with `type="module"` via `script_loader_tag` filter
 
 ---
 
@@ -222,8 +226,10 @@ The toolbar is a standalone React component mounted directly to the DOM (not usi
 
 - **Toolbar.jsx** — Main component with panel state management
 - **ToolbarButton.jsx** — Individual icon buttons (40x40px)
-- **FlyoutPanel.jsx** — 300px-wide slide-out panels with header and close button
-- **icons.jsx** — Lucide-style SVG icons
+- **FlyoutPanel.jsx** — Slide-out panels (300px default, supports custom width via `className` prop)
+- **icons.jsx** — Lucide-style SVG icons (GridIcon, PaletteIcon, FormIcon, PortabilityIcon, LayoutIcon)
+
+The toolbar is hidden in the Site Editor and only appears in the post/page editor.
 
 ### Panels
 
@@ -241,7 +247,18 @@ Manages theme color tokens with a visual color picker:
 - Support for custom colors (add/remove)
 - Live CSS variable updates in the editor
 
-#### Policies (Style Classes)
+#### Patterns (Pattern Library)
+Visual pattern library panel (600px wide, 2-column grid) for managing reusable block patterns:
+- **Browse**: Visual preview cards using `wp.blockEditor.BlockPreview`
+- **Search**: Filter patterns by name
+- **Insert**: Click a pattern card to insert blocks at cursor position
+- **Save**: Save currently selected blocks as a new reusable pattern
+- **Rename**: Inline rename with Enter to confirm, Escape to cancel
+- **Delete**: Remove patterns with confirmation dialog
+
+Uses the WordPress `/wp/v2/blocks` REST API (Synced Patterns / Reusable Blocks).
+
+#### Block Policies (Style Classes)
 Defines allowed CSS classes per block type:
 - Map class names to human-readable labels
 - Assign classes to specific block types (Group, Paragraph, Heading, Image, Button, etc.)
@@ -286,6 +303,38 @@ Export and import entire page layouts as JSON files:
 ## Custom Blocks
 
 All blocks are in the `wp-figmakit` category and use server-side rendering via `render.php`.
+
+### Header (`wp-figmakit/fk-header`)
+
+Site header block with logo, utility navigation, and main navigation. Used as the default header template part.
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `variant` | string | `"default"` | Layout variant |
+| `utilityMenuId` | number | `0` | WordPress nav_menu term ID for utility nav |
+| `mainMenuId` | number | `0` | WordPress nav_menu term ID for main nav |
+| `showUtilityMenu` | boolean | `true` | Toggle utility menu visibility |
+| `showSkipLink` | boolean | `true` | Toggle skip-to-content link |
+
+**Variants:**
+- **`default`** — Logo flush left, utility menu and main menu stacked flush right
+- **`header-utility-top`** — Utility nav on top row, logo + main nav on bottom row
+
+**Features:**
+- Menu items populated from WordPress registered menus via dropdown selector
+- Live menu preview in the editor (fetches actual menu items via REST API)
+- Logo area uses InnerBlocks (`core/site-logo`, `core/image`, `core/group`)
+- Server-side rendering with custom `FK_Header_Nav_Walker` for BEM-style HTML output
+- Mobile hamburger toggle with animated X, `aria-expanded`, and Escape key handling
+- Skip-to-content link for accessibility
+- WCAG AA compliant: `role="banner"`, distinct `aria-label` on each nav, `aria-expanded` on dropdowns, `:focus-visible` outlines
+
+**Mobile behavior** (< 768px):
+- Hamburger toggle (fixed position, top-right)
+- Menus stack vertically: main menu first, utility menu below
+- Submenus collapsed, toggled via tap/click
+
+CSS classes: `.fk-header`, `.fk-header--{variant}`, `.fk-header__inner`, `.fk-header__logo`, `.fk-header__menus`, `.fk-header__utility`, `.fk-header__primary`
 
 ### Card (`wp-figmakit/fk-card`)
 
@@ -613,13 +662,14 @@ POST /wp-figmakit/v1/policies         # Requires: manage_options
 
 | Part | Description |
 |------|-------------|
-| `header.html` | Site header with navigation |
+| `header.html` | FK Header block (logo + utility/main nav) |
 | `footer.html` | Site footer |
 | `sidebar.html` | Sidebar widget area |
 
 ### Navigation Menus
 
 - **Primary** — Main site navigation
+- **Utility** — Utility/secondary navigation (used by header block)
 - **Footer** — Footer navigation
 
 ### Block Patterns
@@ -687,11 +737,11 @@ Full CSP configuration with per-directive controls and pre-configured defaults f
 
 ## Figma Token Integration
 
-The theme can merge Figma design tokens from the FigmaKit plugin into `theme.json` at runtime.
+The theme can optionally merge Figma design tokens into `theme.json` at runtime.
 
-- Reads `figma-tokens.json` from the theme root
+- Reads `figma-tokens.json` from the theme root (if present)
 - Merges tokens via the `wp_theme_json_data_theme` filter
-- Allows plugin-generated tokens to override/extend theme settings
+- Gracefully handles missing file — theme works independently
 
 ---
 

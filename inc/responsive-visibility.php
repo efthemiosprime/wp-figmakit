@@ -46,4 +46,5 @@ function wp_figmakit_apply_responsive_visibility( $block_content, $block ) {
 
 	return $dom->get_updated_html();
 }
-add_filter( 'render_block', 'wp_figmakit_apply_responsive_visibility', 10, 2 );
+// Moved to block-render-combined.php for single-pass performance.
+// add_filter( 'render_block', 'wp_figmakit_apply_responsive_visibility', 10, 2 );

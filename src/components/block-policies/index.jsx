@@ -10,12 +10,12 @@ let policiesCache = null;
 let policiesLoading = false;
 let policiesCallbacks = [];
 
+// Listen for policy updates from PoliciesPanel.
+document.addEventListener('fk-policies-updated', (e) => {
+	policiesCache = e.detail;
+});
+
 function loadPolicies(callback) {
-	// Use window cache if available (set by PoliciesPanel on save)
-	if (window._fkPolicies) {
-		callback(window._fkPolicies);
-		return;
-	}
 
 	if (policiesCache !== null) {
 		callback(policiesCache);
@@ -29,7 +29,6 @@ function loadPolicies(callback) {
 
 	wp.apiFetch({ path: '/wp-figmakit/v1/policies' }).then((data) => {
 		policiesCache = data || {};
-		window._fkPolicies = policiesCache;
 		policiesLoading = false;
 		policiesCallbacks.forEach((cb) => cb(policiesCache));
 		policiesCallbacks = [];

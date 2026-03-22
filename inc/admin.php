@@ -225,22 +225,33 @@ function wp_figmakit_get_grid_fields() {
  * Output grid CSS custom properties from admin settings.
  */
 function wp_figmakit_output_grid_css() {
-	$container_max     = wp_figmakit_get_option( 'grid_container_max', '1440px' );
-	$container_padding = wp_figmakit_get_option( 'grid_container_padding', '160px' );
-	$container_tablet  = wp_figmakit_get_option( 'grid_container_padding_tablet', '32px' );
-	$container_mobile  = wp_figmakit_get_option( 'grid_container_padding_mobile', '24px' );
-	$gutter            = wp_figmakit_get_option( 'grid_gutter', '24px' );
-	$gutter_mobile     = wp_figmakit_get_option( 'grid_gutter_mobile', '16px' );
+	$options = get_option( 'wp_figmakit_options', array() );
 
-	$css = ":root{";
-	$css .= "--fk-container-max:{$container_max};";
-	$css .= "--fk-container-padding:{$container_padding};";
-	$css .= "--fk-gutter:{$gutter};";
-	$css .= "}";
-	$css .= "@media(max-width:980px){:root{--fk-container-padding:{$container_tablet};}}";
-	$css .= "@media(max-width:767px){:root{--fk-container-padding:{$container_mobile};--fk-gutter:{$gutter_mobile};}}";
+	$fields = array(
+		'grid_container_max'            => '1440px',
+		'grid_container_padding'        => '160px',
+		'grid_container_padding_tablet' => '32px',
+		'grid_container_padding_mobile' => '24px',
+		'grid_gutter'                   => '24px',
+		'grid_gutter_mobile'            => '16px',
+	);
 
-	echo "<style id='fk-grid-vars'>{$css}</style>\n";
+	$vals = array();
+	foreach ( $fields as $key => $default ) {
+		$raw = isset( $options[ $key ] ) ? $options[ $key ] : $default;
+		// Strict CSS value validation — only digits, dots, and units.
+		$vals[ $key ] = preg_match( '/^[\d.]+(px|em|rem|%|vw|vh)$/', $raw ) ? $raw : $default;
+	}
+
+	$css  = ':root{';
+	$css .= '--fk-container-max:' . $vals['grid_container_max'] . ';';
+	$css .= '--fk-container-padding:' . $vals['grid_container_padding'] . ';';
+	$css .= '--fk-gutter:' . $vals['grid_gutter'] . ';';
+	$css .= '}';
+	$css .= '@media(max-width:980px){:root{--fk-container-padding:' . $vals['grid_container_padding_tablet'] . ';}}';
+	$css .= '@media(max-width:767px){:root{--fk-container-padding:' . $vals['grid_container_padding_mobile'] . ';--fk-gutter:' . $vals['grid_gutter_mobile'] . ';}}';
+
+	echo "<style id='fk-grid-vars'>" . $css . "</style>\n";
 }
 add_action( 'wp_head', 'wp_figmakit_output_grid_css', 100 );
 

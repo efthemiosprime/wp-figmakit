@@ -1,4 +1,4 @@
-const { useState, useEffect, useCallback } = wp.element;
+const { useState, useEffect, useCallback, useRef } = wp.element;
 const { Button, TextControl, SelectControl, Notice } = wp.components;
 const { getBlockTypes } = wp.blocks;
 const { __ } = wp.i18n;
@@ -7,6 +7,9 @@ export default function PoliciesPanel() {
 	const [policies, setPolicies] = useState({});
 	const [saved, setSaved] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const timerRef = useRef();
+
+	useEffect(() => () => clearTimeout(timerRef.current), []);
 	const [newBlockType, setNewBlockType] = useState('');
 	const [addingClass, setAddingClass] = useState(null); // block type key currently adding to
 	const [newLabel, setNewLabel] = useState('');
@@ -90,9 +93,10 @@ export default function PoliciesPanel() {
 			data: policies,
 		}).then(() => {
 			setSaved(true);
-			// Update cached policies for sidebar panels
-			window._fkPolicies = policies;
-			setTimeout(() => setSaved(false), 3000);
+			// Notify block-policies component of updated policies.
+			document.dispatchEvent(new CustomEvent('fk-policies-updated', { detail: policies }));
+			clearTimeout(timerRef.current);
+			timerRef.current = setTimeout(() => setSaved(false), 3000);
 		});
 	}, [policies]);
 
