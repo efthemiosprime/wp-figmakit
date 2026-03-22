@@ -1,0 +1,88 @@
+.fk-admin {
+	max-width: 1200px;
+}
+
+.fk-admin__title {
+	font-size: 24px;
+	font-weight: 600;
+	margin-bottom: 24px;
+}
+
+.fk-admin__section {
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	padding: 24px;
+	margin-bottom: 24px;
+}
+
+.fk-admin__section-title {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.fk-admin__toggles {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.fk-admin__toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.fk-admin__toggle input[type="checkbox"] {
+	width: 18px;
+	height: 18px;
+}
+
+.fk-admin__code-block {
+	margin-bottom: 24px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.fk-admin__code-block:last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+.fk-admin__code-block h3 {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0 0 4px;
+}
+
+.fk-admin__code-block .description {
+	font-size: 13px;
+	color: #666;
+	margin: 0 0 12px;
+}
+
+.fk-admin__textarea {
+	width: 100%;
+	font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	padding: 12px;
+	background: #2d2d2d;
+	color: #e0e0e0;
+	border: 1px solid #444;
+	border-radius: 4px;
+	resize: vertical;
+	tab-size: 2;
+}
+
+.fk-admin__textarea:focus {
+	outline: none;
+	border-color: #007cba;
+	box-shadow: 0 0 0 1px #007cba;
+}
