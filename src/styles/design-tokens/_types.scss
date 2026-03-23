@@ -131,3 +131,25 @@
 
 .fk-ff-sans { font-family: var(--fk-font-sans); }
 .fk-ff-mono { font-family: var(--fk-font-mono); }
+
+// ==========================================================================
+// Text Align Classes
+// ==========================================================================
+
+.fk-text-left { text-align: left; }
+.fk-text-center { text-align: center; }
+.fk-text-right { text-align: right; }
+.fk-text-justify { text-align: justify; }
+
+// Responsive text alignment
+@media (max-width: 980px) {
+  .fk-md-text-left { text-align: left; }
+  .fk-md-text-center { text-align: center; }
+  .fk-md-text-right { text-align: right; }
+}
+
+@media (max-width: 767px) {
+  .fk-sm-text-left { text-align: left; }
+  .fk-sm-text-center { text-align: center; }
+  .fk-sm-text-right { text-align: right; }
+}
