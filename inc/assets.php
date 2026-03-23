@@ -11,9 +11,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Check if Vite dev server is running.
+ *
+ * Uses a hot file that Vite creates when the dev server starts.
+ * Create a file at wp-content/themes/wp-figmakit/.vite-dev to force dev mode,
+ * or run `npm run dev` which serves from localhost:5173.
  */
 function wp_figmakit_is_vite_dev() {
-	return ! file_exists( WP_FIGMAKIT_DIR . '/dist/.vite/manifest.json' );
+	// Explicit hot file — create .vite-dev to force dev mode.
+	if ( file_exists( WP_FIGMAKIT_DIR . '/.vite-dev' ) ) {
+		return true;
+	}
+
+	// Check if the Vite dev server is actually responding.
+	static $is_dev = null;
+	if ( $is_dev === null ) {
+		$is_dev = false;
+		// Only check in development environments (not on every production page load).
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$response = @file_get_contents( 'http://localhost:5173/@vite/client', false, stream_context_create( array(
+				'http' => array( 'timeout' => 0.3 ),
+			) ) );
+			$is_dev = ( $response !== false );
+		}
+	}
+	return $is_dev;
 }
 
 /**
@@ -37,6 +58,8 @@ function wp_figmakit_get_manifest() {
  */
 function wp_figmakit_enqueue_entry( $entry, $handle ) {
 	if ( wp_figmakit_is_vite_dev() ) {
+		// Dev mode: everything from Vite dev server.
+		// Vite client handles CSS injection via HMR.
 		wp_enqueue_script(
 			'wp-figmakit-vite-client',
 			'http://localhost:5173/@vite/client',
@@ -55,6 +78,7 @@ function wp_figmakit_enqueue_entry( $entry, $handle ) {
 		return;
 	}
 
+	// Production: everything from dist.
 	$manifest = wp_figmakit_get_manifest();
 	if ( ! $manifest || ! isset( $manifest[ $entry ] ) ) {
 		return;

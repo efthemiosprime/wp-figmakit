@@ -47,16 +47,40 @@ function wp_figmakit_block_categories( $categories ) {
 add_filter( 'block_categories_all', 'wp_figmakit_block_categories', 10, 1 );
 
 /**
- * Enqueue custom block editor scripts from Vite build.
+ * Enqueue custom block editor scripts from Vite build or dev server.
  */
 function wp_figmakit_enqueue_block_scripts() {
-	$manifest = wp_figmakit_get_manifest();
+	$is_dev     = wp_figmakit_is_vite_dev();
+	$block_deps = array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-data' );
 
+	if ( $is_dev ) {
+		// Dev mode: load block scripts directly from Vite dev server.
+		$blocks_dir = WP_FIGMAKIT_DIR . '/src/blocks';
+		if ( ! is_dir( $blocks_dir ) ) {
+			return;
+		}
+		foreach ( scandir( $blocks_dir ) as $dir ) {
+			if ( $dir === '.' || $dir === '..' ) continue;
+			$entry = $blocks_dir . '/' . $dir . '/index.js';
+			if ( file_exists( $entry ) ) {
+				wp_enqueue_script(
+					'wp-figmakit-block-' . $dir,
+					'http://localhost:5173/src/blocks/' . $dir . '/index.js',
+					$block_deps,
+					null,
+					true
+				);
+			}
+		}
+		return;
+	}
+
+	// Production: load from manifest.
+	$manifest = wp_figmakit_get_manifest();
 	if ( ! $manifest ) {
 		return;
 	}
 
-	// Auto-enqueue block-* entries
 	foreach ( $manifest as $entry => $data ) {
 		if ( strpos( $entry, 'src/blocks/' ) === 0 && isset( $data['file'] ) ) {
 			$block_name = basename( dirname( $entry ) );
@@ -65,12 +89,11 @@ function wp_figmakit_enqueue_block_scripts() {
 			wp_enqueue_script(
 				$handle,
 				WP_FIGMAKIT_URI . '/dist/' . $data['file'],
-				array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-data' ),
+				$block_deps,
 				WP_FIGMAKIT_VERSION,
 				true
 			);
 
-			// Enqueue block CSS
 			if ( isset( $data['css'] ) ) {
 				foreach ( $data['css'] as $i => $css ) {
 					wp_enqueue_style(
@@ -88,10 +111,15 @@ add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_block_scripts' )
 
 /**
  * Enqueue block frontend CSS.
+ * In dev mode, Vite's main.js import handles CSS via HMR.
+ * In production, load from dist manifest.
  */
 function wp_figmakit_enqueue_block_frontend_styles() {
-	$manifest = wp_figmakit_get_manifest();
+	if ( wp_figmakit_is_vite_dev() ) {
+		return; // Vite client injects CSS via HMR.
+	}
 
+	$manifest = wp_figmakit_get_manifest();
 	if ( ! $manifest ) {
 		return;
 	}
@@ -116,15 +144,24 @@ add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_styles' );
  * Enqueue frontend JS for blocks that need interactivity (tabs, accordion, etc.).
  */
 function wp_figmakit_enqueue_block_frontend_scripts() {
-	// Only enqueue when the fk-tabs block is present on the page.
 	if ( ! has_block( 'wp-figmakit/fk-tabs' ) ) {
+		return;
+	}
+
+	if ( wp_figmakit_is_vite_dev() ) {
+		wp_enqueue_script(
+			'wp-figmakit-tabs-frontend',
+			'http://localhost:5173/src/blocks/tabs/tabs-frontend.js',
+			array(),
+			null,
+			true
+		);
 		return;
 	}
 
 	$manifest = wp_figmakit_get_manifest();
 	$src      = null;
 
-	// Look for tabs-frontend in the Vite manifest.
 	if ( $manifest ) {
 		foreach ( $manifest as $entry => $data ) {
 			if ( strpos( $entry, 'tabs-frontend' ) !== false && isset( $data['file'] ) ) {
@@ -134,17 +171,14 @@ function wp_figmakit_enqueue_block_frontend_scripts() {
 		}
 	}
 
-	// Fallback: use source file directly (dev mode).
-	if ( ! $src ) {
-		$src = WP_FIGMAKIT_URI . '/src/blocks/tabs/tabs-frontend.js';
+	if ( $src ) {
+		wp_enqueue_script(
+			'wp-figmakit-tabs-frontend',
+			$src,
+			array(),
+			WP_FIGMAKIT_VERSION,
+			true
+		);
 	}
-
-	wp_enqueue_script(
-		'wp-figmakit-tabs-frontend',
-		$src,
-		array(),
-		WP_FIGMAKIT_VERSION,
-		true
-	);
 }
 add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_scripts' );

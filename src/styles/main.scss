@@ -8,6 +8,15 @@
 @use './design-tokens/grid';
 @use './design-tokens/utils';
 
+// Block Styles (frontend)
+@use '../blocks/card/card';
+@use '../blocks/hero/hero';
+@use '../blocks/feature/feature';
+@use '../blocks/header/header';
+@use '../blocks/cta/cta';
+@use '../blocks/testimonial/testimonial';
+@use '../blocks/tabs/tabs';
+
 *,
 *::before,
 *::after {
