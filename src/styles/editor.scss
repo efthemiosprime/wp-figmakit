@@ -73,6 +73,15 @@
 	padding-right: 60px !important;
 	outline: 1px dashed rgba(0, 124, 186, 0.2);
 	outline-offset: -1px;
+
+	// Nested fk-row in editor — strip parent container styles
+	.fk-row {
+		max-width: none !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
 }
 
 // Column blocks — visible boundaries and min height

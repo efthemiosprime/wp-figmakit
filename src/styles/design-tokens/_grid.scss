@@ -77,6 +77,15 @@ $grid-gutter: 24px !default;
     flex-wrap: wrap !important;
     flex-direction: column !important;
   }
+
+  // Nested fk-row — strip parent container styles
+  .fk-row {
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 .fk-row-no-gutter {
