@@ -1,0 +1,221 @@
+/* ---------------------------------------------------------------
+   fk-tabs — Tabbed content block
+   WCAG 2.1 AA compliant
+   --------------------------------------------------------------- */
+
+.fk-tabs {
+	width: 100%;
+}
+
+/* ---- Tab navigation ---- */
+
+.fk-tabs__nav {
+	display: flex;
+	gap: 0;
+	border-bottom: 2px solid var(--wp--preset--color--contrast, #e2e8f0);
+	margin-bottom: 0;
+}
+
+.fk-tabs--vertical .fk-tabs__nav {
+	flex-direction: column;
+	border-bottom: none;
+	border-right: 2px solid var(--wp--preset--color--contrast, #e2e8f0);
+	min-width: 180px;
+}
+
+.fk-tabs--vertical {
+	display: flex;
+	flex-direction: row;
+}
+
+/* ---- Tab button ---- */
+/* SC 2.5.8: min 44×44px touch target */
+
+.fk-tabs__tab {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 12px 20px;
+	min-height: 44px;
+	min-width: 44px;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -2px;
+	background: transparent;
+	color: var(--wp--preset--color--contrast, #64748b);
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: color 0.15s, border-color 0.15s;
+	white-space: nowrap;
+	position: relative;
+
+	&:hover {
+		color: var(--wp--preset--color--base, #1e293b);
+	}
+
+	&--active {
+		color: var(--wp--preset--color--base, #1e293b);
+		border-bottom-color: currentColor;
+	}
+
+	/* SC 2.4.7: visible focus indicator — 2px offset outline */
+	&:focus-visible {
+		outline: 2px solid var(--wp--preset--color--base, #1e293b);
+		outline-offset: -2px;
+		border-radius: 2px;
+	}
+
+	/* Fallback for browsers without :focus-visible */
+	&:focus:not(:focus-visible) {
+		outline: none;
+	}
+}
+
+.fk-tabs--vertical .fk-tabs__tab {
+	border-bottom: none;
+	border-right: 2px solid transparent;
+	margin-bottom: 0;
+	margin-right: -2px;
+	justify-content: flex-start;
+
+	&--active {
+		border-right-color: currentColor;
+	}
+}
+
+/* ---- Tab icon ---- */
+/* Icons are aria-hidden, decorative only */
+
+.fk-tabs__tab-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+}
+
+/* ---- Superscript ---- */
+/* aria-hidden on the visual sup; full label in aria-label on button */
+
+.fk-tabs__tab-sup {
+	font-size: 0.625rem;
+	font-weight: 600;
+	/* SC 1.4.3: contrast ratio ≥ 4.5:1 — using high-contrast color */
+	color: var(--wp--preset--color--vivid-red, #b91c1c);
+	vertical-align: super;
+	line-height: 1;
+}
+
+/* ---- Tab panels ---- */
+
+.fk-tabs__panels {
+	flex: 1;
+}
+
+.fk-tabs__panel {
+	display: none;
+	padding: 20px 0;
+
+	&--active {
+		display: block;
+	}
+
+	/* SC 2.4.7: focus indicator when panel receives focus via Tab */
+	&:focus-visible {
+		outline: 2px solid var(--wp--preset--color--base, #1e293b);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+	}
+}
+
+.fk-tabs--vertical .fk-tabs__panel {
+	padding: 0 20px;
+}
+
+/* ---- Reduced motion ---- */
+/* SC 2.3.3: respect user motion preference */
+
+@media (prefers-reduced-motion: reduce) {
+	.fk-tabs__tab {
+		transition: none;
+	}
+}
+
+/* ---- High contrast mode ---- */
+
+@media (forced-colors: active) {
+	.fk-tabs__tab {
+		border-bottom-color: ButtonFace;
+
+		&--active {
+			border-bottom-color: Highlight;
+			color: Highlight;
+		}
+
+		&:focus-visible {
+			outline-color: Highlight;
+		}
+	}
+
+	.fk-tabs__panel:focus-visible {
+		outline-color: Highlight;
+	}
+}
+
+/* ---- Add tab button (editor only) ---- */
+
+.fk-tabs__add-tab {
+	margin-left: 4px;
+	opacity: 0.5;
+	min-height: 44px;
+	min-width: 44px;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+/* ---- Editor styles ---- */
+
+.fk-tabs--editor .fk-tabs__panels {
+	min-height: 100px;
+}
+
+.fk-tabs__panel-wrapper {
+	border: 1px dashed #e2e8f0;
+	border-radius: 4px;
+	padding: 12px;
+	margin-top: 8px;
+}
+
+.fk-tabs__panel-label {
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #94a3b8;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 4px 0 8px;
+	margin-bottom: 8px;
+	border-bottom: 1px dashed #e2e8f0;
+}
+
+.fk-tabs__panel-content {
+	min-height: 60px;
+}

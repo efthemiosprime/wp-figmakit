@@ -111,3 +111,40 @@ function wp_figmakit_enqueue_block_frontend_styles() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_styles' );
+
+/**
+ * Enqueue frontend JS for blocks that need interactivity (tabs, accordion, etc.).
+ */
+function wp_figmakit_enqueue_block_frontend_scripts() {
+	// Only enqueue when the fk-tabs block is present on the page.
+	if ( ! has_block( 'wp-figmakit/fk-tabs' ) ) {
+		return;
+	}
+
+	$manifest = wp_figmakit_get_manifest();
+	$src      = null;
+
+	// Look for tabs-frontend in the Vite manifest.
+	if ( $manifest ) {
+		foreach ( $manifest as $entry => $data ) {
+			if ( strpos( $entry, 'tabs-frontend' ) !== false && isset( $data['file'] ) ) {
+				$src = WP_FIGMAKIT_URI . '/dist/' . $data['file'];
+				break;
+			}
+		}
+	}
+
+	// Fallback: use source file directly (dev mode).
+	if ( ! $src ) {
+		$src = WP_FIGMAKIT_URI . '/src/blocks/tabs/tabs-frontend.js';
+	}
+
+	wp_enqueue_script(
+		'wp-figmakit-tabs-frontend',
+		$src,
+		array(),
+		WP_FIGMAKIT_VERSION,
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_scripts' );
