@@ -65,14 +65,16 @@ if ( $show_skip ) : ?>
 					<?php echo $content; ?>
 				</div>
 				<div class="fk-header__menus">
-					<?php if ( $show_utility ) : ?>
+					<?php if ( $show_utility && $utility_menu_id ) : ?>
 					<div class="fk-header__menus-row">
 						<?php $render_nav( $utility_menu_id, 'utility' ); ?>
 					</div>
 					<?php endif; ?>
+					<?php if ( $main_menu_id ) : ?>
 					<div class="fk-header__menus-row">
 						<?php $render_nav( $main_menu_id, 'primary' ); ?>
 					</div>
+					<?php endif; ?>
 				</div>
 				<button class="fk-header__toggle" aria-expanded="false" aria-controls="fk-header-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle menu', 'wp-figmakit' ); ?>">
 					<span class="fk-header__toggle-bar"></span>
@@ -83,19 +85,17 @@ if ( $show_skip ) : ?>
 
 		<?php else : ?>
 
+			<?php if ( $show_utility && $utility_menu_id ) : ?>
 			<div class="fk-header__row fk-header__row--top">
-				<?php
-				if ( $show_utility ) {
-					$render_nav( $utility_menu_id, 'utility' );
-				}
-				?>
+				<?php $render_nav( $utility_menu_id, 'utility' ); ?>
 			</div>
+			<?php endif; ?>
 
 			<div class="fk-header__row fk-header__row--main">
 				<div class="fk-header__logo">
 					<?php echo $content; ?>
 				</div>
-				<?php $render_nav( $main_menu_id, 'primary' ); ?>
+				<?php if ( $main_menu_id ) { $render_nav( $main_menu_id, 'primary' ); } ?>
 				<button class="fk-header__toggle" aria-expanded="false" aria-controls="fk-header-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle menu', 'wp-figmakit' ); ?>">
 					<span class="fk-header__toggle-bar"></span>
 					<span class="fk-header__toggle-bar"></span>

@@ -5,7 +5,7 @@ const { __ } = wp.i18n;
 const { useSelect } = wp.data;
 
 const VARIANT_OPTIONS = [
-	{ label: __('Default (Logo top)', 'wp-figmakit'), value: 'default' },
+	{ label: __('Default', 'wp-figmakit'), value: 'default' },
 	{ label: __('Utility Top', 'wp-figmakit'), value: 'header-utility-top' },
 ];
 
