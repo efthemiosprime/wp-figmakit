@@ -82,6 +82,7 @@ function wp_figmakit_apply_combined_classes( $block_content, $block ) {
 	}
 
 	// 4. Text style classes (fkTextStyle).
+	$font_family_slug = '';
 	if ( ! empty( $attrs['fkTextStyle'] ) && is_array( $attrs['fkTextStyle'] ) ) {
 		$text_allowed = array(
 			'fk-text-title', 'fk-text-subtitle', 'fk-text-eyebrow',
@@ -93,8 +94,16 @@ function wp_figmakit_apply_combined_classes( $block_content, $block ) {
 			'fk-tc-text', 'fk-tc-text-light', 'fk-tc-white',
 		);
 
-		foreach ( $attrs['fkTextStyle'] as $value ) {
-			if ( ! empty( $value ) && in_array( $value, $text_allowed, true ) ) {
+		foreach ( $attrs['fkTextStyle'] as $key => $value ) {
+			if ( empty( $value ) ) {
+				continue;
+			}
+			// Font family is stored as a slug, applied as inline style.
+			if ( 'family' === $key && ! str_starts_with( $value, 'fk-ff-' ) ) {
+				$font_family_slug = sanitize_html_class( $value );
+				continue;
+			}
+			if ( in_array( $value, $text_allowed, true ) ) {
 				$classes[] = $value;
 			}
 		}
@@ -138,8 +147,8 @@ function wp_figmakit_apply_combined_classes( $block_content, $block ) {
 		}
 	}
 
-	// Skip HTML parsing if no classes to add.
-	if ( empty( $classes ) ) {
+	// Skip HTML parsing if no classes or inline styles to add.
+	if ( empty( $classes ) && empty( $font_family_slug ) ) {
 		return $block_content;
 	}
 
@@ -151,6 +160,14 @@ function wp_figmakit_apply_combined_classes( $block_content, $block ) {
 
 	foreach ( $classes as $class ) {
 		$dom->add_class( $class );
+	}
+
+	// Apply font-family as inline style using WP preset CSS variable.
+	if ( ! empty( $font_family_slug ) ) {
+		$existing_style = $dom->get_attribute( 'style' ) ?? '';
+		$font_style     = 'font-family:var(--wp--preset--font-family--' . $font_family_slug . ')';
+		$new_style      = $existing_style ? $existing_style . ';' . $font_style : $font_style;
+		$dom->set_attribute( 'style', $new_style );
 	}
 
 	return $dom->get_updated_html();

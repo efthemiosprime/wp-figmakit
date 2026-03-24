@@ -1,6 +1,6 @@
 # WP Figmakit Theme
 
-A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities. Also serves as the starting point for the FigmaKit plugin.
+A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities.
 
 - **Author**: Efthemios Suyat (support@figmakit.dev)
 - **Version**: 1.0.0
@@ -16,15 +16,34 @@ A Gutenberg-ready WordPress theme with a design-token-driven, component/block ba
 - [Build System](#build-system)
 - [Theme Configuration](#theme-configuration)
 - [FigmaKit Toolbar](#figmakit-toolbar)
+  - [Grid Settings](#grid-settings)
+  - [Colors](#colors)
+  - [Patterns](#patterns)
+  - [Block Policies](#block-policies)
+  - [Portability](#portability)
 - [Custom Blocks](#custom-blocks)
+  - [Header](#header-wp-figmakitfk-header)
+  - [Card](#card-wp-figmakitfk-card)
+  - [Tabs](#tabs-wp-figmakitfk-tabs)
+  - [Hero](#hero-wp-figmakitfk-hero)
+  - [CTA](#call-to-action-wp-figmakitfk-cta)
+  - [Feature](#feature-wp-figmakitfk-feature)
+  - [Testimonial](#testimonial-wp-figmakitfk-testimonial)
 - [Block Editor Extensions](#block-editor-extensions)
+  - [Spacing](#spacing-fkspacing)
+  - [Layout](#layout-fklayout)
+  - [Sizing](#sizing-fksizing)
+  - [Text Style](#text-style-fktextstyle)
+  - [Visibility](#responsive-visibility-fkvisibility)
+  - [Attributes](#custom-attributes-fkattributes)
+  - [Button Icons](#button-icons-fkbuttonicon)
 - [Design Tokens & CSS Utilities](#design-tokens--css-utilities)
 - [Grid System](#grid-system)
 - [REST API Endpoints](#rest-api-endpoints)
 - [Templates & Patterns](#templates--patterns)
 - [Security](#security)
 - [Admin Options](#admin-options)
-- [Figma Token Integration](#figma-token-integration)
+- [Extending the Theme](#extending-the-theme)
 
 ---
 
@@ -33,16 +52,13 @@ A Gutenberg-ready WordPress theme with a design-token-driven, component/block ba
 ### Requirements
 
 - WordPress 6.0+
-- PHP 7.4+
+- PHP 8.0+
 - Node.js 18+
 
 ### Installation
 
 ```bash
-# Navigate to theme directory
 cd wp-content/themes/wp-figmakit
-
-# Install dependencies
 npm install
 
 # Development (with hot reload)
@@ -62,36 +78,35 @@ The Vite dev server runs on port **5173**. In production, assets are output to `
 wp-figmakit/
 ├── functions.php              # Theme setup, modular loader
 ├── theme.json                 # WP Theme JSON v3 settings
+├── style.css                  # Theme metadata header (no styles)
 ├── vite.config.js             # Vite build configuration
 ├── package.json               # Dependencies (sass, vite)
 │
 ├── inc/                       # PHP modules
 │   ├── assets.php             # Vite integration & asset loading
 │   ├── blocks.php             # Block registration & auto-discovery
-│   ├── patterns.php           # Block pattern registration
-│   ├── templates.php          # Menus & widget areas
 │   ├── admin.php              # Options page, CSP, code injection
 │   ├── security.php           # Security hardening
+│   ├── templates.php          # Menus & widget areas
+│   ├── patterns.php           # Block pattern registration
 │   ├── figma-tokens.php       # Figma token → theme.json merging
 │   ├── grid-api.php           # Grid settings REST API
 │   ├── colors-api.php         # Color tokens REST API
 │   ├── policies-api.php       # Block policies REST API
-│   ├── class-fk-header-nav-walker.php  # Custom nav walker for header block
+│   ├── block-render-combined.php  # Single-pass block rendering
 │   ├── block-attributes.php   # Custom HTML attributes on blocks
 │   ├── block-policies.php     # Style class system for blocks
-│   ├── block-spacing.php      # Spacing utility classes
-│   ├── block-layout.php       # Flexbox/display layout classes
-│   ├── block-sizing.php       # Width/height utility classes
-│   ├── block-text-style.php   # Typography utility classes
 │   ├── button-icons.php       # Button icon injection
-│   └── responsive-visibility.php  # Responsive show/hide
+│   └── class-fk-header-nav-walker.php  # Custom nav walker
 │
 ├── blocks/                    # Server-side block definitions
 │   ├── card/                  # block.json + render.php
 │   ├── cta/
 │   ├── feature/
-│   ├── header/                # Site header with nav menus
+│   ├── header/
 │   ├── hero/
+│   ├── tabs/
+│   ├── tab-item/
 │   └── testimonial/
 │
 ├── templates/                 # FSE block templates
@@ -119,11 +134,13 @@ wp-figmakit/
     │   ├── card/
     │   ├── cta/
     │   ├── feature/
-    │   ├── header/            # Header block editor + frontend JS
+    │   ├── header/
     │   ├── hero/
+    │   ├── tabs/
+    │   ├── tab-item/
     │   └── testimonial/
     ├── components/            # Editor enhancement components
-    │   ├── figmakit-toolbar/  # Custom floating toolbar
+    │   ├── figmakit-toolbar/  # Custom floating toolbar + panels
     │   ├── block-attributes/
     │   ├── block-policies/
     │   ├── block-spacing/
@@ -165,27 +182,16 @@ wp-figmakit/
 | `main` | `src/main.js` | Frontend styles, scripts, and header mobile toggle |
 | `editor` | `src/editor.js` | Block editor extensions and toolbar |
 | `block-*` | `src/blocks/*/index.js` | Auto-discovered per-block scripts |
+| `tabs-frontend` | `src/blocks/tabs/tabs-frontend.js` | Tab switching interactivity |
 
-### JSX Configuration
-
-JSX is compiled using WordPress globals:
-
-```js
-// vite.config.js
-esbuild: {
-    jsxFactory: 'wp.element.createElement',
-    jsxFragment: 'wp.element.Fragment',
-}
-```
+JSX is compiled using WordPress globals (`wp.element.createElement` / `wp.element.Fragment`).
 
 ### Asset Loading
-
-The theme uses a Vite manifest for production and a direct dev server connection for development:
 
 - `wp_figmakit_is_vite_dev()` — detects if the dev server is running
 - `wp_figmakit_get_manifest()` — reads `dist/.vite/manifest.json`
 - `wp_figmakit_enqueue_entry()` — loads entries with HMR or hashed production URLs
-- All `wp-figmakit` prefixed scripts are output with `type="module"` via `script_loader_tag` filter
+- All `wp-figmakit` prefixed scripts are output with `type="module"`
 
 ---
 
@@ -193,7 +199,7 @@ The theme uses a Vite manifest for production and a direct dev server connection
 
 ### theme.json
 
-The theme uses WordPress Theme JSON v3 with:
+The theme uses WordPress Theme JSON v3. See [docs/theme-json.md](docs/theme-json.md) for a detailed guide on how to update it.
 
 **Color Palette:**
 
@@ -208,111 +214,102 @@ The theme uses WordPress Theme JSON v3 with:
 
 **Typography:**
 
-- **System font**: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif
-- **Monospace**: SF Mono, Fira Code, Cascadia Code, monospace
-- **Sizes**: small (0.875rem), medium (1rem), large (1.5rem), x-large (2rem), xx-large (3rem)
+| Font | Stack |
+|------|-------|
+| System (default) | -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif |
+| Monospace | SF Mono, Fira Code, Cascadia Code, monospace |
 
-**Spacing units**: px, em, rem, %, vw, vh
+Font families are registered in `theme.json` and automatically populate the Text Style > Font dropdown in the editor. To add a new font, add an entry to `settings.typography.fontFamilies` in `theme.json`.
+
+**Font Sizes:** small (0.875rem), medium (1rem), large (1.5rem), x-large (2rem), xx-large (3rem)
 
 ---
 
 ## FigmaKit Toolbar
 
-A custom floating toolbar rendered on the left side of the block editor. It provides quick access to theme-level settings without navigating the WordPress sidebar.
+A custom floating toolbar on the left side of the block editor providing quick access to theme-level settings. It appears in the post/page editor only (hidden in the Site Editor).
 
-### Toolbar Architecture
+The toolbar has five panels, each accessible via an icon button:
 
-The toolbar is a standalone React component mounted directly to the DOM (not using WordPress `registerPlugin` or SlotFill). It consists of:
+### Grid Settings
 
-- **Toolbar.jsx** — Main component with panel state management
-- **ToolbarButton.jsx** — Individual icon buttons (40x40px)
-- **FlyoutPanel.jsx** — Slide-out panels (300px default, supports custom width via `className` prop)
-- **icons.jsx** — Lucide-style SVG icons (GridIcon, PaletteIcon, FormIcon, PortabilityIcon, LayoutIcon)
+Controls the global grid/container system. Changes are saved to the database and applied as CSS custom properties.
 
-The toolbar is hidden in the Site Editor and only appears in the post/page editor.
-
-### Panels
-
-#### Grid Settings
-Controls the global grid/container system:
-- Container max width (default: 1440px)
-- Container padding — desktop (160px), tablet (32px), mobile (24px)
-- Gutter — desktop (24px), mobile (16px)
+| Field | Default | CSS Variable |
+|-------|---------|--------------|
+| Container Max Width | 1440px | `--fk-container-max` |
+| Padding (Desktop) | 200px | `--fk-container-padding` |
+| Padding (Tablet) | 32px | `--fk-container-padding-tablet` |
+| Padding (Mobile) | 24px | `--fk-container-padding-mobile` |
+| Gutter (Desktop) | 24px | `--fk-gutter` |
+| Gutter (Mobile) | 16px | `--fk-gutter-mobile` |
 
 Updates CSS custom properties live in the editor iframe.
 
-#### Colors
-Manages theme color tokens with a visual color picker:
-- 7 default colors: primary, secondary, accent, highlight, text, text-light, background
-- Support for custom colors (add/remove)
-- Live CSS variable updates in the editor
+### Colors
 
-#### Patterns (Pattern Library)
-Visual pattern library panel (600px wide, 2-column grid) for managing reusable block patterns:
-- **Browse**: Visual preview cards using `wp.blockEditor.BlockPreview`
-- **Search**: Filter patterns by name
-- **Insert**: Click a pattern card to insert blocks at cursor position
-- **Save**: Save currently selected blocks as a new reusable pattern
-- **Rename**: Inline rename with Enter to confirm, Escape to cancel
-- **Delete**: Remove patterns with confirmation dialog
+Manages theme color tokens with a visual color picker.
+
+**Default colors** (7): Primary, Secondary, Accent, Highlight, Text, Text Light, Background — each with a hex color picker.
+
+**Custom colors**: Add unlimited custom colors with a name and hex value. Custom colors generate CSS variables (e.g. a color named "Brand Blue" becomes `--fk-color-brand-blue`). Colors update live in the editor.
+
+All colors are output as CSS custom properties via `wp_head` on the frontend.
+
+### Patterns
+
+A visual pattern library panel (600px wide, 2-column grid) for managing reusable block patterns.
+
+| Action | Description |
+|--------|-------------|
+| **Browse** | Visual preview cards using `BlockPreview` |
+| **Search** | Filter patterns by name |
+| **Insert** | Click a pattern card to insert blocks at cursor position |
+| **Save** | Save currently selected blocks as a new reusable pattern |
+| **Rename** | Inline rename with Enter to confirm, Escape to cancel |
+| **Delete** | Remove patterns with confirmation dialog |
 
 Uses the WordPress `/wp/v2/blocks` REST API (Synced Patterns / Reusable Blocks).
 
-#### Block Policies (Style Classes)
-Defines allowed CSS classes per block type:
-- Map class names to human-readable labels
-- Assign classes to specific block types (Group, Paragraph, Heading, Image, Button, etc.)
-- Classes appear as checkboxes in each block's inspector panel
+### Block Policies
 
-#### Portability (Export/Import)
-Export and import entire page layouts as JSON files:
+Define allowed CSS classes per block type. This lets you create a controlled set of style options that content editors can apply to blocks.
 
-**Export:**
-- Serializes all page blocks using `wp.blocks.serialize()`
-- Downloads a `.json` file containing the full block markup
-- Preserves all attributes, classes, styles, nested blocks, and custom data (`fkAttributes`, `fkPolicyClasses`, etc.)
+**How it works:**
+1. In the Policies panel, select a block type (e.g. `core/group`, `core/paragraph`, `core/heading`)
+2. Add class/label pairs (e.g. Label: "Card Shadow", Class: `card-shadow`)
+3. Save the policies
+4. In the editor, each block's inspector panel shows checkboxes for its assigned policy classes
 
-**Import:**
-- **Replace mode**: Replaces all page blocks with the imported content
-- **Append mode**: Adds imported blocks after existing content
-- Parses block markup using `wp.blocks.parse()`
-- Fully integrated with Gutenberg's undo stack (Ctrl+Z works)
+Supports 16+ block types including all custom FigmaKit blocks.
 
-**JSON format (v1):**
-```json
-{
-  "version": 1,
-  "generator": "figmakit",
-  "title": "Page Title",
-  "date": "2026-03-22T...",
-  "content": "<!-- wp:paragraph {\"className\":\"my-class\"} -->..."
-}
-```
+### Portability
 
-### Adding a New Panel
+Export and import entire page layouts as JSON files.
 
-1. Create a panel component in `src/components/figmakit-toolbar/panels/`
-2. Add an icon to `icons.jsx`
-3. Register in the `PANELS` array in `Toolbar.jsx`:
-```js
-{ id: 'my-panel', icon: MyIcon, label: 'My Panel', component: MyPanel }
-```
+**Export:** Serializes all page blocks using `wp.blocks.serialize()` and downloads a `.json` file containing the full block markup with all attributes, classes, styles, and nested blocks preserved.
+
+**Import:** Two modes available:
+- **Replace** — replaces all page blocks with the imported content
+- **Append** — adds imported blocks after existing content
+
+Fully integrated with Gutenberg's undo stack (Ctrl+Z works after import).
 
 ---
 
 ## Custom Blocks
 
-All blocks are in the `wp-figmakit` category and use server-side rendering via `render.php`.
+All blocks are in the `wp-figmakit` category and use server-side rendering via `render.php`. Blocks are auto-discovered from the `blocks/` directory.
 
 ### Header (`wp-figmakit/fk-header`)
 
-Site header block with logo, utility navigation, and main navigation. Used as the default header template part.
+Site header block with logo, utility navigation, and main navigation.
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `variant` | string | `"default"` | Layout variant |
-| `utilityMenuId` | number | `0` | WordPress nav_menu term ID for utility nav |
-| `mainMenuId` | number | `0` | WordPress nav_menu term ID for main nav |
+| `utilityMenuId` | number | `0` | Nav menu term ID for utility nav |
+| `mainMenuId` | number | `0` | Nav menu term ID for main nav |
 | `showUtilityMenu` | boolean | `true` | Toggle utility menu visibility |
 | `showSkipLink` | boolean | `true` | Toggle skip-to-content link |
 
@@ -324,17 +321,12 @@ Site header block with logo, utility navigation, and main navigation. Used as th
 - Menu items populated from WordPress registered menus via dropdown selector
 - Live menu preview in the editor (fetches actual menu items via REST API)
 - Logo area uses InnerBlocks (`core/site-logo`, `core/image`, `core/group`)
-- Server-side rendering with custom `FK_Header_Nav_Walker` for BEM-style HTML output
+- Server-side rendering with custom `FK_Header_Nav_Walker` for BEM-style HTML
 - Mobile hamburger toggle with animated X, `aria-expanded`, and Escape key handling
 - Skip-to-content link for accessibility
-- WCAG AA compliant: `role="banner"`, distinct `aria-label` on each nav, `aria-expanded` on dropdowns, `:focus-visible` outlines
+- WCAG AA compliant
 
-**Mobile behavior** (< 768px):
-- Hamburger toggle (fixed position, top-right)
-- Menus stack vertically: main menu first, utility menu below
-- Submenus collapsed, toggled via tap/click
-
-CSS classes: `.fk-header`, `.fk-header--{variant}`, `.fk-header__inner`, `.fk-header__logo`, `.fk-header__menus`, `.fk-header__utility`, `.fk-header__primary`
+**Mobile behavior** (< 768px): Hamburger toggle, menus stack vertically (main first, utility below), submenus toggled via tap.
 
 ### Card (`wp-figmakit/fk-card`)
 
@@ -342,35 +334,34 @@ Flexible card component with configurable sections.
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `variant` | string | `"vstack"` | Layout variant |
+| `variant` | string | `"vstack"` | Layout variant (Vertical Stack, Horizontal Stack) |
 | `showImage` | boolean | `true` | Toggle image section |
 | `showEyebrow` | boolean | `true` | Toggle eyebrow text |
 | `showButtons` | boolean | `true` | Toggle CTA buttons |
-| `showFootnote` | boolean | `true` | Toggle footnote |
+| `showFootnote` | boolean | `false` | Toggle footnote |
 
-CSS classes: `.fk-card`, `.fk-card--{variant}`
+Each section (image, eyebrow, title, description, buttons, footnote) uses InnerBlocks so content is fully customizable. The variant control switches between vertical and horizontal card layouts.
 
-### Call to Action (`wp-figmakit/fk-cta`)
+### Tabs (`wp-figmakit/fk-tabs`)
 
-CTA section with heading, description, and buttons.
-
-| Attribute | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `variant` | string | `"centered"` | Layout variant |
-| `alignment` | string | `"center"` | Text alignment |
-
-CSS classes: `.fk-cta`, `.fk-cta--{variant}`, `.has-text-align-{alignment}`
-
-### Feature (`wp-figmakit/fk-feature`)
-
-Feature block with icon/image, title, and description.
+Tabbed content container with support for icons, superscripts, and any inner blocks per panel.
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `variant` | string | `"vstack"` | Layout variant |
-| `iconPosition` | string | `"top"` | Icon/image position |
+| `variant` | string | `"horizontal"` | Tab layout variant |
+| `activeTab` | number | `0` | Initially active tab index |
 
-CSS classes: `.fk-feature`, `.fk-feature--{variant}`
+**Tab Item** (`wp-figmakit/fk-tab-item`) — child block:
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | string | `"Tab"` | Tab button label |
+| `icon` | string | `""` | Dashicon name |
+| `iconMediaId` | number | `0` | Custom icon image ID |
+| `iconMediaUrl` | string | `""` | Custom icon image URL |
+| `superscript` | string | `""` | Superscript text on tab button |
+
+Each tab panel accepts any blocks as inner content. Tab switching is handled on the frontend via `tabs-frontend.js`.
 
 ### Hero (`wp-figmakit/fk-hero`)
 
@@ -383,7 +374,23 @@ Hero/banner section with heading, description, and CTA.
 | `minHeight` | string | `"60vh"` | Minimum section height |
 | `showButtons` | boolean | `true` | Toggle CTA buttons |
 
-CSS classes: `.fk-hero`, `.fk-hero--{variant}`, `.fk-hero--overlay`
+### Call to Action (`wp-figmakit/fk-cta`)
+
+CTA section with heading, description, and buttons.
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `variant` | string | `"centered"` | Layout variant |
+| `alignment` | string | `"center"` | Text alignment |
+
+### Feature (`wp-figmakit/fk-feature`)
+
+Feature block with icon/image, title, and description.
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `variant` | string | `"vstack"` | Layout variant |
+| `iconPosition` | string | `"top"` | Icon/image position |
 
 ### Testimonial (`wp-figmakit/fk-testimonial`)
 
@@ -395,93 +402,108 @@ Testimonial/quote block with avatar and attribution.
 | `showAvatar` | boolean | `true` | Toggle avatar |
 | `showRole` | boolean | `true` | Toggle role text |
 
-CSS classes: `.fk-testimonial`, `.fk-testimonial--{variant}`
-
 ---
 
 ## Block Editor Extensions
 
-All extensions use WordPress `addFilter()` on `blocks.registerBlockType` and `editor.BlockEdit` to inject custom attributes and inspector panels into every block.
+Every block in the editor gets additional inspector panels injected via WordPress `addFilter()` hooks. These panels appear in the block sidebar and their values are applied as utility classes or inline styles on the frontend via a single-pass `render_block` filter (`inc/block-render-combined.php`).
 
-### Block Attributes (`fkAttributes`)
+All extension classes are also applied live in the editor via `editor.BlockListBlock` filters.
 
-Add custom HTML attributes to any block: `class`, `id`, `title`, `alt`, `rel`, `target`, `role`, `aria-label`, and `data-*`.
+### Spacing (`fkSpacing`)
 
-Applied on the server via `WP_HTML_Tag_Processor` in the `render_block` filter.
+Padding and margin controls with linkable sides for quick uniform values.
 
-### Block Policies / Style Classes (`fkPolicyClasses`)
+**Padding controls:** Top, Bottom, Left, Right — each with a dropdown of spacing scale values.
 
-Checkboxes in the block inspector to toggle predefined CSS classes. Classes are defined per block type in the Policies toolbar panel.
+**Margin controls:** Top, Bottom, Left, Right — same scale plus `auto` for centering.
+
+**Link buttons:** Link all 4 sides, link top/bottom pair, or link left/right pair. When linked, changing one value updates all linked sides.
+
+**Scale values:** 3XL (96px), 2XL (80px), XL (48px), LG (32px), MD (24px), SM (20px), XS (16px), 2XS (12px), 3XS (8px), 4XS (4px), 0
+
+Output as utility classes: `pt-{size}`, `pb-{size}`, `pl-{size}`, `pr-{size}`, `mt-{size}`, `mb-{size}`, `ml-{size}`, `mr-{size}`. Auto-adds `fk-d-block` when both left and right margin are `auto` (horizontal centering).
+
+### Layout (`fkLayout`)
+
+Flexbox, grid, and display controls with responsive overrides.
+
+**Desktop controls:**
+
+| Control | Options |
+|---------|---------|
+| Display | Block, Flex, Inline Flex, Grid, None |
+| Direction | Row, Row Reverse, Column, Column Reverse |
+| Justify | Start, Center, End, Space Between, Space Around, Space Evenly |
+| Align | Start, Center, End, Stretch, Baseline |
+| Wrap | Wrap, No Wrap |
+| Gap | 3XL through 4XS, 0 |
+
+**Responsive overrides (Tablet & Mobile):**
+
+| Control | Options |
+|---------|---------|
+| Display | Block, Flex, None |
+| Direction | Row, Column |
+
+**Column management** (for Group blocks): Preset buttons for 1–6 and 12 columns, or a range slider for 1–12. Auto-creates child column blocks with appropriate `fk-col-*` classes.
+
+### Sizing (`fkSizing`)
+
+Width, height, and overflow controls.
+
+| Category | Options |
+|----------|---------|
+| Width | Auto, 25%, 33%, 50%, 66%, 75%, 100%, 100vw |
+| Max Width | None, XS (320px), SM (480px), MD (640px), LG (768px), XL (960px), 2XL (1200px), 3XL (1440px), 100% |
+| Height | Auto, 25%, 50%, 75%, 100%, 100vh |
+| Min Height | 0, XS (200px), SM (300px), MD (400px), LG (500px), XL (600px), 2XL (800px), 100%, 100vh |
+| Max Height | None, 100%, 100vh |
+| Overflow | Hidden, Auto, Visible, Scroll |
+
+### Text Style (`fkTextStyle`)
+
+Typography controls for text blocks (Paragraph, Heading, List, Quote, Pullquote, Verse, Preformatted).
+
+**Toolbar dropdown:** Quick text style presets — Title, Subtitle, Eyebrow, Body LG/MD/SM, Caption, Footnote, Link. Each preset applies font size, line height, weight, and letter spacing.
+
+**Inspector panel:**
+
+| Control | Options |
+|---------|---------|
+| Weight | Light (300), Normal (400), Medium (500), Semibold (600), Bold (700), Black (900) |
+| Font | Dynamically populated from `theme.json` font families |
+| Color | Primary, Secondary, Accent, Highlight, Text, Text Light, White |
+
+Font family is applied as an inline style using `var(--wp--preset--font-family--{slug})`, so any font added to `theme.json` automatically appears in the dropdown.
 
 ### Responsive Visibility (`fkVisibility`)
 
-Show/hide any block per breakpoint:
+Show/hide any block per breakpoint with toggle switches.
 
-| Class | Breakpoint |
-|-------|-----------|
-| `fk-hide-desktop` | 1025px+ |
-| `fk-hide-tablet` | 768px–1024px |
-| `fk-hide-mobile` | 0–767px |
+| Toggle | Hides at | Class Applied |
+|--------|----------|---------------|
+| Desktop | 1025px+ | `fk-hide-desktop` |
+| Tablet | 768px–1024px | `fk-hide-tablet` |
+| Mobile | 0–767px | `fk-hide-mobile` |
 
-### Block Spacing (`fkSpacing`)
+Shows a warning notice in the editor when a block is hidden on any breakpoint.
 
-Padding and margin utility classes applied via inspector controls:
+### Custom Attributes (`fkAttributes`)
 
-- **Pattern**: `{side}-{value}` (e.g., `pt-16`, `mb-24`)
-- **Sides**: `pt`, `pb`, `pl`, `pr`, `mt`, `mb`, `ml`, `mr`
-- Auto-adds `fk-d-block` when left+right margins are `auto` (centering)
+Add arbitrary HTML attributes to any block.
 
-### Block Layout (`fkLayout`)
+**Supported attributes:** `id`, `class`, `title`, `alt`, `rel`, `target`, `role`, `aria-*`, `data-*`
 
-Flexbox and display layout controls with responsive variants:
+Add/remove individual attributes with name/value pairs. Applied on the server via `WP_HTML_Tag_Processor`.
 
-| Category | Classes |
-|----------|---------|
-| Display | `fk-d-block`, `fk-d-flex`, `fk-d-iflex`, `fk-d-grid`, `fk-d-none` |
-| Direction | `fk-dir-row`, `fk-dir-row-r`, `fk-dir-col`, `fk-dir-col-r` |
-| Justify | `fk-jc-start`, `fk-jc-center`, `fk-jc-end`, `fk-jc-between`, `fk-jc-around`, `fk-jc-evenly` |
-| Align | `fk-ai-start`, `fk-ai-center`, `fk-ai-end`, `fk-ai-stretch`, `fk-ai-baseline` |
-| Wrap | `fk-wrap`, `fk-nowrap` |
-| Gap | `gap-3xl` through `gap-4xs`, `gap-0` |
+### Block Policies / Style Classes (`fkPolicyClasses`)
 
-Responsive prefixes: `fk-t-` (tablet), `fk-m-` (mobile)
-
-### Block Sizing (`fkSizing`)
-
-Width, height, and overflow controls:
-
-| Category | Classes |
-|----------|---------|
-| Width | `fk-w-auto`, `fk-w-25`, `fk-w-33`, `fk-w-50`, `fk-w-66`, `fk-w-75`, `fk-w-full`, `fk-w-screen` |
-| Max-Width | `fk-mw-none`, `fk-mw-xs` through `fk-mw-3xl`, `fk-mw-full` |
-| Height | `fk-h-auto`, `fk-h-25`, `fk-h-50`, `fk-h-75`, `fk-h-full`, `fk-h-screen` |
-| Min-Height | `fk-mnh-0`, `fk-mnh-xs` through `fk-mnh-2xl`, `fk-mnh-full`, `fk-mnh-screen` |
-| Max-Height | `fk-mxh-none`, `fk-mxh-full`, `fk-mxh-screen` |
-| Overflow | `fk-of-hidden`, `fk-of-auto`, `fk-of-visible`, `fk-of-scroll` |
-
-### Block Text Style (`fkTextStyle`)
-
-Typography utility classes:
-
-| Class | Description |
-|-------|-------------|
-| `fk-text-title` | 48px (36px tablet, 28px mobile) |
-| `fk-text-subtitle` | 32px (26px tablet, 22px mobile) |
-| `fk-text-eyebrow` | 12px, uppercase, tracked |
-| `fk-text-body-lg` | 18px (16px mobile) |
-| `fk-text-body-md` | 16px |
-| `fk-text-body-sm` | 14px |
-| `fk-text-caption` | 12px |
-| `fk-text-footnote` | 11px |
-| `fk-text-link` | 16px |
-
-Font weights: `fk-fw-light` (300) through `fk-fw-black` (900)
-
-Font families: `fk-ff-sans`, `fk-ff-mono`
+Checkboxes in the block inspector to toggle predefined CSS classes. Classes are configured per block type in the [Block Policies](#block-policies) toolbar panel.
 
 ### Button Icons (`fkButtonIcon`)
 
-Inject Dashicons into core/button blocks with configurable position (`before` or `after`).
+Inject Dashicons into `core/button` blocks with configurable position (`before` or `after`).
 
 ---
 
@@ -501,7 +523,7 @@ Design tokens are defined as SCSS variables and CSS custom properties in `src/st
 --fk-color-bg: #fff;
 ```
 
-Colors are manageable from the toolbar Colors panel and output as CSS custom properties via `wp_head`.
+Manageable from the toolbar [Colors](#colors) panel.
 
 ### Spacing Scale (`_spacing.scss`)
 
@@ -518,25 +540,29 @@ Colors are manageable from the toolbar Colors panel and output as CSS custom pro
 | `--spacing-3xs` | 8px | 6px | 6px |
 | `--spacing-4xs` | 4px | 4px | 4px |
 
-**Utility classes**: `.p-{size}`, `.m-{size}`, `.py-{size}`, `.px-{size}`, `.pt-{size}`, `.pb-{size}`, `.pl-{size}`, `.pr-{size}`, `.mt-{size}`, `.mb-{size}`, `.ml-{size}`, `.mr-{size}`, `.gap-{size}`, `.gap-x-{size}`, `.gap-y-{size}`
-
-**Section spacing**: `.section` (default vertical rhythm), `.section-3xl` through `.section-sm`
+**Utility classes:** `.p-{size}`, `.m-{size}`, `.py-{size}`, `.px-{size}`, `.pt-{size}`, `.pb-{size}`, `.pl-{size}`, `.pr-{size}`, `.mt-{size}`, `.mb-{size}`, `.ml-{size}`, `.mr-{size}`, `.gap-{size}`, `.gap-x-{size}`, `.gap-y-{size}`
 
 ### Typography Scale (`_types.scss`)
 
-| Token | Value |
-|-------|-------|
-| `--fk-fs-title` | 48px (responsive) |
-| `--fk-fs-subtitle` | 32px (responsive) |
-| `--fk-fs-eyebrow` | 12px |
-| `--fk-fs-body-lg` | 18px (responsive) |
-| `--fk-fs-body-md` | 16px |
-| `--fk-fs-body-sm` | 14px |
-| `--fk-fs-caption` | 12px |
-| `--fk-fs-footnote` | 11px |
-| `--fk-fs-link` | 16px |
+| Class | Size | Notes |
+|-------|------|-------|
+| `.fk-text-title` | 48px | Responsive (36px tablet, 28px mobile) |
+| `.fk-text-subtitle` | 32px | Responsive (26px tablet, 22px mobile) |
+| `.fk-text-eyebrow` | 12px | Uppercase, tracked |
+| `.fk-text-body-lg` | 18px | Responsive (16px mobile) |
+| `.fk-text-body-md` | 16px | |
+| `.fk-text-body-sm` | 14px | |
+| `.fk-text-caption` | 12px | |
+| `.fk-text-footnote` | 11px | |
+| `.fk-text-link` | 16px | Underlined |
 
-Line heights: `--fk-lh-tight` (1.2), `--fk-lh-normal` (1.5), `--fk-lh-relaxed` (1.75)
+**Font weights:** `.fk-fw-light` (300), `.fk-fw-normal` (400), `.fk-fw-medium` (500), `.fk-fw-semibold` (600), `.fk-fw-bold` (700), `.fk-fw-black` (900)
+
+**Font families:** `.fk-ff-sans`, `.fk-ff-mono`
+
+**Text colors:** `.fk-tc-primary`, `.fk-tc-secondary`, `.fk-tc-accent`, `.fk-tc-highlight`, `.fk-tc-text`, `.fk-tc-text-light`, `.fk-tc-white`
+
+**Text alignment:** `.fk-text-left`, `.fk-text-center`, `.fk-text-right`, `.fk-text-justify` (with responsive variants `.fk-md-text-*`, `.fk-sm-text-*`)
 
 ### Breakpoints (`_variables.scss`)
 
@@ -550,7 +576,7 @@ Line heights: `--fk-lh-tight` (1.2), `--fk-lh-normal` (1.5), `--fk-lh-relaxed` (
 
 ## Grid System
 
-A 12-column responsive grid with `fk-` prefix, defined in `_grid.scss`.
+A 12-column responsive grid defined in `_grid.scss`. Container values are configurable from the [Grid Settings](#grid-settings) toolbar panel.
 
 ### Container
 
@@ -558,13 +584,6 @@ A 12-column responsive grid with `fk-` prefix, defined in `_grid.scss`.
 <div class="fk-container">...</div>
 <div class="fk-container-fluid">...</div>
 ```
-
-| Property | Desktop | Tablet | Mobile |
-|----------|---------|--------|--------|
-| Max width | 1440px | 100% | 100% |
-| Padding | 160px | 32px | 24px |
-
-Container values are configurable from the Grid Settings toolbar panel.
 
 ### Row & Columns
 
@@ -577,32 +596,17 @@ Container values are configurable from the Grid Settings toolbar panel.
 
 - **Columns**: `fk-col-1` through `fk-col-12`, `fk-col-auto`, `fk-col` (flex: 1)
 - **Tablet**: `fk-col-t-1` through `fk-col-t-12`, `fk-col-t-auto`, `fk-col-t-full`
-- **Mobile**: `fk-col-m-1` through `fk-col-m-12`, `fk-col-m-auto`, `fk-col-m-full` (columns stack by default)
+- **Mobile**: `fk-col-m-1` through `fk-col-m-12`, `fk-col-m-auto`, `fk-col-m-full`
 - **No gutter**: `fk-row-no-gutter`
 
 ### Offsets
 
-```html
-<div class="fk-col-6 fk-offset-3">Centered column</div>
-```
-
-- **Left offset**: `fk-offset-0` through `fk-offset-11`
-- **Right offset**: `fk-offset-r-1` through `fk-offset-r-11`
-- **Responsive**: `fk-offset-t-{n}`, `fk-offset-m-{n}`
+- **Left**: `fk-offset-0` through `fk-offset-11` (responsive: `fk-offset-t-*`, `fk-offset-m-*`)
+- **Right**: `fk-offset-r-1` through `fk-offset-r-11`
 
 ### Column Order
 
-- `fk-order-1` through `fk-order-12`
-- `fk-order-first`, `fk-order-last`
-- Responsive: `fk-order-t-first/last`, `fk-order-m-first/last`
-
-### Section
-
-```html
-<section class="fk-section">...</section>
-```
-
-Applies vertical padding using the spacing scale for consistent page rhythm.
+`fk-order-1` through `fk-order-12`, `fk-order-first`, `fk-order-last` (responsive: `fk-order-t-*`, `fk-order-m-*`)
 
 ---
 
@@ -617,10 +621,6 @@ GET  /wp-figmakit/v1/grid-settings    # Requires: edit_posts
 POST /wp-figmakit/v1/grid-settings    # Requires: manage_options
 ```
 
-**Fields**: `grid_container_max`, `grid_container_padding`, `grid_container_padding_tablet`, `grid_container_padding_mobile`, `grid_gutter`, `grid_gutter_mobile`
-
-Values are validated as CSS units (`/^[\d.]+(px|em|rem|%|vw)$/`).
-
 ### Color Settings
 
 ```
@@ -628,18 +628,12 @@ GET  /wp-figmakit/v1/color-settings   # Requires: edit_posts
 POST /wp-figmakit/v1/color-settings   # Requires: manage_options
 ```
 
-**Fields**: `color_primary`, `color_secondary`, `color_accent`, `color_highlight`, `color_text`, `color_text_light`, `color_bg`, plus `_custom_colors` for user-defined tokens.
-
-Values are validated with `sanitize_hex_color()`.
-
 ### Policies
 
 ```
 GET  /wp-figmakit/v1/policies         # Requires: edit_posts
 POST /wp-figmakit/v1/policies         # Requires: manage_options
 ```
-
-**Structure**: `{ "core/group": [{ "label": "Card Shadow", "class": "card-shadow" }] }`
 
 ---
 
@@ -664,35 +658,31 @@ POST /wp-figmakit/v1/policies         # Requires: manage_options
 |------|-------------|
 | `header.html` | FK Header block (logo + utility/main nav) |
 | `footer.html` | Site footer |
-| `sidebar.html` | Sidebar widget area |
+| `sidebar.html` | Sidebar |
 
 ### Navigation Menus
 
 - **Primary** — Main site navigation
-- **Utility** — Utility/secondary navigation (used by header block)
+- **Utility** — Secondary navigation (used by header block)
 - **Footer** — Footer navigation
-
-### Block Patterns
-
-- **Hero** (`wp-figmakit/hero`) — Cover block with heading, paragraph, and buttons
 
 ---
 
 ## Security
 
-The theme includes comprehensive security hardening in `inc/security.php`:
+Comprehensive security hardening in `inc/security.php`:
 
 | Feature | Description |
 |---------|-------------|
 | CORS Restriction | Same-origin only, editors/admins only for REST |
-| Security Headers | HSTS, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy |
-| Content Security Policy | Configurable CSP with preset directives for GA, GTM, OneTrust, Facebook, Bing, Clarity, Cloudflare |
+| Security Headers | HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy |
+| Content Security Policy | Configurable CSP with presets for GA, GTM, OneTrust, Facebook, Bing, Clarity, Cloudflare |
 | XML-RPC | Disabled |
 | Version Hiding | WordPress version removed from headers and feeds |
 | File Editing | `DISALLOW_FILE_EDIT` enforced |
 | Sensitive Files | Blocks access to license.txt, readme.html, wp-config.php, .htaccess, error_log, debug.log |
 | Comment Sanitization | XSS prevention on author, email, URL, and content |
-| Secure Cookies | HttpOnly, Secure, SameSite=Lax (PHP 7.3+) |
+| Secure Cookies | HttpOnly, Secure, SameSite=Lax |
 | User Enumeration | REST users endpoint and author archives blocked for unauthenticated users |
 
 ---
@@ -714,34 +704,9 @@ Inject custom code at various points in the page:
 
 Each injection point has an enable/disable toggle.
 
-### Grid Settings
-
-Configurable via admin page or toolbar panel. Output as CSS custom properties:
-
-```css
-:root {
-    --fk-container-max: 1440px;
-    --fk-container-padding: 160px;
-    --fk-container-padding-tablet: 32px;
-    --fk-container-padding-mobile: 24px;
-    --fk-gutter: 24px;
-    --fk-gutter-mobile: 16px;
-}
-```
-
 ### Content Security Policy
 
 Full CSP configuration with per-directive controls and pre-configured defaults for common third-party services.
-
----
-
-## Figma Token Integration
-
-The theme can optionally merge Figma design tokens into `theme.json` at runtime.
-
-- Reads `figma-tokens.json` from the theme root (if present)
-- Merges tokens via the `wp_theme_json_data_theme` filter
-- Gracefully handles missing file — theme works independently
 
 ---
 
@@ -757,17 +722,6 @@ $value = wp_figmakit_get_option('grid_container_max', '1440px');
 
 ## Extending the Theme
 
-### PHP Hooks
-
-| Hook | Type | Description |
-|------|------|-------------|
-| `render_block` | Filter | Block attribute, spacing, layout, sizing, text style, and policy class injection |
-| `wp_theme_json_data_theme` | Filter | Figma token merging |
-| `send_headers` | Action | Security headers and CSP |
-| `wp_head` | Action | Grid CSS vars, color CSS vars, custom head code |
-| `wp_body_open` | Action | Custom body code |
-| `the_content` | Filter | Post top/bottom code injection |
-
 ### Adding a Custom Block
 
 1. Create `blocks/{block-name}/block.json` and `blocks/{block-name}/render.php`
@@ -781,4 +735,33 @@ $value = wp_figmakit_get_option('grid_container_max', '1440px');
 2. Use `addFilter('blocks.registerBlockType', ...)` to add attributes
 3. Use `addFilter('editor.BlockEdit', ...)` to add inspector controls
 4. Import in `src/editor.js`
-5. Add server-side rendering in `inc/{name}.php` using the `render_block` filter
+5. Add server-side rendering in `inc/block-render-combined.php`
+
+### Adding a Toolbar Panel
+
+1. Create a panel component in `src/components/figmakit-toolbar/panels/`
+2. Add an icon to `icons.jsx`
+3. Register in the `PANELS` array in `Toolbar.jsx`
+
+### Adding a Font
+
+Add an entry to `settings.typography.fontFamilies` in `theme.json`:
+
+```json
+{
+    "fontFamily": "'Inter', sans-serif",
+    "slug": "inter",
+    "name": "Inter"
+}
+```
+
+It will automatically appear in the Text Style > Font dropdown. See [docs/theme-json.md](docs/theme-json.md) for more details including loading font files.
+
+### PHP Hooks
+
+| Hook | Type | Description |
+|------|------|-------------|
+| `render_block` | Filter | Combined class/style injection for all extensions |
+| `wp_theme_json_data_theme` | Filter | Figma token merging |
+| `send_headers` | Action | Security headers and CSP |
+| `wp_head` | Action | Grid CSS vars, color CSS vars, custom head code |

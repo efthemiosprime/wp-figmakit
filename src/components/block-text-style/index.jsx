@@ -1,6 +1,6 @@
 const { createHigherOrderComponent } = wp.compose;
 const { addFilter } = wp.hooks;
-const { Fragment, useCallback } = wp.element;
+const { Fragment, useCallback, useMemo } = wp.element;
 const { BlockControls, InspectorControls } = wp.blockEditor;
 const {
 	ToolbarGroup,
@@ -10,6 +10,7 @@ const {
 	PanelBody,
 	SelectControl,
 } = wp.components;
+const { useSelect } = wp.data;
 const { __ } = wp.i18n;
 
 const TEXT_BLOCKS = [
@@ -44,11 +45,27 @@ const FONT_WEIGHT_OPTIONS = [
 	{ label: 'Black (900)', value: 'fk-fw-black' },
 ];
 
-const FONT_FAMILY_OPTIONS = [
-	{ label: '—', value: '' },
-	{ label: 'Sans', value: 'fk-ff-sans' },
-	{ label: 'Mono', value: 'fk-ff-mono' },
-];
+/**
+ * Build font family options from WP editor settings (theme.json fontFamilies).
+ */
+function useFontFamilyOptions() {
+	const fontFamilies = useSelect((select) => {
+		const settings = select('core/block-editor').getSettings();
+		return settings.fontFamilies || settings.__experimentalFeatures?.typography?.fontFamilies?.theme || [];
+	}, []);
+
+	return useMemo(() => {
+		const options = [{ label: '—', value: '' }];
+		if (Array.isArray(fontFamilies)) {
+			fontFamilies.forEach((f) => {
+				if (f.slug && f.name) {
+					options.push({ label: f.name, value: f.slug });
+				}
+			});
+		}
+		return options;
+	}, [fontFamilies]);
+}
 
 const TEXT_COLOR_OPTIONS = [
 	{ label: '—', value: '' },
@@ -81,11 +98,20 @@ addFilter('blocks.registerBlockType', 'wp-figmakit/block-text-style', (settings)
 });
 
 /**
- * Build class list from text style selections.
+ * Build class list from text style selections (excludes family — applied as inline style).
  */
 function getTextStyleClasses(textStyle) {
 	if (!textStyle) return [];
-	return Object.values(textStyle).filter(Boolean);
+	const { family, ...rest } = textStyle;
+	return Object.values(rest).filter(Boolean);
+}
+
+/**
+ * Get inline font-family style from a font slug.
+ */
+function getFontFamilyStyle(slug) {
+	if (!slug) return {};
+	return { fontFamily: `var(--wp--preset--font-family--${slug})` };
 }
 
 /**
@@ -100,6 +126,7 @@ const withTextStylePanel = createHigherOrderComponent((BlockEdit) => {
 		const { attributes, setAttributes } = props;
 		const textStyle = attributes.fkTextStyle || {};
 		const currentStyle = TEXT_STYLES.find((s) => s.value === textStyle.style);
+		const fontFamilyOptions = useFontFamilyOptions();
 
 		const updateTextStyle = useCallback((key, value) => {
 			setAttributes({ fkTextStyle: { ...textStyle, [key]: value } });
@@ -164,7 +191,7 @@ const withTextStylePanel = createHigherOrderComponent((BlockEdit) => {
 						<SelectControl
 							label={__('Font', 'wp-figmakit')}
 							value={textStyle.family || ''}
-							options={FONT_FAMILY_OPTIONS}
+							options={fontFamilyOptions}
 							onChange={(val) => updateTextStyle('family', val)}
 							__nextHasNoMarginBottom
 						/>
@@ -195,15 +222,21 @@ const withTextStyleClasses = createHigherOrderComponent((BlockListBlock) => {
 
 		const textStyle = props.attributes.fkTextStyle || {};
 		const classes = getTextStyleClasses(textStyle);
+		const fontStyle = getFontFamilyStyle(textStyle.family);
+		const hasChanges = classes.length > 0 || textStyle.family;
 
-		if (classes.length === 0) {
+		if (!hasChanges) {
 			return <BlockListBlock {...props} />;
 		}
 
 		const existing = props.className || '';
 		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+		const wrapperProps = {
+			...(props.wrapperProps || {}),
+			style: { ...(props.wrapperProps?.style || {}), ...fontStyle },
+		};
 
-		return <BlockListBlock {...props} className={newClassName} />;
+		return <BlockListBlock {...props} className={newClassName} wrapperProps={wrapperProps} />;
 	};
 }, 'withTextStyleClasses');
 
