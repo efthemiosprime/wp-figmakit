@@ -65,8 +65,10 @@ if ( $show_skip ) : ?>
 					<?php echo $content; ?>
 				</div>
 				<div class="fk-header__menus">
-					<?php if ( $show_utility && $utility_menu_id ) : ?>
-					<div class="fk-header__menus-row">
+					<?php
+				$has_both = $show_utility && $utility_menu_id && $main_menu_id;
+				if ( $show_utility && $utility_menu_id ) : ?>
+					<div class="fk-header__menus-row<?php echo $has_both ? ' fk-header__menus-row--separator' : ''; ?>">
 						<?php $render_nav( $utility_menu_id, 'utility' ); ?>
 					</div>
 					<?php endif; ?>
