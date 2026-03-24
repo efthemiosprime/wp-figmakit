@@ -4,6 +4,7 @@ import save from './save.jsx';
 
 const { registerBlockType } = wp.blocks;
 const { createElement } = wp.element;
+const { InnerBlocks, useBlockProps } = wp.blockEditor;
 
 const tabsIcon = createElement('svg', {
 	xmlns: 'http://www.w3.org/2000/svg',
@@ -26,4 +27,34 @@ registerBlockType('wp-figmakit/fk-tabs', {
 	icon: tabsIcon,
 	edit,
 	save,
+	deprecated: [
+		// v1: save() wrapped inner blocks in <div class="fk-tabs fk-tabs--{variant}">
+		{
+			attributes: {
+				variant:   { type: 'string', default: 'horizontal' },
+				activeTab: { type: 'number', default: 0 },
+				className: { type: 'string' },
+			},
+			save( { attributes } ) {
+				const cls = 'fk-tabs fk-tabs--' + attributes.variant +
+					( attributes.className ? ' ' + attributes.className : '' );
+				return createElement( 'div', { className: cls },
+					createElement( InnerBlocks.Content )
+				);
+			},
+		},
+		// v0: save() used useBlockProps.save() wrapper
+		{
+			attributes: {
+				variant:   { type: 'string', default: 'horizontal' },
+				activeTab: { type: 'number', default: 0 },
+			},
+			save() {
+				const blockProps = useBlockProps.save();
+				return createElement( 'div', blockProps,
+					createElement( InnerBlocks.Content )
+				);
+			},
+		},
+	],
 });
