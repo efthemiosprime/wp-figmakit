@@ -133,6 +133,18 @@
 .fk-ff-mono { font-family: var(--fk-font-mono); }
 
 // ==========================================================================
+// Text Color Classes
+// ==========================================================================
+
+.fk-tc-primary { color: var(--fk-color-primary); }
+.fk-tc-secondary { color: var(--fk-color-secondary); }
+.fk-tc-accent { color: var(--fk-color-accent); }
+.fk-tc-highlight { color: var(--fk-color-highlight); }
+.fk-tc-text { color: var(--fk-color-text); }
+.fk-tc-text-light { color: var(--fk-color-text-light); }
+.fk-tc-white { color: #fff; }
+
+// ==========================================================================
 // Text Align Classes
 // ==========================================================================
 

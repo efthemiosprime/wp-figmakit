@@ -50,6 +50,17 @@ const FONT_FAMILY_OPTIONS = [
 	{ label: 'Mono', value: 'fk-ff-mono' },
 ];
 
+const TEXT_COLOR_OPTIONS = [
+	{ label: '—', value: '' },
+	{ label: 'Primary', value: 'fk-tc-primary' },
+	{ label: 'Secondary', value: 'fk-tc-secondary' },
+	{ label: 'Accent', value: 'fk-tc-accent' },
+	{ label: 'Highlight', value: 'fk-tc-highlight' },
+	{ label: 'Text', value: 'fk-tc-text' },
+	{ label: 'Text Light', value: 'fk-tc-text-light' },
+	{ label: 'White', value: 'fk-tc-white' },
+];
+
 /**
  * Add fkTextStyle attribute to all blocks.
  */
@@ -62,6 +73,7 @@ addFilter('blocks.registerBlockType', 'wp-figmakit/block-text-style', (settings)
 				style: '',
 				weight: '',
 				family: '',
+				color: '',
 			},
 		},
 	};
@@ -156,6 +168,13 @@ const withTextStylePanel = createHigherOrderComponent((BlockEdit) => {
 							onChange={(val) => updateTextStyle('family', val)}
 							__nextHasNoMarginBottom
 						/>
+						<SelectControl
+							label={__('Color', 'wp-figmakit')}
+							value={textStyle.color || ''}
+							options={TEXT_COLOR_OPTIONS}
+							onChange={(val) => updateTextStyle('color', val)}
+							__nextHasNoMarginBottom
+						/>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
@@ -164,3 +183,28 @@ const withTextStylePanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withTextStylePanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-text-style-panel', withTextStylePanel);
+
+/**
+ * Apply text style classes to block wrapper in the editor.
+ */
+const withTextStyleClasses = createHigherOrderComponent((BlockListBlock) => {
+	return (props) => {
+		if (!TEXT_BLOCKS.includes(props.name)) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const textStyle = props.attributes.fkTextStyle || {};
+		const classes = getTextStyleClasses(textStyle);
+
+		if (classes.length === 0) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const existing = props.className || '';
+		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+
+		return <BlockListBlock {...props} className={newClassName} />;
+	};
+}, 'withTextStyleClasses');
+
+addFilter('editor.BlockListBlock', 'wp-figmakit/block-text-style-classes', withTextStyleClasses);

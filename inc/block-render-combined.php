@@ -89,6 +89,8 @@ function wp_figmakit_apply_combined_classes( $block_content, $block ) {
 			'fk-text-caption', 'fk-text-footnote', 'fk-text-link',
 			'fk-fw-light', 'fk-fw-normal', 'fk-fw-medium', 'fk-fw-semibold', 'fk-fw-bold', 'fk-fw-black',
 			'fk-ff-sans', 'fk-ff-mono',
+			'fk-tc-primary', 'fk-tc-secondary', 'fk-tc-accent', 'fk-tc-highlight',
+			'fk-tc-text', 'fk-tc-text-light', 'fk-tc-white',
 		);
 
 		foreach ( $attrs['fkTextStyle'] as $value ) {
