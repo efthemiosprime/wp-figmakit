@@ -1,0 +1,11 @@
+.fk-button-variant-panel {
+	.fk-button-variant-panel__group {
+		display: flex;
+		width: 100%;
+
+		.components-button {
+			flex: 1;
+			justify-content: center;
+		}
+	}
+}

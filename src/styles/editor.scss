@@ -64,6 +64,68 @@
 }
 
 // ==========================================================================
+// Button variant styles in editor
+// ==========================================================================
+
+// Secondary — outlined
+.fk-btn--secondary .wp-block-button__link {
+	background: transparent !important;
+	color: var(--wp--preset--color--primary, #1a1a2e) !important;
+	border: 1.5px solid var(--wp--preset--color--primary, #1a1a2e);
+}
+
+// Tertiary — ghost
+.fk-btn--tertiary .wp-block-button__link {
+	background: transparent !important;
+	color: var(--wp--preset--color--primary, #1a1a2e) !important;
+	border: none;
+}
+
+// Link — text-only, underlined
+.fk-btn--link .wp-block-button__link {
+	background: transparent !important;
+	color: var(--wp--preset--color--primary, #1a1a2e) !important;
+	border: none;
+	padding-left: 0;
+	padding-right: 0;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+// Icon preview styles in editor
+.fk-btn-icon {
+	vertical-align: middle;
+	line-height: 1;
+
+	&.dashicons {
+		font-size: inherit;
+		width: auto;
+		height: auto;
+	}
+}
+
+.fk-icon-position-leading .fk-btn-icon {
+	margin-right: 0.4em;
+}
+
+.fk-icon-position-trailing .fk-btn-icon {
+	margin-left: 0.4em;
+}
+
+// Icon-only in editor
+.fk-icon-only .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.6em;
+	aspect-ratio: 1;
+
+	.fk-btn-icon {
+		margin: 0;
+	}
+}
+
+// ==========================================================================
 // Column editor styles — OUTSIDE .editor-styles-wrapper for full specificity
 // ==========================================================================
 

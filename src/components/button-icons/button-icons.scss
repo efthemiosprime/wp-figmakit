@@ -3,6 +3,16 @@
 		margin-bottom: 16px;
 	}
 
+	.fk-button-icons-panel__position-group {
+		display: flex;
+		width: 100%;
+
+		.components-button {
+			flex: 1;
+			justify-content: center;
+		}
+	}
+
 	.fk-button-icons-panel__label {
 		display: block;
 		font-size: 11px;

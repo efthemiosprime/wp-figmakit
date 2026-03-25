@@ -3,6 +3,8 @@ import './components/block-attributes/index.jsx';
 import './components/block-attributes/block-attributes.scss';
 import './components/responsive-visibility/index.jsx';
 import './components/responsive-visibility/responsive-visibility.scss';
+import './components/button-variant/index.jsx';
+import './components/button-variant/button-variant.scss';
 import './components/button-icons/index.jsx';
 import './components/button-icons/button-icons.scss';
 import './components/block-spacing/index.jsx';

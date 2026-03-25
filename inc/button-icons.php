@@ -24,22 +24,30 @@ function wp_figmakit_render_button_icon( $block_content, $block ) {
 	$icon     = sanitize_html_class( $block['attrs']['fkButtonIcon'] );
 	$position = isset( $block['attrs']['fkButtonIconPosition'] )
 		? sanitize_html_class( $block['attrs']['fkButtonIconPosition'] )
-		: 'before';
+		: 'leading';
+
+	// Map legacy values
+	if ( 'before' === $position ) {
+		$position = 'leading';
+	} elseif ( 'after' === $position ) {
+		$position = 'trailing';
+	}
 
 	$icon_html = '<span class="fk-btn-icon dashicons dashicons-' . $icon . '" aria-hidden="true"></span>';
 
 	// Inject icon inside the <a> tag
-	if ( $position === 'before' ) {
+	if ( 'trailing' === $position ) {
 		$block_content = preg_replace(
-			'/(<a\b[^>]*>)/',
-			'$1' . $icon_html,
+			'/(<\/a>)/',
+			$icon_html . '$1',
 			$block_content,
 			1
 		);
 	} else {
+		// leading and icon-only both prepend
 		$block_content = preg_replace(
-			'/(<\/a>)/',
-			$icon_html . '$1',
+			'/(<a\b[^>]*>)/',
+			'$1' . $icon_html,
 			$block_content,
 			1
 		);
@@ -50,6 +58,10 @@ function wp_figmakit_render_button_icon( $block_content, $block ) {
 	if ( $dom->next_tag() ) {
 		$dom->add_class( 'fk-has-button-icon' );
 		$dom->add_class( 'fk-icon-position-' . $position );
+
+		if ( 'icon-only' === $position ) {
+			$dom->add_class( 'fk-icon-only' );
+		}
 	}
 
 	return $dom->get_updated_html();

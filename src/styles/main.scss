@@ -222,6 +222,53 @@ article {
 	.fk-hide-mobile { display: none !important; }
 }
 
+// ==========================================================================
+// Button Variants
+// Primary is the WordPress default (filled) — no overrides needed.
+// ==========================================================================
+
+// Secondary — outlined
+.fk-btn--secondary .wp-block-button__link {
+	background: transparent;
+	color: var(--wp--preset--color--primary, #1a1a2e);
+	border: 1.5px solid var(--wp--preset--color--primary, #1a1a2e);
+
+	&:hover,
+	&:focus-visible {
+		background: var(--wp--preset--color--primary, #1a1a2e);
+		color: var(--wp--preset--color--surface, #fff);
+	}
+}
+
+// Tertiary — ghost / no border
+.fk-btn--tertiary .wp-block-button__link {
+	background: transparent;
+	color: var(--wp--preset--color--primary, #1a1a2e);
+	border: none;
+
+	&:hover,
+	&:focus-visible {
+		background: rgba(0, 0, 0, 0.06);
+	}
+}
+
+// Link — text-only, underlined
+.fk-btn--link .wp-block-button__link {
+	background: transparent;
+	color: var(--wp--preset--color--primary, #1a1a2e);
+	border: none;
+	padding-left: 0;
+	padding-right: 0;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+
+	&:hover,
+	&:focus-visible {
+		color: var(--wp--preset--color--highlight, #e94560);
+		background: transparent;
+	}
+}
+
 // Button Icons
 .fk-btn-icon {
 	vertical-align: middle;
@@ -233,9 +280,31 @@ article {
 		height: auto;
 	}
 }
+
+// Leading icon
+.fk-icon-position-leading .fk-btn-icon,
 .fk-icon-position-before .fk-btn-icon {
 	margin-right: 0.4em;
 }
+
+// Trailing icon
+.fk-icon-position-trailing .fk-btn-icon,
 .fk-icon-position-after .fk-btn-icon {
 	margin-left: 0.4em;
+}
+
+// Icon only — hide text, square button
+.fk-icon-only .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.6em;
+	font-size: 0;          // collapse text
+	line-height: 1;
+	aspect-ratio: 1;
+
+	.fk-btn-icon {
+		font-size: 1rem;    // restore icon size
+		margin: 0;
+	}
 }
