@@ -95,9 +95,9 @@ $spacing-sizes: (
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .gap-#{$name} { gap: $val !important; }
-  .gap-y-#{$name} { row-gap: $val !important; }
-  .gap-x-#{$name} { column-gap: $val !important; }
+  .fk-gap-#{$name} { gap: $val !important; }
+  .fk-gap-y-#{$name} { row-gap: $val !important; }
+  .fk-gap-x-#{$name} { column-gap: $val !important; }
 }
 
 // ==========================================================================
@@ -106,13 +106,13 @@ $spacing-sizes: (
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .p-#{$name} { padding: $val !important; }
-  .py-#{$name} { padding-top: $val !important; padding-bottom: $val !important; }
-  .px-#{$name} { padding-left: $val !important; padding-right: $val !important; }
-  .pt-#{$name} { padding-top: $val !important; }
-  .pb-#{$name} { padding-bottom: $val !important; }
-  .pl-#{$name} { padding-left: $val !important; }
-  .pr-#{$name} { padding-right: $val !important; }
+  .fk-p-#{$name} { padding: $val !important; }
+  .fk-py-#{$name} { padding-top: $val !important; padding-bottom: $val !important; }
+  .fk-px-#{$name} { padding-left: $val !important; padding-right: $val !important; }
+  .fk-pt-#{$name} { padding-top: $val !important; }
+  .fk-pb-#{$name} { padding-bottom: $val !important; }
+  .fk-pl-#{$name} { padding-left: $val !important; }
+  .fk-pr-#{$name} { padding-right: $val !important; }
 }
 
 // ==========================================================================
@@ -121,22 +121,22 @@ $spacing-sizes: (
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .m-#{$name} { margin: $val !important; }
-  .my-#{$name} { margin-top: $val !important; margin-bottom: $val !important; }
-  .mx-#{$name} { margin-left: $val !important; margin-right: $val !important; }
-  .mt-#{$name} { margin-top: $val !important; }
-  .mb-#{$name} { margin-bottom: $val !important; }
-  .ml-#{$name} { margin-left: $val !important; }
-  .mr-#{$name} { margin-right: $val !important; }
+  .fk-m-#{$name} { margin: $val !important; }
+  .fk-my-#{$name} { margin-top: $val !important; margin-bottom: $val !important; }
+  .fk-mx-#{$name} { margin-left: $val !important; margin-right: $val !important; }
+  .fk-mt-#{$name} { margin-top: $val !important; }
+  .fk-mb-#{$name} { margin-bottom: $val !important; }
+  .fk-ml-#{$name} { margin-left: $val !important; }
+  .fk-mr-#{$name} { margin-right: $val !important; }
 }
 
-.m-auto { margin: auto !important; }
-.mx-auto { margin-left: auto !important; margin-right: auto !important; }
-.my-auto { margin-top: auto !important; margin-bottom: auto !important; }
-.mt-auto { margin-top: auto !important; }
-.mb-auto { margin-bottom: auto !important; }
-.ml-auto { margin-left: auto !important; }
-.mr-auto { margin-right: auto !important; }
+.fk-m-auto { margin: auto !important; }
+.fk-mx-auto { margin-left: auto !important; margin-right: auto !important; }
+.fk-my-auto { margin-top: auto !important; margin-bottom: auto !important; }
+.fk-mt-auto { margin-top: auto !important; }
+.fk-mb-auto { margin-bottom: auto !important; }
+.fk-ml-auto { margin-left: auto !important; }
+.fk-mr-auto { margin-right: auto !important; }
 
 // ==========================================================================
 // Section Spacing Classes

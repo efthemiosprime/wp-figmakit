@@ -165,7 +165,7 @@ article {
 }
 
 // Reset root padding — skip elements with explicit spacing classes
-.has-global-padding:not([class*="px-"]):not([class*="pl-"]):not([class*="pr-"]):not([class*="p-"]) {
+.has-global-padding:not([class*="fk-px-"]):not([class*="fk-pl-"]):not([class*="fk-pr-"]):not([class*="fk-p-"]) {
 	padding-right: 0 !important;
 	padding-left: 0 !important;
 }

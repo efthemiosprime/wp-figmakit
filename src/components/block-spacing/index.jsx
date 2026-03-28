@@ -12,7 +12,7 @@ function getSpacingClasses(spacing) {
 	const classes = Object.entries(map).reduce((acc, [key, prefix]) => {
 		const val = spacing[key];
 		if (val) {
-			acc.push(`${prefix}-${val}`);
+			acc.push(`fk-${prefix}-${val}`);
 		}
 		return acc;
 	}, []);

@@ -28,15 +28,15 @@ function wp_figmakit_spacing_allowlist() {
 	$allowlist = array();
 	foreach ( $sides as $side ) {
 		foreach ( $sizes as $size ) {
-			$allowlist[] = $side . '-' . $size;
+			$allowlist[] = 'fk-' . $side . '-' . $size;
 		}
 	}
 
 	// Auto margins for centering.
-	$allowlist[] = 'mt-auto';
-	$allowlist[] = 'mb-auto';
-	$allowlist[] = 'ml-auto';
-	$allowlist[] = 'mr-auto';
+	$allowlist[] = 'fk-mt-auto';
+	$allowlist[] = 'fk-mb-auto';
+	$allowlist[] = 'fk-ml-auto';
+	$allowlist[] = 'fk-mr-auto';
 
 	return $allowlist;
 }
@@ -65,7 +65,7 @@ function wp_figmakit_render_block_extensions( $block_content, $block ) {
 
 		foreach ( $sides as $side ) {
 			if ( ! empty( $spacing[ $side ] ) ) {
-				$candidate = $side . '-' . $spacing[ $side ];
+				$candidate = 'fk-' . $side . '-' . $spacing[ $side ];
 				if ( in_array( $candidate, $allowed, true ) ) {
 					$classes[] = $candidate;
 				}
@@ -87,7 +87,7 @@ function wp_figmakit_render_block_extensions( $block_content, $block ) {
 		'fk-jc-start', 'fk-jc-center', 'fk-jc-end', 'fk-jc-between', 'fk-jc-around', 'fk-jc-evenly',
 		'fk-ai-start', 'fk-ai-center', 'fk-ai-end', 'fk-ai-stretch', 'fk-ai-baseline',
 		'fk-wrap', 'fk-nowrap',
-		'gap-3xl', 'gap-2xl', 'gap-xl', 'gap-lg', 'gap-md', 'gap-sm', 'gap-xs', 'gap-2xs', 'gap-3xs', 'gap-4xs', 'gap-0',
+		'fk-gap-3xl', 'fk-gap-2xl', 'fk-gap-xl', 'fk-gap-lg', 'fk-gap-md', 'fk-gap-sm', 'fk-gap-xs', 'fk-gap-2xs', 'fk-gap-3xs', 'fk-gap-4xs', 'fk-gap-0',
 		'fk-t-d-block', 'fk-t-d-flex', 'fk-t-d-none',
 		'fk-t-dir-row', 'fk-t-dir-col',
 		'fk-m-d-block', 'fk-m-d-flex', 'fk-m-d-none',
