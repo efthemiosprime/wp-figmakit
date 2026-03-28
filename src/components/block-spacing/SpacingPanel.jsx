@@ -1,7 +1,8 @@
+import { SPACING_SIZES } from '../../lib/spacing-options';
+
 const { useCallback, useState } = wp.element;
 const { PanelBody, SelectControl, Button } = wp.components;
 const { __ } = wp.i18n;
-const { SPACING_SIZES } = require('../../lib/spacing-options');
 
 function LinkButton({ isLinked, onClick, title }) {
 	return (

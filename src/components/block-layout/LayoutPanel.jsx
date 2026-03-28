@@ -1,9 +1,10 @@
+import { GAP_SIZES } from '../../lib/spacing-options';
+
 const { useCallback } = wp.element;
 const { PanelBody, SelectControl, RangeControl, Button } = wp.components;
 const { useSelect, useDispatch } = wp.data;
 const { createBlock } = wp.blocks;
 const { __ } = wp.i18n;
-const { GAP_SIZES } = require('../../lib/spacing-options');
 
 const DISPLAY_OPTIONS = [
 	{ label: '—', value: '' },

@@ -89,6 +89,13 @@
 .fk-w-full { width: 100%; }
 .fk-w-screen { width: 100vw; }
 
+// Width inheritance for blocks with inner media (image, video, cover)
+[class*="fk-w-"] img,
+[class*="fk-w-"] video {
+  width: 100%;
+  height: auto;
+}
+
 // Max Width
 .fk-mw-none { max-width: none; }
 .fk-mw-xs { max-width: 320px; }

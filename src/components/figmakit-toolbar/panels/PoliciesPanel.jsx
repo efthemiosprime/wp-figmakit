@@ -24,27 +24,9 @@ export default function PoliciesPanel() {
 		});
 	}, []);
 
-	const ALLOWED_BLOCK_TYPES = [
-		{ label: 'Group', value: 'core/group' },
-		{ label: 'Paragraph', value: 'core/paragraph' },
-		{ label: 'Heading', value: 'core/heading' },
-		{ label: 'Image', value: 'core/image' },
-		{ label: 'Gallery', value: 'core/gallery' },
-		{ label: 'Video', value: 'core/video' },
-		{ label: 'Button', value: 'core/button' },
-		{ label: 'Buttons', value: 'core/buttons' },
-		{ label: 'Columns', value: 'core/columns' },
-		{ label: 'Table', value: 'core/table' },
-		{ label: 'Pullquote', value: 'core/pullquote' },
-		{ label: 'List', value: 'core/list' },
-		{ label: 'Quote', value: 'core/quote' },
-		{ label: 'Cover', value: 'core/cover' },
-		{ label: 'Separator', value: 'core/separator' },
-		{ label: 'Spacer', value: 'core/spacer' },
-		{ label: 'Card', value: 'wp-figmakit/fk-card' },
-	];
-
-	const blockTypes = ALLOWED_BLOCK_TYPES;
+	const blockTypes = getBlockTypes()
+		.map((bt) => ({ label: bt.title, value: bt.name }))
+		.sort((a, b) => a.label.localeCompare(b.label));
 	const availableBlockTypes = blockTypes.filter((bt) => !policies[bt.value]);
 
 	const addBlockType = useCallback(() => {
