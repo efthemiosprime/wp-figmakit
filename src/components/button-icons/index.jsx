@@ -1,203 +1,96 @@
-const { createHigherOrderComponent } = wp.compose;
-const { addFilter } = wp.hooks;
-const { Fragment, useRef, useEffect, useCallback } = wp.element;
-const { InspectorControls } = wp.blockEditor;
-const { PanelBody, Button, ButtonGroup } = wp.components;
-const { __ } = wp.i18n;
-
-const DASHICONS = [
-	'arrow-right-alt',
-	'arrow-right-alt2',
-	'arrow-left-alt',
-	'arrow-left-alt2',
-	'arrow-up-alt',
-	'arrow-down-alt',
-	'external',
-	'download',
-	'upload',
-	'cart',
-	'email',
-	'email-alt',
-	'phone',
-	'search',
-	'star-filled',
-	'star-empty',
-	'heart',
-	'plus-alt',
-	'minus',
-	'info',
-	'warning',
-	'yes',
-	'no',
-	'lock',
-	'unlock',
-	'calendar',
-	'clock',
-	'location',
-	'admin-users',
-	'share',
-];
-
-const POSITIONS = [
-	{ value: 'leading', label: __('Leading', 'wp-figmakit') },
-	{ value: 'trailing', label: __('Trailing', 'wp-figmakit') },
-	{ value: 'icon-only', label: __('Icon only', 'wp-figmakit') },
-];
+import { createBlockExtension } from '../../lib/create-block-extension';
+import ButtonIconPanel from './ButtonIconPanel';
 
 /**
- * Add icon attributes to core/button only.
+ * Dashicon name → Unicode codepoint for CSS content property.
+ * Used to render icons via ::before/::after pseudo-elements in the editor.
  */
-addFilter('blocks.registerBlockType', 'wp-figmakit/button-icons', (settings, name) => {
-	if (name !== 'core/button') return settings;
+const DASHICON_UNICODE = {
+	'arrow-right-alt':  '\\f344',
+	'arrow-right-alt2': '\\f345',
+	'arrow-left-alt':   '\\f340',
+	'arrow-left-alt2':  '\\f341',
+	'arrow-up-alt':     '\\f342',
+	'arrow-up-alt2':    '\\f343',
+	'arrow-down-alt':   '\\f346',
+	'arrow-down-alt2':  '\\f347',
+	'external':         '\\f504',
+	'download':         '\\f316',
+	'upload':           '\\f317',
+	'cart':             '\\f174',
+	'email':            '\\f465',
+	'email-alt':        '\\f466',
+	'phone':            '\\f525',
+	'search':           '\\f179',
+	'star-filled':      '\\f155',
+	'star-empty':       '\\f154',
+	'heart':            '\\f487',
+	'plus-alt':         '\\f502',
+	'minus':            '\\f460',
+	'info':             '\\f348',
+	'warning':          '\\f534',
+	'yes':              '\\f147',
+	'no':               '\\f158',
+	'lock':             '\\f160',
+	'unlock':           '\\f528',
+	'calendar':         '\\f145',
+	'clock':            '\\f469',
+	'location':         '\\f230',
+	'admin-users':      '\\f110',
+	'share':            '\\f237',
+};
 
-	settings.attributes = {
-		...settings.attributes,
-		fkButtonIcon: { type: 'string', default: '' },
-		fkButtonIconPosition: { type: 'string', default: 'leading' },
-	};
-	return settings;
-});
+function normalizePosition(pos) {
+	if (pos === 'before') return 'leading';
+	if (pos === 'after') return 'trailing';
+	return pos || 'leading';
+}
 
-/**
- * Button icon inspector panel + editor preview.
- */
-const withButtonIconPanel = createHigherOrderComponent((BlockEdit) => {
-	return (props) => {
-		if (props.name !== 'core/button') {
-			return <BlockEdit {...props} />;
+createBlockExtension({
+	name: 'button-icons',
+	attribute: {
+		key: 'fkButtonIcon',
+		type: 'string',
+		default: '',
+	},
+	extraAttributes: {
+		fkButtonIconPosition: {
+			type: 'string',
+			default: 'leading',
+		},
+	},
+	blockFilter: (name) => name === 'core/button',
+
+	getClasses: (icon, allAttrs) => {
+		if (!icon) return [];
+
+		const position = normalizePosition(allAttrs.fkButtonIconPosition);
+		const classes = [
+			'fk-has-button-icon',
+			`fk-icon-position-${position}`,
+		];
+
+		if (position === 'icon-only') {
+			classes.push('fk-icon-only');
 		}
 
-		const { attributes, setAttributes } = props;
-		const icon = attributes.fkButtonIcon || '';
-		// Support legacy "before"/"after" values
-		const rawPosition = attributes.fkButtonIconPosition || 'leading';
-		const position =
-			rawPosition === 'before' ? 'leading' :
-			rawPosition === 'after' ? 'trailing' :
-			rawPosition;
-		const wrapperRef = useRef(null);
+		return classes;
+	},
 
-		// Editor preview: inject icon span into button link via DOM.
-		// Uses MutationObserver so the icon survives React re-renders
-		// of the inner RichText (typing, focus changes, etc.).
-		useEffect(() => {
-			if (!wrapperRef.current) return;
+	getWrapperProps: (icon, existingWP, allAttrs) => {
+		if (!icon) return null;
 
-			const inject = () => {
-				const link = wrapperRef.current?.querySelector('.wp-block-button__link');
-				if (!link) return;
+		const codepoint = DASHICON_UNICODE[icon];
+		if (!codepoint) return null;
 
-				// Already injected — nothing to do
-				if (link.querySelector('.fk-btn-icon')) return;
+		return {
+			...(existingWP || {}),
+			style: {
+				...(existingWP?.style || {}),
+				'--fk-btn-icon-content': `"${codepoint}"`,
+			},
+		};
+	},
 
-				if (!icon) return;
-
-				const span = document.createElement('span');
-				span.className = `fk-btn-icon dashicons dashicons-${icon}`;
-				span.setAttribute('aria-hidden', 'true');
-
-				if (position === 'trailing') {
-					link.appendChild(span);
-				} else {
-					link.prepend(span);
-				}
-			};
-
-			// Clean up any existing icons first (handles icon/position changes)
-			const clean = () => {
-				wrapperRef.current?.querySelectorAll('.fk-btn-icon').forEach((el) => el.remove());
-			};
-
-			clean();
-			inject();
-
-			// Re-inject when React rebuilds the button DOM
-			const observer = new MutationObserver(inject);
-			observer.observe(wrapperRef.current, { childList: true, subtree: true });
-
-			return () => {
-				observer.disconnect();
-				clean();
-			};
-		}, [icon, position]);
-
-		// Toggle icon-only class on the editor wrapper
-		useEffect(() => {
-			if (!wrapperRef.current) return;
-
-			const btn = wrapperRef.current.querySelector('.wp-block-button');
-			if (!btn) return;
-
-			btn.classList.toggle('fk-icon-only', !!(icon && position === 'icon-only'));
-
-			return () => {
-				btn?.classList.remove('fk-icon-only');
-			};
-		}, [icon, position]);
-
-		const clearIcon = useCallback(() => {
-			setAttributes({ fkButtonIcon: '' });
-		}, [setAttributes]);
-
-		return (
-			<Fragment>
-				<div ref={wrapperRef}>
-					<BlockEdit {...props} />
-				</div>
-				<InspectorControls>
-					<PanelBody
-						title={__('Button Icon', 'wp-figmakit')}
-						initialOpen={false}
-						className="fk-button-icons-panel"
-					>
-						<div className="fk-button-icons-panel__position">
-							<label className="fk-button-icons-panel__label">
-								{__('Position', 'wp-figmakit')}
-							</label>
-							<ButtonGroup className="fk-button-icons-panel__position-group">
-								{POSITIONS.map((p) => (
-									<Button
-										key={p.value}
-										variant={position === p.value ? 'primary' : 'secondary'}
-										size="small"
-										onClick={() => setAttributes({ fkButtonIconPosition: p.value })}
-									>
-										{p.label}
-									</Button>
-								))}
-							</ButtonGroup>
-						</div>
-
-						<div className="fk-button-icons-panel__grid">
-							{DASHICONS.map((name) => (
-								<button
-									key={name}
-									type="button"
-									className={`fk-button-icons-panel__icon ${icon === name ? 'is-selected' : ''}`}
-									onClick={() => setAttributes({ fkButtonIcon: name })}
-									title={name}
-								>
-									<span className={`dashicons dashicons-${name}`} />
-								</button>
-							))}
-						</div>
-
-						{icon && (
-							<Button
-								variant="tertiary"
-								isDestructive
-								size="small"
-								onClick={clearIcon}
-								className="fk-button-icons-panel__clear"
-							>
-								{__('Remove Icon', 'wp-figmakit')}
-							</Button>
-						)}
-					</PanelBody>
-				</InspectorControls>
-			</Fragment>
-		);
-	};
-}, 'withButtonIconPanel');
-
-addFilter('editor.BlockEdit', 'wp-figmakit/button-icons-panel', withButtonIconPanel);
+	Panel: ButtonIconPanel,
+});

@@ -67,14 +67,50 @@
 	}
 }
 
-// Editor preview styles for injected icon
-.fk-btn-icon {
+// ==========================================================================
+// Editor preview: icon via CSS pseudo-elements (no DOM manipulation)
+// ==========================================================================
+
+// Shared pseudo-element base
+.fk-has-button-icon .wp-block-button__link::before,
+.fk-has-button-icon .wp-block-button__link::after {
+	font-family: dashicons;
+	font-style: normal;
+	font-weight: normal;
+	text-transform: none;
+	speak: never;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	vertical-align: middle;
 	line-height: 1;
+	font-size: inherit;
+}
 
-	&.dashicons {
-		font-size: inherit;
-		width: auto;
-		height: auto;
+// Leading icon — ::before
+.fk-has-button-icon.fk-icon-position-leading .wp-block-button__link::before {
+	content: var(--fk-btn-icon-content);
+	margin-right: 0.4em;
+}
+
+// Trailing icon — ::after
+.fk-has-button-icon.fk-icon-position-trailing .wp-block-button__link::after {
+	content: var(--fk-btn-icon-content);
+	margin-left: 0.4em;
+}
+
+// Icon-only — hide text, show icon via ::before
+.fk-has-button-icon.fk-icon-position-icon-only .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.6em;
+	font-size: 0;
+	line-height: 1;
+	aspect-ratio: 1;
+
+	&::before {
+		content: var(--fk-btn-icon-content);
+		font-size: 1rem;
+		margin: 0;
 	}
 }
