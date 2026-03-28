@@ -157,6 +157,10 @@ function wp_figmakit_enqueue_block_frontend_scripts() {
 			'entry' => 'modal-frontend',
 			'src'   => 'src/blocks/modal/modal-frontend.js',
 		),
+		'wp-figmakit/fk-isi-tray' => array(
+			'entry' => 'isi-tray-frontend',
+			'src'   => 'src/blocks/isi-tray/isi-tray-frontend.js',
+		),
 	);
 
 	$manifest = wp_figmakit_is_vite_dev() ? null : wp_figmakit_get_manifest();

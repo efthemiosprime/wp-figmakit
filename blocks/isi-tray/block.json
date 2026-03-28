@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-isi-tray",
+	"version": "1.0.0",
+	"title": "ISI Tray",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "Important Safety Information tray with sticky collapsed/expanded view and auto-hide when full ISI is in viewport.",
+	"keywords": ["isi", "safety", "tray", "pharma", "figmakit"],
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"color": {
+			"background": true,
+			"text": true
+		}
+	},
+	"attributes": {
+		"variant": {
+			"type": "string",
+			"default": "one-col"
+		},
+		"collapsedHeight": {
+			"type": "number",
+			"default": 116
+		},
+		"expandedHeight": {
+			"type": "number",
+			"default": 300
+		},
+		"trayTitle": {
+			"type": "string",
+			"default": "Important Safety Information"
+		},
+		"colRatio": {
+			"type": "string",
+			"default": "65-35"
+		},
+		"piLink": {
+			"type": "string",
+			"default": ""
+		},
+		"piLinkText": {
+			"type": "string",
+			"default": "See full Prescribing Information"
+		},
+		"fullIsiSelector": {
+			"type": "string",
+			"default": "#full-isi"
+		}
+	},
+	"render": "file:./render.php"
+}

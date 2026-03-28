@@ -1,0 +1,289 @@
+// =============================================
+// fk-isi-tray — ISI Tray block styles
+// Sticky tray only (full ISI is manually placed)
+// =============================================
+
+// ── STICKY ISI TRAY ──
+
+.fk-isi-wrap {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	overflow: hidden;
+	transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.fk-isi-wrap.tray-visible {
+	max-height: 360px;
+	opacity: 1;
+}
+
+.fk-isi-wrap.tray-hidden {
+	max-height: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.fk-isi {
+	background: #fff;
+	border-top: 2px solid var(--fk-color-secondary, #185FA5);
+	overflow: hidden;
+	transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fk-isi.collapsed {
+	height: 116px;
+}
+
+.fk-isi.expanded {
+	height: 300px;
+}
+
+// Bar — inherits fk-row for container padding
+.fk-isi__bar {
+	align-items: center;
+	justify-content: space-between;
+	height: 36px;
+	background: #f9f9f9;
+	border-bottom: 1px solid #d8d8d8;
+}
+
+.fk-isi__title {
+	font-size: var(--fk-fs-eyebrow);
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--fk-color-secondary, #185FA5);
+}
+
+.fk-isi__bar-right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+// Buttons — 44px min touch target (WCAG SC 2.5.5)
+.fk-isi__btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 3px;
+	font-size: var(--fk-fs-eyebrow);
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	min-height: 44px;
+	min-width: 44px;
+	padding: 4px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.15s;
+	border: 1px solid var(--fk-color-secondary, #185FA5);
+	color: var(--fk-color-secondary, #185FA5);
+	background: transparent;
+	font-family: inherit;
+
+	&:focus-visible {
+		outline: 2px solid var(--fk-color-secondary, #185FA5);
+		outline-offset: 2px;
+	}
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+	}
+}
+
+.fk-isi__btn:hover {
+	background: rgba(24, 95, 165, 0.08);
+}
+
+.fk-isi__btn--expand {
+	background: var(--fk-color-secondary, #185FA5);
+	color: #fff;
+
+	&:hover {
+		background: var(--fk-color-primary, #0C447C);
+	}
+}
+
+// Body
+.fk-isi__body {
+	height: calc(100% - 36px);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.fk-isi.expanded .fk-isi__body {
+	overflow-y: auto;
+}
+
+.fk-isi__cols {
+	flex: 1;
+	min-height: 0;
+	align-items: stretch;
+}
+
+.fk-isi__cols--one-col .fk-isi-col {
+	flex: 1;
+}
+
+.fk-isi__cols--two-col .fk-isi-col--left {
+	flex: 0 0 65%;
+}
+
+.fk-isi__cols--two-col .fk-isi-col--right {
+	flex: 0 0 35%;
+}
+
+.fk-isi__cols .fk-isi-col {
+	padding: 10px 18px;
+	font-size: var(--fk-fs-footnote);
+	line-height: var(--fk-lh-normal);
+	color: var(--fk-color-text-muted, #555);
+	overflow: hidden;
+}
+
+.fk-isi__cols--two-col .fk-isi-col--right {
+	border-left: 1px solid #d8d8d8;
+}
+
+// Collapsed truncation
+.fk-isi.collapsed .fk-isi-col p,
+.fk-isi.collapsed .fk-isi-col .wp-block-paragraph {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.fk-isi.expanded .fk-isi-col p,
+.fk-isi.expanded .fk-isi-col .wp-block-paragraph {
+	display: block;
+	overflow: visible;
+}
+
+// ISI column headings
+.fk-isi-col__head {
+	font-size: var(--fk-fs-eyebrow);
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--fk-color-secondary, #185FA5);
+	margin-bottom: 8px;
+}
+
+// Warning text
+.fk-isi .warn-txt {
+	color: #7a1a1a;
+	font-weight: 600;
+}
+
+// Body region focus (WCAG SC 2.4.7)
+.fk-isi__body:focus-visible {
+	outline: 2px solid var(--fk-color-secondary, #185FA5);
+	outline-offset: -2px;
+}
+
+.fk-isi__body:focus:not(:focus-visible) {
+	outline: none;
+}
+
+// ── REDUCED MOTION ──
+
+@media (prefers-reduced-motion: reduce) {
+	.fk-isi-wrap {
+		transition: none;
+	}
+
+	.fk-isi {
+		transition: none;
+	}
+
+	.fk-isi__btn {
+		transition: none;
+	}
+}
+
+// ── HIGH CONTRAST MODE ──
+
+@media (forced-colors: active) {
+	.fk-isi {
+		border-top-color: ButtonText;
+	}
+
+	.fk-isi__btn {
+		border-color: ButtonText;
+	}
+
+	.fk-isi__btn--expand {
+		background: Highlight;
+		color: HighlightText;
+	}
+
+	.fk-isi__btn:focus-visible {
+		outline-color: Highlight;
+	}
+
+	.fk-isi__body:focus-visible {
+		outline-color: Highlight;
+	}
+}
+
+// ── RESPONSIVE ──
+
+@media (max-width: 767px) {
+	.fk-isi__cols--two-col {
+		grid-template-columns: 1fr;
+	}
+
+	.fk-isi__cols--two-col .fk-isi-col--right {
+		border-left: none;
+		border-top: 1px solid #d8d8d8;
+		padding-top: 8px;
+		margin-top: 8px;
+	}
+}
+
+// ── EDITOR PREVIEW ──
+
+.fk-isi-tray--editor {
+	position: relative;
+	border: 2px dashed rgba(24, 95, 165, 0.4);
+	border-radius: 8px;
+	overflow: visible;
+	background: #fff;
+	color: #333;
+}
+
+.fk-isi-tray__editor-label {
+	display: block;
+	font-size: var(--fk-fs-footnote);
+	font-weight: 600;
+	color: #185FA5;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 8px 16px;
+	border-bottom: 1px dashed rgba(24, 95, 165, 0.2);
+	background: rgba(24, 95, 165, 0.04);
+	border-radius: 6px 6px 0 0;
+}
+
+.fk-isi-tray__editor-content {
+	padding: 16px;
+}
+
+.fk-isi-tray__editor-content--two-col > .block-editor-inner-blocks > .block-editor-block-list__layout {
+	display: grid;
+	grid-template-columns: var(--fk-isi-cols, 65% 35%);
+	gap: 24px;
+}
+
+.fk-isi-tray__editor-pi {
+	padding: 8px 16px 16px;
+	font-size: var(--fk-fs-footnote);
+	color: #185FA5;
+	text-decoration: underline;
+}

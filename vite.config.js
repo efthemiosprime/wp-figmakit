@@ -43,6 +43,7 @@ export default defineConfig({
 				'tabs-frontend': path.resolve(__dirname, 'src/blocks/tabs/tabs-frontend.js'),
 			'accordion-frontend': path.resolve(__dirname, 'src/blocks/accordion/accordion-frontend.js'),
 			'modal-frontend': path.resolve(__dirname, 'src/blocks/modal/modal-frontend.js'),
+			'isi-tray-frontend': path.resolve(__dirname, 'src/blocks/isi-tray/isi-tray-frontend.js'),
 				...getBlockEntries(),
 			},
 		},
