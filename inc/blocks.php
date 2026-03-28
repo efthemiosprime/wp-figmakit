@@ -144,41 +144,58 @@ add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_styles' );
  * Enqueue frontend JS for blocks that need interactivity (tabs, accordion, etc.).
  */
 function wp_figmakit_enqueue_block_frontend_scripts() {
-	if ( ! has_block( 'wp-figmakit/fk-tabs' ) ) {
-		return;
-	}
+	$frontend_scripts = array(
+		'wp-figmakit/fk-tabs'      => array(
+			'entry' => 'tabs-frontend',
+			'src'   => 'src/blocks/tabs/tabs-frontend.js',
+		),
+		'wp-figmakit/fk-accordion' => array(
+			'entry' => 'accordion-frontend',
+			'src'   => 'src/blocks/accordion/accordion-frontend.js',
+		),
+	);
 
-	if ( wp_figmakit_is_vite_dev() ) {
-		wp_enqueue_script(
-			'wp-figmakit-tabs-frontend',
-			'http://localhost:5173/src/blocks/tabs/tabs-frontend.js',
-			array(),
-			null,
-			true
-		);
-		return;
-	}
+	$manifest = wp_figmakit_is_vite_dev() ? null : wp_figmakit_get_manifest();
 
-	$manifest = wp_figmakit_get_manifest();
-	$src      = null;
+	foreach ( $frontend_scripts as $block_name => $script ) {
+		if ( ! has_block( $block_name ) ) {
+			continue;
+		}
 
-	if ( $manifest ) {
+		$handle = 'wp-figmakit-' . $script['entry'];
+
+		if ( wp_figmakit_is_vite_dev() ) {
+			wp_enqueue_script(
+				$handle,
+				'http://localhost:5173/' . $script['src'],
+				array(),
+				null,
+				true
+			);
+			continue;
+		}
+
+		if ( ! $manifest ) {
+			continue;
+		}
+
+		$src = null;
 		foreach ( $manifest as $entry => $data ) {
-			if ( strpos( $entry, 'tabs-frontend' ) !== false && isset( $data['file'] ) ) {
+			if ( strpos( $entry, $script['entry'] ) !== false && isset( $data['file'] ) ) {
 				$src = WP_FIGMAKIT_URI . '/dist/' . $data['file'];
 				break;
 			}
 		}
-	}
 
-	if ( $src ) {
-		wp_enqueue_script(
-			'wp-figmakit-tabs-frontend',
-			$src,
-			array(),
-			WP_FIGMAKIT_VERSION,
-			true
-		);
+		if ( $src ) {
+			wp_enqueue_script(
+				$handle,
+				$src,
+				array(),
+				WP_FIGMAKIT_VERSION,
+				true
+			);
+		}
 	}
 }
 add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_block_frontend_scripts' );

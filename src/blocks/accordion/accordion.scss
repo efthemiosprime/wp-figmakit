@@ -1,0 +1,215 @@
+// =============================================
+// fk-accordion — Accordion block styles
+// WCAG 2.1 AA compliant
+// =============================================
+
+// ── FRONTEND ──
+
+.fk-accordion {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.fk-accordion-item {
+	border: 1px solid var(--fk-color-border, rgba(255, 255, 255, 0.2));
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+// Header button — 44px min touch target (WCAG SC 2.5.5)
+.fk-accordion-item__heading {
+	margin: 0;
+	font-size: inherit;
+}
+
+.fk-accordion-item__header {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-height: 44px;
+	padding: 16px 20px;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	text-align: left;
+	gap: 16px;
+	transition: background-color 0.15s ease;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.04);
+	}
+
+	// Focus indicator (WCAG SC 2.4.7)
+	&:focus-visible {
+		outline: 2px solid var(--fk-color-secondary, #4169E1);
+		outline-offset: -2px;
+		border-radius: 8px;
+	}
+
+	&:focus:not(:focus-visible) {
+		outline: none;
+	}
+}
+
+// Icon
+.fk-accordion-item__icon {
+	flex-shrink: 0;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
+}
+
+// Title
+.fk-accordion-item__title {
+	flex: 1;
+	font-size: var(--fk-fs-body-lg);
+	font-weight: 700;
+	line-height: var(--fk-lh-tight);
+}
+
+// Toggle icon (+/−)
+.fk-accordion-item__toggle {
+	flex-shrink: 0;
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	font-weight: 300;
+	color: var(--fk-color-secondary, #4169E1);
+	transition: transform 0.2s ease;
+
+	&::before {
+		content: '+';
+	}
+}
+
+.fk-accordion-item.is-open .fk-accordion-item__toggle::before {
+	content: '\2212'; // minus sign
+}
+
+// Panel
+.fk-accordion-item__panel {
+	overflow: hidden;
+	transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	max-height: 0;
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+.fk-accordion-item.is-open .fk-accordion-item__panel {
+	max-height: 2000px;
+}
+
+.fk-accordion-item__panel-inner {
+	padding: 0 20px 20px;
+	font-size: var(--fk-fs-body-sm);
+	line-height: var(--fk-lh-normal);
+	color: var(--fk-color-text-muted, #A0A0A0);
+
+	p + p {
+		margin-top: 8px;
+	}
+}
+
+// ── REDUCED MOTION (WCAG SC 2.3.3) ──
+
+@media (prefers-reduced-motion: reduce) {
+	.fk-accordion-item__header {
+		transition: none;
+	}
+
+	.fk-accordion-item__toggle {
+		transition: none;
+	}
+
+	.fk-accordion-item__panel {
+		transition: none;
+	}
+}
+
+// ── HIGH CONTRAST MODE ──
+
+@media (forced-colors: active) {
+	.fk-accordion-item {
+		border-color: ButtonText;
+	}
+
+	.fk-accordion-item__header:focus-visible {
+		outline-color: Highlight;
+	}
+
+	.fk-accordion-item__toggle {
+		color: ButtonText;
+	}
+
+	.fk-accordion-item.is-open .fk-accordion-item__toggle {
+		color: Highlight;
+	}
+}
+
+// ── RESPONSIVE ──
+
+@media (max-width: 767px) {
+	.fk-accordion-item__header {
+		padding: 12px 16px;
+		gap: 12px;
+	}
+
+	.fk-accordion-item__icon {
+		width: 32px;
+		height: 32px;
+	}
+
+	.fk-accordion-item__panel-inner {
+		padding: 0 16px 16px;
+	}
+}
+
+// ── EDITOR PREVIEW ──
+
+.fk-accordion--editor {
+	.fk-accordion-item--editor {
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		overflow: visible;
+		margin-bottom: 12px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.fk-accordion-item__header--editor {
+		display: flex;
+		align-items: center;
+		padding: 16px 20px;
+		gap: 16px;
+		border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+	}
+
+	.fk-accordion-item__panel--editor {
+		display: block;
+		max-height: none;
+		overflow: visible;
+	}
+
+	.fk-accordion-item__panel--editor .fk-accordion-item__panel-inner {
+		padding: 16px 20px;
+	}
+}

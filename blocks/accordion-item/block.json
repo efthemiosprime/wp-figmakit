@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-accordion-item",
+	"version": "1.0.0",
+	"title": "FK Accordion Item",
+	"category": "wp-figmakit",
+	"icon": "index-card",
+	"description": "A single accordion item with header (icon + title) and expandable panel.",
+	"keywords": ["accordion", "item", "panel", "figmakit"],
+	"parent": ["wp-figmakit/fk-accordion"],
+	"supports": {
+		"html": false,
+		"color": {
+			"background": true,
+			"text": true
+		}
+	},
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Accordion Title"
+		},
+		"iconMediaId": {
+			"type": "number",
+			"default": 0
+		},
+		"iconMediaUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"isOpenByDefault": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"render": "file:./render.php"
+}

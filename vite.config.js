@@ -41,6 +41,7 @@ export default defineConfig({
 				main: path.resolve(__dirname, 'src/main.js'),
 				editor: path.resolve(__dirname, 'src/editor.js'),
 				'tabs-frontend': path.resolve(__dirname, 'src/blocks/tabs/tabs-frontend.js'),
+			'accordion-frontend': path.resolve(__dirname, 'src/blocks/accordion/accordion-frontend.js'),
 				...getBlockEntries(),
 			},
 		},

@@ -1,0 +1,34 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-accordion",
+	"version": "1.0.0",
+	"title": "FK Accordion",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "Expandable accordion with icon support in headers and rich content panels. WCAG 2.1 AA compliant.",
+	"keywords": ["accordion", "collapse", "expand", "faq", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"allowMultiple": {
+			"type": "boolean",
+			"default": false
+		},
+		"defaultOpen": {
+			"type": "number",
+			"default": -1
+		}
+	},
+	"render": "file:./render.php"
+}
