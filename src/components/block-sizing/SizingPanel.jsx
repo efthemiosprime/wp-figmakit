@@ -5,6 +5,7 @@ const { __ } = wp.i18n;
 const WIDTH_OPTIONS = [
 	{ label: '—', value: '' },
 	{ label: 'Auto', value: 'fk-w-auto' },
+	{ label: 'Fit Content', value: 'fk-w-fit' },
 	{ label: '25%', value: 'fk-w-25' },
 	{ label: '33%', value: 'fk-w-33' },
 	{ label: '50%', value: 'fk-w-50' },

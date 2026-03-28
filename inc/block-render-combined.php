@@ -109,7 +109,7 @@ function wp_figmakit_render_block_extensions( $block_content, $block ) {
 	// ──────────────────────────────────────────────────────────────────────
 	if ( ! empty( $attrs['fkSizing'] ) && is_array( $attrs['fkSizing'] ) ) {
 		$sizing_allowed = array(
-			'fk-w-auto', 'fk-w-25', 'fk-w-33', 'fk-w-50', 'fk-w-66', 'fk-w-75', 'fk-w-full', 'fk-w-screen',
+			'fk-w-auto', 'fk-w-fit', 'fk-w-25', 'fk-w-33', 'fk-w-50', 'fk-w-66', 'fk-w-75', 'fk-w-full', 'fk-w-screen',
 			'fk-mw-none', 'fk-mw-xs', 'fk-mw-sm', 'fk-mw-md', 'fk-mw-lg', 'fk-mw-xl', 'fk-mw-2xl', 'fk-mw-3xl', 'fk-mw-full',
 			'fk-mnw-0', 'fk-mnw-full',
 			'fk-h-auto', 'fk-h-25', 'fk-h-50', 'fk-h-75', 'fk-h-full', 'fk-h-screen',
