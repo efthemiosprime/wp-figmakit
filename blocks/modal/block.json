@@ -1,0 +1,62 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-figmakit/fk-modal",
+	"version": "1.0.0",
+	"title": "Modal",
+	"category": "wp-figmakit",
+	"icon": "",
+	"description": "A configurable modal dialog with hash-trigger, exit intent, and HCP gate variants. WCAG 2.1 AA compliant.",
+	"keywords": ["modal", "dialog", "popup", "gate", "figmakit"],
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"modalId": {
+			"type": "string",
+			"default": ""
+		},
+		"variant": {
+			"type": "string",
+			"default": "hash"
+		},
+		"maxWidth": {
+			"type": "string",
+			"default": "640px"
+		},
+		"showBackdrop": {
+			"type": "boolean",
+			"default": true
+		},
+		"closeOnEscape": {
+			"type": "boolean",
+			"default": true
+		},
+		"closeOnBackdrop": {
+			"type": "boolean",
+			"default": true
+		},
+		"whitelistUrls": {
+			"type": "array",
+			"default": []
+		},
+		"hcpCookieExpiry": {
+			"type": "number",
+			"default": 30
+		},
+		"hcpDenyUrl": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"render": "file:./render.php"
+}

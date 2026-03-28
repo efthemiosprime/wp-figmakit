@@ -153,6 +153,10 @@ function wp_figmakit_enqueue_block_frontend_scripts() {
 			'entry' => 'accordion-frontend',
 			'src'   => 'src/blocks/accordion/accordion-frontend.js',
 		),
+		'wp-figmakit/fk-modal' => array(
+			'entry' => 'modal-frontend',
+			'src'   => 'src/blocks/modal/modal-frontend.js',
+		),
 	);
 
 	$manifest = wp_figmakit_is_vite_dev() ? null : wp_figmakit_get_manifest();

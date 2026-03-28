@@ -42,6 +42,7 @@ export default defineConfig({
 				editor: path.resolve(__dirname, 'src/editor.js'),
 				'tabs-frontend': path.resolve(__dirname, 'src/blocks/tabs/tabs-frontend.js'),
 			'accordion-frontend': path.resolve(__dirname, 'src/blocks/accordion/accordion-frontend.js'),
+			'modal-frontend': path.resolve(__dirname, 'src/blocks/modal/modal-frontend.js'),
 				...getBlockEntries(),
 			},
 		},

@@ -1,0 +1,136 @@
+// =============================================
+// fk-modal — Block styles
+// WCAG 2.1 AA compliant modal dialog
+// =============================================
+
+// Frontend: hidden by default
+.fk-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+
+	&.fk-modal--open {
+		display: flex;
+	}
+}
+
+// Backdrop
+.fk-modal__backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: -1;
+	cursor: pointer;
+}
+
+// Content container
+.fk-modal__content {
+	position: relative;
+	background: #fff;
+	color: #000;
+	max-width: var(--fk-modal-max-width, 640px);
+	width: 100%;
+	max-height: 90vh;
+	overflow-y: auto;
+	padding: 40px;
+	border-radius: 10px;
+	z-index: 1;
+
+	@media (max-width: 767px) {
+		max-width: 100%;
+		max-height: 95vh;
+		padding: 20px;
+	}
+}
+
+// Close button — 44x44px min touch target (WCAG SC 2.5.5)
+.fk-modal__close {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	min-width: 44px;
+	min-height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: 2px solid transparent;
+	cursor: pointer;
+	color: inherit;
+	z-index: 2;
+	border-radius: 4px;
+	padding: 0;
+
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+
+	&:focus-visible {
+		outline: 2px solid #007cba;
+		outline-offset: 2px;
+	}
+
+	&:hover {
+		background: rgba(0, 0, 0, 0.08);
+	}
+}
+
+// Body scroll lock
+body.fk-modal-active {
+	overflow: hidden;
+}
+
+// =============================================
+// Editor preview
+// =============================================
+
+.fk-modal--editor {
+	position: relative;
+	display: block;
+	border: 2px dashed rgba(0, 124, 186, 0.4);
+	border-radius: 8px;
+	overflow: visible;
+
+	.fk-modal__editor-label {
+		display: block;
+		font-size: 11px;
+		font-weight: 600;
+		color: #007cba;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		padding: 8px 16px;
+		border-bottom: 1px dashed rgba(0, 124, 186, 0.2);
+		background: rgba(0, 124, 186, 0.04);
+		border-radius: 6px 6px 0 0;
+	}
+
+	.fk-modal__editor-content {
+		padding: 16px;
+	}
+}
+
+// Variant-specific editor indicators
+.fk-modal--editor.fk-modal--exit-intent {
+	border-color: rgba(233, 69, 96, 0.4);
+
+	.fk-modal__editor-label {
+		color: #e94560;
+		border-bottom-color: rgba(233, 69, 96, 0.2);
+		background: rgba(233, 69, 96, 0.04);
+	}
+}
+
+.fk-modal--editor.fk-modal--hcp-gate {
+	border-color: rgba(65, 105, 225, 0.4);
+
+	.fk-modal__editor-label {
+		color: #4169e1;
+		border-bottom-color: rgba(65, 105, 225, 0.2);
+		background: rgba(65, 105, 225, 0.04);
+	}
+}
