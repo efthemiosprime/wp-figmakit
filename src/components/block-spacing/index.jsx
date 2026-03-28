@@ -241,3 +241,24 @@ const withSpacingPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withSpacingPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-spacing-panel', withSpacingPanel);
+
+/**
+ * Apply spacing classes to block wrapper in the editor so changes are visible in real-time.
+ */
+const withSpacingEditorClasses = createHigherOrderComponent((BlockListBlock) => {
+	return (props) => {
+		const spacing = props.attributes.fkSpacing || {};
+		const classes = getSpacingClasses(spacing);
+
+		if (classes.length === 0) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const existing = props.className || '';
+		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+
+		return <BlockListBlock {...props} className={newClassName} />;
+	};
+}, 'withSpacingEditorClasses');
+
+addFilter('editor.BlockListBlock', 'wp-figmakit/block-spacing-classes', withSpacingEditorClasses);

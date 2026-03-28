@@ -78,3 +78,28 @@ const withVisibilityPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withVisibilityPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/responsive-visibility-panel', withVisibilityPanel);
+
+/**
+ * Apply visibility classes to block wrapper in the editor so changes are visible in real-time.
+ */
+const withVisibilityEditorClasses = createHigherOrderComponent((BlockListBlock) => {
+	return (props) => {
+		const vis = props.attributes.fkVisibility || { desktop: true, tablet: true, mobile: true };
+		const classes = [];
+
+		if (!vis.desktop) classes.push('fk-hide-desktop');
+		if (!vis.tablet) classes.push('fk-hide-tablet');
+		if (!vis.mobile) classes.push('fk-hide-mobile');
+
+		if (classes.length === 0) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const existing = props.className || '';
+		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+
+		return <BlockListBlock {...props} className={newClassName} />;
+	};
+}, 'withVisibilityEditorClasses');
+
+addFilter('editor.BlockListBlock', 'wp-figmakit/responsive-visibility-classes', withVisibilityEditorClasses);

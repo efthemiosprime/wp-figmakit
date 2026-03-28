@@ -39,6 +39,29 @@ function wp_figmakit_setup() {
 }
 add_action( 'after_setup_theme', 'wp_figmakit_setup' );
 
+/**
+ * Enqueue Google Fonts.
+ */
+function wp_figmakit_enqueue_fonts() {
+	wp_enqueue_style(
+		'wp-figmakit-google-fonts',
+		'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap',
+		array(),
+		null
+	);
+}
+add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_fonts' );
+add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_fonts' );
+
+/**
+ * Add theme identifier class to body.
+ */
+function wp_figmakit_body_class( $classes ) {
+	$classes[] = 'wp-figmakit';
+	return $classes;
+}
+add_filter( 'body_class', 'wp_figmakit_body_class' );
+
 // Modular includes
 require_once WP_FIGMAKIT_DIR . '/inc/assets.php';
 require_once WP_FIGMAKIT_DIR . '/inc/blocks.php';
@@ -47,10 +70,10 @@ require_once WP_FIGMAKIT_DIR . '/inc/templates.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-attributes.php';
 require_once WP_FIGMAKIT_DIR . '/inc/responsive-visibility.php';
 require_once WP_FIGMAKIT_DIR . '/inc/button-icons.php';
-require_once WP_FIGMAKIT_DIR . '/inc/button-variant.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-spacing.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-layout.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-sizing.php';
+require_once WP_FIGMAKIT_DIR . '/inc/button-variant.php';
 require_once WP_FIGMAKIT_DIR . '/inc/block-text-style.php';
 require_once WP_FIGMAKIT_DIR . '/inc/admin.php';
 require_once WP_FIGMAKIT_DIR . '/inc/grid-api.php';

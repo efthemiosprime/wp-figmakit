@@ -95,46 +95,48 @@ $spacing-sizes: (
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .gap-#{$name} { gap: $val; }
-  .gap-y-#{$name} { row-gap: $val; }
-  .gap-x-#{$name} { column-gap: $val; }
+  .gap-#{$name} { gap: $val !important; }
+  .gap-y-#{$name} { row-gap: $val !important; }
+  .gap-x-#{$name} { column-gap: $val !important; }
 }
 
 // ==========================================================================
 // Utility Classes - Padding
+// !important to override Gutenberg's body .is-layout-flex and layout resets
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .p-#{$name} { padding: $val; }
-  .py-#{$name} { padding-top: $val; padding-bottom: $val; }
-  .px-#{$name} { padding-left: $val; padding-right: $val; }
-  .pt-#{$name} { padding-top: $val; }
-  .pb-#{$name} { padding-bottom: $val; }
-  .pl-#{$name} { padding-left: $val; }
-  .pr-#{$name} { padding-right: $val; }
+  .p-#{$name} { padding: $val !important; }
+  .py-#{$name} { padding-top: $val !important; padding-bottom: $val !important; }
+  .px-#{$name} { padding-left: $val !important; padding-right: $val !important; }
+  .pt-#{$name} { padding-top: $val !important; }
+  .pb-#{$name} { padding-bottom: $val !important; }
+  .pl-#{$name} { padding-left: $val !important; }
+  .pr-#{$name} { padding-right: $val !important; }
 }
 
 // ==========================================================================
 // Utility Classes - Margin
+// !important to override Gutenberg's body .is-layout-flex and layout resets
 // ==========================================================================
 
 @each $name, $val in $spacing-sizes {
-  .m-#{$name} { margin: $val; }
-  .my-#{$name} { margin-top: $val; margin-bottom: $val; }
-  .mx-#{$name} { margin-left: $val; margin-right: $val; }
-  .mt-#{$name} { margin-top: $val; }
-  .mb-#{$name} { margin-bottom: $val; }
-  .ml-#{$name} { margin-left: $val; }
-  .mr-#{$name} { margin-right: $val; }
+  .m-#{$name} { margin: $val !important; }
+  .my-#{$name} { margin-top: $val !important; margin-bottom: $val !important; }
+  .mx-#{$name} { margin-left: $val !important; margin-right: $val !important; }
+  .mt-#{$name} { margin-top: $val !important; }
+  .mb-#{$name} { margin-bottom: $val !important; }
+  .ml-#{$name} { margin-left: $val !important; }
+  .mr-#{$name} { margin-right: $val !important; }
 }
 
-.m-auto { margin: auto; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-.my-auto { margin-top: auto; margin-bottom: auto; }
-.mt-auto { margin-top: auto; }
-.mb-auto { margin-bottom: auto; }
-.ml-auto { margin-left: auto; }
-.mr-auto { margin-right: auto; }
+.m-auto { margin: auto !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+.my-auto { margin-top: auto !important; margin-bottom: auto !important; }
+.mt-auto { margin-top: auto !important; }
+.mb-auto { margin-bottom: auto !important; }
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
 
 // ==========================================================================
 // Section Spacing Classes

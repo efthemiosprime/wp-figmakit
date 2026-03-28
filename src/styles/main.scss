@@ -164,8 +164,8 @@ article {
 	margin-right: auto !important;
 }
 
-// Reset root padding
-.has-global-padding {
+// Reset root padding — skip elements with explicit spacing classes
+.has-global-padding:not([class*="px-"]):not([class*="pl-"]):not([class*="pr-"]):not([class*="p-"]) {
 	padding-right: 0 !important;
 	padding-left: 0 !important;
 }

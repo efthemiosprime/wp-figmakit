@@ -182,8 +182,23 @@ add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' )
  * Inject editor CSS into the block editor iframe.
  */
 function wp_figmakit_editor_iframe_styles( $editor_settings ) {
+	if ( wp_figmakit_is_vite_dev() ) {
+		// Dev mode: import main styles from Vite dev server into the iframe
+		$editor_settings['styles'][] = array( 'css' => '@import url("http://localhost:5173/src/styles/main.scss");' );
+		$editor_settings['styles'][] = array( 'css' => '@import url("http://localhost:5173/src/styles/editor.scss");' );
+		return $editor_settings;
+	}
+
 	$manifest = wp_figmakit_get_manifest();
 	if ( $manifest ) {
+		// Inject main CSS first — contains utility classes (spacing, layout, sizing, grid)
+		// that Vite deduplicates out of the editor bundle.
+		$main_entry = 'src/main.js';
+		if ( isset( $manifest[ $main_entry ]['css'][0] ) ) {
+			$css_url = WP_FIGMAKIT_URI . '/dist/' . $manifest[ $main_entry ]['css'][0];
+			$editor_settings['styles'][] = array( 'css' => '@import url("' . $css_url . '");' );
+		}
+
 		// Inject editor CSS
 		$editor_entry = 'src/editor.js';
 		if ( isset( $manifest[ $editor_entry ]['css'][0] ) ) {

@@ -504,3 +504,31 @@ const withLayoutPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withLayoutPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-layout-panel', withLayoutPanel);
+
+/**
+ * Apply layout classes to block wrapper in the editor so changes are visible in real-time.
+ */
+const withLayoutEditorClasses = createHigherOrderComponent((BlockListBlock) => {
+	return (props) => {
+		const layout = props.attributes.fkLayout || {};
+		const tablet = props.attributes.fkLayoutTablet || {};
+		const mobile = props.attributes.fkLayoutMobile || {};
+
+		const classes = [
+			...getLayoutClasses(layout),
+			...getLayoutClasses(tablet),
+			...getLayoutClasses(mobile),
+		];
+
+		if (classes.length === 0) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const existing = props.className || '';
+		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+
+		return <BlockListBlock {...props} className={newClassName} />;
+	};
+}, 'withLayoutEditorClasses');
+
+addFilter('editor.BlockListBlock', 'wp-figmakit/block-layout-classes', withLayoutEditorClasses);

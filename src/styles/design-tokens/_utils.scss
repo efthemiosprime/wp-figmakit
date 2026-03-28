@@ -5,14 +5,14 @@
 
 @use 'variables' as *;
 
-// Display
-.fk-d-block { display: block; }
-.fk-d-iblock { display: inline-block; }
-.fk-d-inline { display: inline; }
-.fk-d-flex { display: flex; }
-.fk-d-iflex { display: inline-flex; }
-.fk-d-grid { display: grid; }
-.fk-d-none { display: none; }
+// Display — !important to override Gutenberg's body .is-layout-flex and layout resets
+.fk-d-block { display: block !important; }
+.fk-d-iblock { display: inline-block !important; }
+.fk-d-inline { display: inline !important; }
+.fk-d-flex { display: flex !important; }
+.fk-d-iflex { display: inline-flex !important; }
+.fk-d-grid { display: grid !important; }
+.fk-d-none { display: none !important; }
 
 // Responsive Display — Tablet
 @media (max-width: #{$bp-tablet-max}) {

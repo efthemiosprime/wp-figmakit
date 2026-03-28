@@ -182,3 +182,24 @@ const withSizingPanel = createHigherOrderComponent((BlockEdit) => {
 }, 'withSizingPanel');
 
 addFilter('editor.BlockEdit', 'wp-figmakit/block-sizing-panel', withSizingPanel);
+
+/**
+ * Apply sizing classes to block wrapper in the editor so changes are visible in real-time.
+ */
+const withSizingEditorClasses = createHigherOrderComponent((BlockListBlock) => {
+	return (props) => {
+		const sizing = props.attributes.fkSizing || {};
+		const classes = getSizingClasses(sizing);
+
+		if (classes.length === 0) {
+			return <BlockListBlock {...props} />;
+		}
+
+		const existing = props.className || '';
+		const newClassName = [existing, ...classes].filter(Boolean).join(' ');
+
+		return <BlockListBlock {...props} className={newClassName} />;
+	};
+}, 'withSizingEditorClasses');
+
+addFilter('editor.BlockListBlock', 'wp-figmakit/block-sizing-classes', withSizingEditorClasses);
