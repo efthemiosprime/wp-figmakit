@@ -10,6 +10,7 @@
 .fk-d-iblock { display: inline-block !important; }
 .fk-d-inline { display: inline !important; }
 .fk-d-flex { display: flex !important; }
+.fk-d-inline-flex { display: inline-flex !important; }
 .fk-d-iflex { display: inline-flex !important; }
 .fk-d-grid { display: grid !important; }
 .fk-d-none { display: none !important; }
@@ -113,6 +114,8 @@
 
 // Height
 .fk-h-auto { height: auto; }
+.fk-h-fit { height: fit-content; }
+.fk-h-hug { height: fit-content; }
 .fk-h-25 { height: 25%; }
 .fk-h-50 { height: 50%; }
 .fk-h-75 { height: 75%; }
