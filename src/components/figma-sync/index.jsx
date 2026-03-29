@@ -8,9 +8,7 @@
 
 const { createHigherOrderComponent } = wp.compose;
 const { addFilter } = wp.hooks;
-const { Fragment, useState } = wp.element;
-const { BlockControls } = wp.blockEditor;
-const { ToolbarGroup, ToolbarButton, Spinner } = wp.components;
+const { Fragment, useState, createElement } = wp.element;
 const { useSelect } = wp.data;
 const { __ } = wp.i18n;
 
@@ -77,11 +75,13 @@ function SyncButton({ clientId }) {
 		setSyncing(false);
 	};
 
-	return wp.element.createElement(
+	const { ToolbarGroup, ToolbarButton, Spinner } = wp.components;
+
+	return createElement(
 		ToolbarGroup,
 		null,
-		wp.element.createElement(ToolbarButton, {
-			icon: syncing ? wp.element.createElement(Spinner, null) : syncIcon,
+		createElement(ToolbarButton, {
+			icon: syncing ? createElement(Spinner, null) : syncIcon,
 			label: __('Re-sync from Figma', 'wp-figmakit'),
 			onClick: handleSync,
 			disabled: syncing,
@@ -98,18 +98,20 @@ const withFigmaSync = createHigherOrderComponent((BlockEdit) => {
 		const showSync = pluginActive && (props.name === 'core/block' || props.name.startsWith('wp-figmakit/'));
 
 		if (!showSync) {
-			return wp.element.createElement(BlockEdit, props);
+			return createElement(BlockEdit, props);
 		}
 
-		return wp.element.createElement(
+		const { BlockControls } = wp.blockEditor;
+
+		return createElement(
 			Fragment,
 			null,
-			wp.element.createElement(
+			createElement(
 				BlockControls,
 				{ group: 'other' },
-				wp.element.createElement(SyncButton, { clientId: props.clientId })
+				createElement(SyncButton, { clientId: props.clientId })
 			),
-			wp.element.createElement(BlockEdit, props)
+			createElement(BlockEdit, props)
 		);
 	};
 }, 'withFigmaSync');
