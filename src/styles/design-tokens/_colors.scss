@@ -10,4 +10,64 @@
   --fk-color-text: #333;
   --fk-color-text-light: #666;
   --fk-color-bg: #fff;
+  --fk-color-white: #fff;
+  --fk-color-black: #000;
+  --fk-color-muted: #f5f5f5;
+  --fk-color-border: #e0e0e0;
 }
+
+// ==========================================================================
+// Color map for utility generation
+// ==========================================================================
+
+$fk-colors: (
+  'primary':    var(--fk-color-primary),
+  'secondary':  var(--fk-color-secondary),
+  'accent':     var(--fk-color-accent),
+  'highlight':  var(--fk-color-highlight),
+  'text':       var(--fk-color-text),
+  'text-light': var(--fk-color-text-light),
+  'bg':         var(--fk-color-bg),
+  'white':      var(--fk-color-white),
+  'black':      var(--fk-color-black),
+  'muted':      var(--fk-color-muted),
+  'border':     var(--fk-color-border),
+);
+
+// ==========================================================================
+// Background color utilities
+// ==========================================================================
+
+@each $name, $val in $fk-colors {
+  .fk-bg-#{$name} { background-color: $val !important; }
+}
+
+// ==========================================================================
+// Text color utilities
+// ==========================================================================
+
+@each $name, $val in $fk-colors {
+  .fk-tc-#{$name} { color: $val !important; }
+}
+
+// ==========================================================================
+// Border color utilities
+// ==========================================================================
+
+@each $name, $val in $fk-colors {
+  .fk-bc-#{$name} { border-color: $val !important; }
+}
+
+// ==========================================================================
+// Border width utilities
+// ==========================================================================
+
+.fk-b-0 { border: 0 !important; }
+.fk-b-1 { border: 1px solid var(--fk-color-border) !important; }
+.fk-b-2 { border: 2px solid var(--fk-color-border) !important; }
+.fk-b-t-1 { border-top: 1px solid var(--fk-color-border) !important; }
+.fk-b-b-1 { border-bottom: 1px solid var(--fk-color-border) !important; }
+.fk-b-l-1 { border-left: 1px solid var(--fk-color-border) !important; }
+.fk-b-r-1 { border-right: 1px solid var(--fk-color-border) !important; }
+.fk-b-t-2 { border-top: 2px solid var(--fk-color-border) !important; }
+.fk-b-b-2 { border-bottom: 2px solid var(--fk-color-border) !important; }

@@ -138,6 +138,24 @@
 .fk-mxh-full { max-height: 100%; }
 .fk-mxh-screen { max-height: 100vh; }
 
+// Border Radius — uses CSS custom properties for theme-level overrides.
+:root {
+  --fk-r-none: 0;
+  --fk-r-sm: 4px;
+  --fk-r-md: 8px;
+  --fk-r-lg: 12px;
+  --fk-r-xl: 16px;
+  --fk-r-2xl: 24px;
+  --fk-r-full: 9999px;
+}
+.fk-r-none { border-radius: var(--fk-r-none) !important; }
+.fk-r-sm { border-radius: var(--fk-r-sm) !important; }
+.fk-r-md { border-radius: var(--fk-r-md) !important; }
+.fk-r-lg { border-radius: var(--fk-r-lg) !important; }
+.fk-r-xl { border-radius: var(--fk-r-xl) !important; }
+.fk-r-2xl { border-radius: var(--fk-r-2xl) !important; }
+.fk-r-full { border-radius: var(--fk-r-full) !important; }
+
 // Overflow
 .fk-of-hidden { overflow: hidden; }
 .fk-of-auto { overflow: auto; }

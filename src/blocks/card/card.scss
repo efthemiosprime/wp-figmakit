@@ -38,10 +38,28 @@
 		}
 	}
 
-	> .wp-block-group.container {
-		padding: 16px !important;
+	// Content wrapper — any group child of the card gets content padding.
+	// Override Gutenberg's has-global-padding and is-layout-constrained.
+	> .wp-block-group,
+	> .wp-block-group.has-global-padding,
+	> .wp-block-group.is-layout-constrained {
+		padding: var(--spacing-md, 24px) !important;
+		padding-right: var(--spacing-md, 24px) !important;
+		padding-left: var(--spacing-md, 24px) !important;
 	}
 
+	// Direct child blocks (when not wrapped in a group) get horizontal padding.
+	> .wp-block-heading,
+	> p {
+		margin: 0;
+		padding: var(--spacing-3xs, 8px) var(--spacing-md, 24px) 0;
+	}
+
+	> .wp-block-buttons {
+		padding: var(--spacing-sm, 20px) var(--spacing-md, 24px) var(--spacing-md, 24px);
+	}
+
+	// BEM-named elements (from theme blocks or manual markup).
 	.fk-card__eyebrow {
 		margin: 0;
 		padding: var(--spacing-xs, 16px) var(--spacing-md, 24px) 0;
@@ -186,4 +204,31 @@
 	display: flex !important;
 	flex-direction: column !important;
 	justify-content: center !important;
+}
+
+// Content padding for direct child blocks in editor (vstack).
+// Targets the block wrapper divs that Gutenberg adds around each inner block.
+.fk-card--vstack > .block-editor-inner-blocks > .block-editor-block-list__layout {
+	> [data-type="core/heading"],
+	> [data-type="core/paragraph"] {
+		padding: var(--spacing-3xs, 8px) var(--spacing-md, 24px) 0;
+	}
+
+	> [data-type="core/buttons"] {
+		padding: var(--spacing-sm, 20px) var(--spacing-md, 24px) var(--spacing-md, 24px);
+	}
+
+	> [data-type="core/group"] {
+		padding: var(--spacing-md, 24px) !important;
+	}
+
+	// Image should have no padding (flush to card edge).
+	> [data-type="core/image"] {
+		padding: 0;
+	}
+}
+
+// Content padding for hstack content group children in editor.
+.fk-card--hstack > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type="core/group"] {
+	padding: var(--spacing-md, 24px) !important;
 }
