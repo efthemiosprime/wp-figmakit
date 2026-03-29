@@ -175,6 +175,26 @@ function wp_figmakit_enqueue_editor_assets() {
 		}
 
 	}
+
+	// Provide fkEditorData fallback when the FigmaKit plugin is not active.
+	// The plugin localizes richer data (API URL, theme scan, unsupported variants).
+	// This fallback ensures the variant switcher works with hardcoded defaults.
+	if ( ! defined( 'FK_VERSION' ) ) {
+		wp_localize_script( 'wp-figmakit-editor', 'fkEditorData', array(
+			'pluginActive'  => false,
+			'themeVariants' => array(
+				'fk-btn'         => array( 'primary', 'secondary', 'tertiary', 'link' ),
+				'fk-card'        => array( 'vstack', 'hstack' ),
+				'fk-hero'        => array( 'centered', 'split', 'image-left', 'overlay' ),
+				'fk-feature'     => array( 'vstack', 'hstack', 'icon-left', 'icon-right' ),
+				'fk-tabs'        => array( 'horizontal', 'vertical' ),
+				'fk-accordion'   => array( 'default' ),
+				'fk-cta'         => array( 'centered', 'split' ),
+				'fk-testimonial' => array( 'default', 'centered' ),
+			),
+			'unsupported'   => array(),
+		) );
+	}
 }
 add_action( 'enqueue_block_editor_assets', 'wp_figmakit_enqueue_editor_assets' );
 

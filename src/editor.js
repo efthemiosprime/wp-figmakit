@@ -19,3 +19,6 @@ import './components/figmakit-toolbar/index.jsx';
 import './components/figmakit-toolbar/figmakit-toolbar.scss';
 import './components/block-policies/index.jsx';
 import './components/block-policies/block-policies.scss';
+import './components/variant-switcher/index.jsx';
+import './components/variant-resolver/index.jsx';
+import './components/figma-sync/index.jsx';
