@@ -9,11 +9,6 @@
 .editor-styles-wrapper {
 	font-family: var(--wp--preset--font-family--system);
 
-	// Reset Gutenberg layout constraints in editor
-	.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
-		max-width: none;
-	}
-
 	// Reset Gutenberg max-width on fk-row in editor
 	.is-layout-constrained > .fk-row {
 		max-width: none;

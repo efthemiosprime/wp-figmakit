@@ -149,28 +149,20 @@ article {
 }
 
 // ==========================================================================
-// Gutenberg Layout Reset — no default constraints
-// Container/padding/margin controlled per block via Group + spacing panel
+// Gutenberg layout
+// theme.json sets content / wide size to 100% and the root padding to 0, so
+// blocks are full width by default. FigmaKit's layout grid sets the root
+// padding and wide size (--wp--style--root--padding-*, --wp--style--global--*)
+// and WordPress applies them through .has-global-padding and the constrained
+// layout: nothing here may override those, or full-width blocks lose the
+// matching negative margin and shift by the grid margin.
 // ==========================================================================
-
-// Remove default max-width — blocks are full-width by default
-.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)):not(.fk-row) {
-	max-width: none;
-	margin-left: 0;
-	margin-right: 0;
-}
 
 // fk-row inside constrained layout — keep its max-width
 .is-layout-constrained > .fk-row {
 	max-width: var(--fk-container-max) !important;
 	margin-left: auto !important;
 	margin-right: auto !important;
-}
-
-// Reset root padding — skip elements with explicit spacing classes
-.has-global-padding:not([class*="fk-px-"]):not([class*="fk-pl-"]):not([class*="fk-pr-"]):not([class*="fk-p-"]) {
-	padding-right: 0 !important;
-	padding-left: 0 !important;
 }
 
 // fk-row controls its own padding — override Gutenberg
@@ -201,18 +193,10 @@ article {
 	margin-block-end: 0;
 }
 
-// Full width
-.alignfull {
-	max-width: 100vw;
-	margin-left: calc(50% - 50vw);
-	margin-right: calc(50% - 50vw);
-	width: 100vw;
-}
-
-// Wide — same as full, no constraints
-.alignwide {
-	max-width: none;
-}
+// Full / wide alignment: WordPress handles both (useRootPaddingAwareAlignments:
+// negative root-padding margins for .alignfull, --wp--style--global--wide-size
+// for .alignwide). A 100vw breakout here would include the scrollbar and
+// overflow nested groups.
 
 // Responsive Visibility
 @media (min-width: $bp-desktop-min) {
