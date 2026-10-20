@@ -92,12 +92,36 @@ function wp_figmakit_merge_token_data( $theme_json, array $figma_data ) {
 		$existing = _wp_array_get( $current, array_merge( array( 'settings' ), $path, array( 'theme' ) ), array() );
 		_wp_array_set( $settings, $path, wp_figmakit_merge_presets_by_slug( is_array( $existing ) ? $existing : array(), $incoming ) );
 	}
-	return $theme_json->update_with(
-		array(
-			'version'  => isset( $figma_data['version'] ) ? $figma_data['version'] : WP_Theme_JSON::LATEST_SCHEMA,
-			'settings' => $settings,
-		)
+	$data = array(
+		'version'  => isset( $figma_data['version'] ) ? $figma_data['version'] : WP_Theme_JSON::LATEST_SCHEMA,
+		'settings' => $settings,
 	);
+	if ( isset( $figma_data['styles']['typography']['fontFamily'] ) ) {
+		// The site's text in the Foundations font.
+		$data['styles'] = array( 'typography' => array( 'fontFamily' => (string) $figma_data['styles']['typography']['fontFamily'] ) );
+	}
+	return $theme_json->update_with( $data );
+}
+
+add_action( 'wp_enqueue_scripts', 'wp_figmakit_enqueue_token_fonts' );
+add_action( 'enqueue_block_assets', 'wp_figmakit_enqueue_token_fonts' );
+
+/**
+ * Load the Foundations fonts (src/scss/presets.json font families) from Google Fonts, as the
+ * theme loads its own — every weight, so each text style's weight renders as drawn.
+ */
+function wp_figmakit_enqueue_token_fonts() {
+	$data = wp_figmakit_read_token_file( get_stylesheet_directory() . '/src/scss/presets.json' );
+	$list = $data && isset( $data['settings']['typography']['fontFamilies'] ) ? (array) $data['settings']['typography']['fontFamilies'] : array();
+	$args = array();
+	foreach ( $list as $family ) {
+		if ( ! empty( $family['name'] ) ) {
+			$args[] = 'family=' . str_replace( ' ', '+', (string) $family['name'] ) . ':ital,wght@0,100..900;1,100..900';
+		}
+	}
+	if ( $args ) {
+		wp_enqueue_style( 'wp-figmakit-token-fonts', 'https://fonts.googleapis.com/css2?' . implode( '&', $args ) . '&display=swap', array(), null );
+	}
 }
 
 /**
