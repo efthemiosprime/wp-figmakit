@@ -27,8 +27,10 @@ function wp_figmakit_is_vite_dev() {
 	if ( $is_dev === null ) {
 		$is_dev = false;
 		// Only check in development environments (not on every production page load).
+		// Ask for this theme's own entry: another project's Vite on the same port answers
+		// /@vite/client too, and would leave the site without the theme's built CSS.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$response = @file_get_contents( 'http://localhost:5173/@vite/client', false, stream_context_create( array(
+			$response = @file_get_contents( 'http://localhost:5173/src/main.js', false, stream_context_create( array(
 				'http' => array( 'timeout' => 0.3 ),
 			) ) );
 			$is_dev = ( $response !== false );
