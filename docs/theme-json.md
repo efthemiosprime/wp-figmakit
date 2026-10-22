@@ -14,7 +14,7 @@ wp-content/themes/wp-figmakit/theme.json
 
 - **Appearance > Editor > Styles** — global colors, typography, and spacing reflect what's defined here
 - **Block Editor sidebar** — color palettes, font sizes, and font families shown in block controls come from this file
-- **Text Style panel (FigmaKit)** — the Font dropdown pulls its options from the `fontFamilies` defined here
+- **Text Style panel (FrameKit)** — the Font dropdown pulls its options from the `fontFamilies` defined here
 - **Generated CSS** — WordPress auto-generates CSS variables like `--wp--preset--color--primary` from the values in this file
 
 ## Structure overview
@@ -66,7 +66,7 @@ Add an entry to `settings.typography.fontFamilies`:
 }
 ```
 
-This creates `--wp--preset--font-family--inter` and adds "Inter" to the FigmaKit Text Style > Font dropdown automatically.
+This creates `--wp--preset--font-family--inter` and adds "Inter" to the FrameKit Text Style > Font dropdown automatically.
 
 **Note:** You must also load the font files (via `@font-face` in CSS, Google Fonts link, or the `fontFace` property in theme.json). Example using `fontFace`:
 
@@ -142,11 +142,11 @@ WordPress auto-generates these from `theme.json` settings:
 | File | Role |
 |---|---|
 | `theme.json` | Defines presets (colors, fonts, sizes) and global styles |
-| `src/styles/design-tokens/_colors.scss` | FigmaKit's own CSS variables (`--fk-color-*`) used by utility classes |
-| `src/styles/design-tokens/_types.scss` | FigmaKit's typography utility classes (`.fk-text-title`, `.fk-fw-bold`, etc.) |
+| `src/styles/design-tokens/_colors.scss` | FrameKit's own CSS variables (`--fk-color-*`) used by utility classes |
+| `src/styles/design-tokens/_types.scss` | FrameKit's typography utility classes (`.fk-text-title`, `.fk-fw-bold`, etc.) |
 | `style.css` | Theme metadata header only (name, version, author) — no actual styles |
 
-The `--wp--preset--*` variables (from theme.json) and `--fk-*` variables (from SCSS) are separate systems. Theme.json presets power the block editor's built-in controls. FigmaKit's design tokens power the custom utility classes.
+The `--wp--preset--*` variables (from theme.json) and `--fk-*` variables (from SCSS) are separate systems. Theme.json presets power the block editor's built-in controls. FrameKit's design tokens power the custom utility classes.
 
 ## Reference
 

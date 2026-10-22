@@ -1,6 +1,6 @@
 <?php
 /**
- * Security Hardening for WP Figmakit Theme.
+ * Security Hardening for WP FrameKit Theme.
  *
  * @package WP_Figmakit
  */

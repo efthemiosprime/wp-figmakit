@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wp_figmakit_register_pattern_categories() {
 	register_block_pattern_category( 'wp-figmakit', array(
-		'label' => 'WP Figmakit',
+		'label' => 'WP FrameKit',
 	) );
 }
 add_action( 'init', 'wp_figmakit_register_pattern_categories' );

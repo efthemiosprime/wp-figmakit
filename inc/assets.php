@@ -176,7 +176,7 @@ function wp_figmakit_enqueue_editor_assets() {
 
 	}
 
-	// Provide fkEditorData fallback when the FigmaKit plugin is not active.
+	// Provide fkEditorData fallback when the FrameKit plugin is not active.
 	// The plugin localizes richer data (API URL, theme scan, unsupported variants).
 	// This fallback ensures the variant switcher works with hardcoded defaults.
 	if ( ! defined( 'FK_VERSION' ) ) {

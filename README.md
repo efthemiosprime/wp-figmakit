@@ -1,4 +1,4 @@
-# WP Figmakit Theme
+# WP FrameKit Theme
 
 A Gutenberg-ready WordPress theme with a design-token-driven, component/block based approach — extended with a visual toolbar, utility-first CSS system, and page builder capabilities.
 
@@ -15,7 +15,7 @@ A Gutenberg-ready WordPress theme with a design-token-driven, component/block ba
 - [File Structure](#file-structure)
 - [Build System](#build-system)
 - [Theme Configuration](#theme-configuration)
-- [FigmaKit Toolbar](#figmakit-toolbar)
+- [FrameKit Toolbar](#framekit-toolbar)
   - [Grid Settings](#grid-settings)
   - [Colors](#colors)
   - [Patterns](#patterns)
@@ -225,7 +225,7 @@ Font families are registered in `theme.json` and automatically populate the Text
 
 ---
 
-## FigmaKit Toolbar
+## FrameKit Toolbar
 
 A custom floating toolbar on the left side of the block editor providing quick access to theme-level settings. It appears in the post/page editor only (hidden in the Site Editor).
 
@@ -281,7 +281,7 @@ Define allowed CSS classes per block type. This lets you create a controlled set
 3. Save the policies
 4. In the editor, each block's inspector panel shows checkboxes for its assigned policy classes
 
-Supports 16+ block types including all custom FigmaKit blocks.
+Supports 16+ block types including all custom FrameKit blocks.
 
 ### Portability
 
@@ -689,7 +689,7 @@ Comprehensive security hardening in `inc/security.php`:
 
 ## Admin Options
 
-Available at **Appearance > Figmakit Options** in the WordPress admin.
+Available at **Appearance > FrameKit Options** in the WordPress admin.
 
 ### Code Integration
 

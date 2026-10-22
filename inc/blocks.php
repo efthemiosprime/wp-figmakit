@@ -30,14 +30,14 @@ function wp_figmakit_register_blocks() {
 add_action( 'init', 'wp_figmakit_register_blocks' );
 
 /**
- * Register a block category for Figmakit blocks.
+ * Register a block category for FrameKit blocks.
  */
 function wp_figmakit_block_categories( $categories ) {
 	return array_merge(
 		array(
 			array(
 				'slug'  => 'wp-figmakit',
-				'title' => 'WP Figmakit',
+				'title' => 'WP FrameKit',
 				'icon'  => null,
 			),
 		),

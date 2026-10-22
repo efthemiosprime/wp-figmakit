@@ -1,4 +1,4 @@
-// WP Figmakit Theme Styles
+// WP FrameKit Theme Styles
 
 // Design Tokens
 @use './design-tokens/variables' as *;
@@ -151,7 +151,7 @@ article {
 // ==========================================================================
 // Gutenberg layout
 // theme.json sets content / wide size to 100% and the root padding to 0, so
-// blocks are full width by default. FigmaKit's layout grid sets the root
+// blocks are full width by default. FrameKit's layout grid sets the root
 // padding and wide size (--wp--style--root--padding-*, --wp--style--global--*)
 // and WordPress applies them through .has-global-padding and the constrained
 // layout: nothing here may override those, or full-width blocks lose the

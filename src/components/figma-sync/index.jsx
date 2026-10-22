@@ -1,7 +1,7 @@
 /**
  * Re-sync from Figma Toolbar Button
  *
- * Adds a toolbar button on blocks that belong to a FigmaKit pattern.
+ * Adds a toolbar button on blocks that belong to a FrameKit pattern.
  * Clicking it re-imports the Figma component and updates the block
  * pattern content via the plugin's REST API.
  */
@@ -30,7 +30,7 @@ const syncIcon = wp.element.createElement('svg', {
 function SyncButton({ clientId }) {
 	const [syncing, setSyncing] = useState(false);
 
-	// Check if this block is a synced pattern (core/block reference) with FigmaKit meta.
+	// Check if this block is a synced pattern (core/block reference) with FrameKit meta.
 	const componentId = useSelect((select) => {
 		const block = select('core/block-editor').getBlock(clientId);
 		if (!block) return null;
@@ -89,7 +89,7 @@ function SyncButton({ clientId }) {
 	);
 }
 
-// Only register the filter if the FigmaKit plugin is active.
+// Only register the filter if the FrameKit plugin is active.
 // Without the plugin there are no component IDs, no REST API, no patterns to sync.
 const pluginActive = window.fkEditorData?.pluginActive === true;
 

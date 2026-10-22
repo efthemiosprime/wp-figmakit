@@ -1,6 +1,6 @@
 <?php
 /**
- * WP Figmakit Theme Options Admin Page.
+ * WP FrameKit Theme Options Admin Page.
  *
  * @package WP_Figmakit
  */
@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wp_figmakit_admin_menu() {
 	add_theme_page(
-		__( 'WP Figmakit Options', 'wp-figmakit' ),
-		__( 'Figmakit Options', 'wp-figmakit' ),
+		__( 'WP FrameKit Options', 'wp-figmakit' ),
+		__( 'FrameKit Options', 'wp-figmakit' ),
 		'manage_options',
 		'wp-figmakit-options',
 		'wp_figmakit_options_page'
@@ -289,7 +289,7 @@ function wp_figmakit_options_page() {
 	}
 	?>
 	<div class="wrap fk-admin">
-		<h1 class="fk-admin__title"><?php esc_html_e( 'WP Figmakit Options', 'wp-figmakit' ); ?></h1>
+		<h1 class="fk-admin__title"><?php esc_html_e( 'WP FrameKit Options', 'wp-figmakit' ); ?></h1>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'wp_figmakit_options' ); ?>

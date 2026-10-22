@@ -1,7 +1,7 @@
 /**
  * Unsupported Variant Resolver
  *
- * Shows an inline warning on any block (FigmaKit or core Gutenberg) when
+ * Shows an inline warning on any block (FrameKit or core Gutenberg) when
  * its variant isn't defined in the theme. Works by checking:
  * - `variant` attribute on wp-figmakit/* blocks
  * - BEM variant classes (fk-btn--*, fk-card--*, etc.) in className on core blocks
@@ -91,7 +91,7 @@ function VariantWarning({ blockName, attributes, setAttributes }) {
 	const handleGenerate = () => {
 		if (!pluginActive) {
 			wp.data.dispatch('core/notices').createWarningNotice(
-				__('FigmaKit plugin is not active. Install it to auto-generate variant CSS.', 'wp-figmakit'),
+				__('FrameKit plugin is not active. Install it to auto-generate variant CSS.', 'wp-figmakit'),
 				{ type: 'snackbar' }
 			);
 			return;

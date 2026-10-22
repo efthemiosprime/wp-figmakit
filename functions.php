@@ -1,6 +1,6 @@
 <?php
 /**
- * WP Figmakit — Component/Block-based theme.
+ * WP FrameKit — Component/Block-based theme.
  *
  * Modular loader: all functionality lives in /inc modules.
  *

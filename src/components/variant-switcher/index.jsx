@@ -1,7 +1,7 @@
 /**
  * Block Variant Switcher
  *
- * Adds a toolbar dropdown to switch FigmaKit variants. Works on:
+ * Adds a toolbar dropdown to switch FrameKit variants. Works on:
  * - wp-figmakit/* blocks (reads `variant` attribute)
  * - Core Gutenberg blocks with fk-* BEM variant classes (e.g. fk-btn--primary on core/button)
  */
@@ -16,7 +16,7 @@ const { __ } = wp.i18n;
  * Covers both wp-figmakit custom blocks AND core Gutenberg blocks.
  */
 const BLOCK_TO_PREFIX = {
-	// FigmaKit custom blocks.
+	// FrameKit custom blocks.
 	'wp-figmakit/fk-card': 'fk-card',
 	'wp-figmakit/fk-hero': 'fk-hero',
 	'wp-figmakit/fk-feature': 'fk-feature',
@@ -27,7 +27,7 @@ const BLOCK_TO_PREFIX = {
 	'wp-figmakit/fk-modal': 'fk-modal',
 	'wp-figmakit/fk-isi-tray': 'fk-isi-tray',
 	'wp-figmakit/fk-header': 'fk-header',
-	// Core Gutenberg blocks that receive FigmaKit variant classes.
+	// Core Gutenberg blocks that receive FrameKit variant classes.
 	'core/button': 'fk-btn',
 	'core/buttons': 'fk-btn',
 	'core/group': 'fk-group',
@@ -66,7 +66,7 @@ function getVariantOptions(prefix) {
  * For core blocks: reads `fkButtonVariant` or parses BEM class from `className`.
  */
 function getCurrentVariant(blockName, attributes, prefix) {
-	// FigmaKit blocks store variant directly.
+	// FrameKit blocks store variant directly.
 	if (blockName.startsWith('wp-figmakit/') && attributes.variant) {
 		return attributes.variant;
 	}
