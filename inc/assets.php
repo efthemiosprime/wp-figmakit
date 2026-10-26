@@ -10,6 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * A string only this theme's src/main.js contains, so the dev check can tell its
+ * Vite server from another project's on the same port.
+ */
+define( 'WP_FIGMAKIT_VITE_MARKER', 'fk-header__toggle' );
+
+/**
  * Check if Vite dev server is running.
  *
  * Uses a hot file that Vite creates when the dev server starts.
@@ -22,16 +28,19 @@ function wp_figmakit_is_vite_dev() {
 		return true;
 	}
 
-	// Check if the Vite dev server is actually responding.
+	// Check if this theme's Vite dev server is actually responding.
 	static $is_dev = null;
 	if ( $is_dev === null ) {
 		$is_dev = false;
 		// Only check in development environments (not on every production page load).
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$response = @file_get_contents( 'http://localhost:5173/@vite/client', false, stream_context_create( array(
+			// Ask for this theme's entry, not just /@vite/client: another project's Vite
+			// on the same port answers that too, and the theme would then skip dist/ and
+			// load that project's main.js, leaving the header unstyled.
+			$response = @file_get_contents( 'http://localhost:5173/src/main.js', false, stream_context_create( array(
 				'http' => array( 'timeout' => 0.3 ),
 			) ) );
-			$is_dev = ( $response !== false );
+			$is_dev = ( false !== $response && false !== strpos( $response, WP_FIGMAKIT_VITE_MARKER ) );
 		}
 	}
 	return $is_dev;
