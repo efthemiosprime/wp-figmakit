@@ -14,6 +14,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * The block extensions' attributes (src/components/*, via src/lib/create-block-extension.jsx),
+ * name → JSON type. The editor adds them to every block; the server must know them too.
+ */
+const WP_FIGMAKIT_EXTENSION_ATTRIBUTES = array(
+	'fkLayout'             => 'object',
+	'fkLayoutTablet'       => 'object',
+	'fkLayoutMobile'       => 'object',
+	'fkColumns'            => 'number',
+	'fkTextStyle'          => 'object',
+	'fkButtonIcon'         => 'string',
+	'fkButtonIconPosition' => 'string',
+	'fkPolicyClasses'      => 'array',
+	'fkAttributes'         => 'array',
+	'fkSizing'             => 'object',
+	'fkSpacing'            => 'object',
+	'fkButtonVariant'      => 'string',
+	'fkVisibility'         => 'object',
+);
+
+/**
+ * Register the extensions' attributes on every block on the server as well. The editor previews a
+ * dynamic block (breadcrumbs, latest posts, archives…) through the block renderer REST route, which
+ * rejects attributes the server does not know ("fkAttributes is not a valid property of Object"),
+ * so those blocks showed "Error: [object Object]" in the editor. Type only: the defaults stay the
+ * editor's, and render_block receives the saved attributes as before.
+ *
+ * @param array $args Block type arguments.
+ * @return array
+ */
+function wp_figmakit_register_extension_attributes( $args ) {
+	$attributes = isset( $args['attributes'] ) && is_array( $args['attributes'] ) ? $args['attributes'] : array();
+	foreach ( WP_FIGMAKIT_EXTENSION_ATTRIBUTES as $name => $type ) {
+		if ( ! isset( $attributes[ $name ] ) ) {
+			$attributes[ $name ] = array( 'type' => $type );
+		}
+	}
+	$args['attributes'] = $attributes;
+	return $args;
+}
+add_filter( 'register_block_type_args', 'wp_figmakit_register_extension_attributes' );
+
+/**
  * Build the spacing class allowlist programmatically.
  */
 function wp_figmakit_spacing_allowlist() {
