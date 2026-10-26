@@ -28,7 +28,9 @@
 	padding: 0;
 }
 
-body {
+// A fallback only: theme.json's global styles (and the Foundations font FigmaKit adds) set
+// the body's font, colour and background — this loads after them and would override them.
+:where(body) {
 	font-family: var(--fk-font-sans);
 	color: var(--fk-color-text);
 	background-color: var(--fk-color-bg);
@@ -187,11 +189,10 @@ article {
 	margin-right: 0 !important;
 }
 
-// Reset block gap — use spacing panel instead
-.is-layout-constrained > * + * {
-	margin-block-start: 0;
-	margin-block-end: 0;
-}
+// Block gap reset (no default gap between stacked blocks — use the spacing panel) lives in
+// theme.json styles.css: printed with the global styles, it comes after core's default gap
+// and before each block's own Block spacing, so a gap set on a block still applies. Here,
+// after both, it zeroed every block's own gap too.
 
 // Full / wide alignment: WordPress handles both (useRootPaddingAwareAlignments:
 // negative root-padding margins for .alignfull, --wp--style--global--wide-size
