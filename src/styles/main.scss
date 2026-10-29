@@ -93,11 +93,16 @@
 
 .entry-content {
 	margin-top: 1.5rem;
+}
 
-	p {
-		margin-bottom: 1rem;
-	}
+// A paragraph's space below it, where nothing else spaces it (a post's text): at no
+// specificity, so a block layout's own spacing between its blocks wins (core's
+// .wp-container-… > * resets margins and spaces them by its gap).
+:where(.entry-content) p {
+	margin-bottom: 1rem;
+}
 
+.entry-content {
 	img {
 		max-width: 100%;
 		height: auto;
